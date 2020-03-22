@@ -1,7 +1,17 @@
 <section class="container">
     <div class="row">
         <div class="col-12">
-            Hello World!
+            Welcome <%= @current_user.firstname %> <%= @current_user.lastname %>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <h1><%= @board.title %></h1>
+            <div class="row">
+                <div class="col-12">
+                    <%= render_many @board.lists, VegaWeb.PageView, "list.html", as: :list %>
+                </div>
+            </div>
         </div>
     </div>
 </section>

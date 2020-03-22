@@ -6,9 +6,13 @@ defmodule Vega.Application do
   use Application
 
   def start(_type, _args) do
+
+    import Supervisor.Spec
+
     # List all child processes to be supervised
     children = [
       # Start the endpoint when the application starts
+      worker(Mongo, [[name: :mongo, url: Application.get_env(:vega, :mongodb)[:url], timeout: 60_000, pool_size: 10, idle_interval: 10_000]]),
       VegaWeb.Endpoint
       # Starts a worker by calling: Vega.Worker.start_link(arg)
       # {Vega.Worker, arg},

@@ -1,0 +1,54 @@
+.list-cards {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  overflow-x: hidden;
+  margin: 0 4px;
+  padding: 0 4px;
+  min-height: 0;
+}
+
+.list-card {
+  background-color: #fff;
+  border-radius: 3px;
+  box-shadow: 0 1px 0 rgba(9,30,66,.25);
+  cursor: pointer;
+  display: block;
+  margin-bottom: 8px;
+  max-width: 300px;
+  min-height: 20px;
+  text-decoration: none;
+}
+
+.list-card-details {
+  overflow: hidden;
+  padding: 6px 8px 2px;
+}
+
+.list-card-title {
+  display: block;
+  margin: 0 0 4px;
+  overflow: hidden;
+  word-wrap: break-word;
+  color: #172b4d;
+}
+
+.list-card-composer {
+  margin-bottom: 8px;
+}
+
+textarea.list-card-composer-textarea,
+textarea.list-card-composer-textarea:focus {
+  overflow: hidden;
+  word-wrap: break-word;
+  resize: none;
+  height: 60px;
+  background: none;
+  border: none;
+  box-shadow: none;
+  margin-bottom: 4px;
+  max-height: 162px;
+  min-height: 54px;
+  overflow-y: auto;
+  padding: 0;
+  width: 100%;
+}

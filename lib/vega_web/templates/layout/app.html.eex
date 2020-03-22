@@ -16,6 +16,7 @@
     </main>
     <footer>
     </footer>
+    <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/common.js") %>"></script>
     <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
   </body>
 </html>

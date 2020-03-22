@@ -1,0 +1,108 @@
+.list-composer {
+  border-radius: 3px;
+  flex: 0 0 272px;
+  margin: 0 8px 0 4px;
+  height: 100%;
+}
+
+.list-wrapper {
+  border-radius: 3px;
+  flex: 0 0 272px;
+  margin: 0 4px;
+  height: 100%;
+
+  &:first-child {
+    margin-left: 8px;
+  }
+
+}
+
+.list {
+  background-color: #ebecf0;
+  border-radius: 3px;
+  display: flex;
+  flex-direction: column;
+  max-height: 100%;
+
+  .header {
+    flex: 0 0 auto;
+    padding: 10px 8px;
+    min-height: 20px;
+  }
+
+  h2 {
+    font-size: 1rem;
+    line-height: 1.2rem;
+    font-weight: 400;
+  }
+
+}
+
+
+.list-footer {
+  padding: 10px 8px;
+  min-height: 20px;
+}
+
+.list-control {
+  text-decoration: none;
+  color: #5e6c84;
+  border-radius: 3px;
+  display: block;
+  flex: 1 0 auto;
+  padding: 4px 8px;
+  &:hover {
+    text-decoration: none;
+    background-color: rgba(9,30,66,.08);
+    color: #172b4d;
+  }
+}
+
+.is-idle {
+  background-color: hsla(0,0%,100%,.24);
+  cursor: pointer;
+
+  &:hover {
+    background-color: hsla(0,0%,100%,.32);
+  }
+}
+
+.list-mod {
+  cursor: pointer;
+  height: auto;
+  min-height: 32px;
+  padding: 4px;
+  display: flex;
+}
+
+.btn-new-list {
+  text-decoration: none;
+  padding: 8px;
+  color: white;
+}
+
+.list-is-dragging {
+  background-color: rgba(255, 255, 255, 0.47);
+  box-shadow: inset 0px 0px 2px 0px rgba(0, 0, 0, 0.75);
+}
+
+.list-drag-handle {
+  cursor: pointer;
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Old versions of Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Opera and Firefox */
+}
+
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Old versions of Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Opera and Firefox */
+}

@@ -1,0 +1,47 @@
+textarea:focus,
+input:focus{
+  outline: none;
+}
+
+.button,
+input:not([type=file]),
+textarea {
+  background-color: #fafbfc;
+  border: none;
+  box-shadow: inset 0 0 0 2px #dfe1e6;
+  color: #172b4d;
+  box-sizing: border-box;
+  -webkit-appearance: none;
+  border-radius: 3px;
+  display: block;
+  line-height: 20px;
+  margin-bottom: 12px;
+  padding: 8px 12px;
+  transition-property: background-color, border-color, box-shadow;
+  transition-duration: 85ms;
+  transition-timing-function: ease;
+}
+
+.submit {
+  background-color: rgba(9,30,66,.04);
+  border: none;
+  cursor: pointer;
+  display: inline-block;
+  font-weight: 400;
+  line-height: 20px;
+  margin: 0 4px 0 0;
+  padding: 6px 12px;
+  text-align: center;
+  background-color: #fafbfc;
+  color: #172b4d;
+  border-radius: 3px;
+  text-decoration: none;
+}
+
+.primary {
+  background-color: #5aac44;
+  color: white;
+  &:hover {
+    background-color: #61bd4f;
+  }
+}

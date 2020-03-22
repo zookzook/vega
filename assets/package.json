@@ -6,10 +6,11 @@
     "watch": "webpack --mode development --watch"
   },
   "dependencies": {
-    "bootstrap": "4.4.1",
+    "normalize.css": "8.0.1",
     "phoenix": "file:../deps/phoenix",
     "phoenix_html": "file:../deps/phoenix_html",
-    "phoenix_live_view": "file:../deps/phoenix_live_view"
+    "phoenix_live_view": "file:../deps/phoenix_live_view",
+    "sortablejs": "^1.10.2"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",

@@ -1,14 +1,5 @@
 use Mix.Config
 
-# Configure your database
-config :vega, Vega.Repo,
-  username: "postgres",
-  password: "postgres",
-  database: "vega_dev",
-  hostname: "localhost",
-  show_sensitive_data_on_connection_error: true,
-  pool_size: 10
-
 # For development, we disable any cache and enable
 # debugging and code reloading.
 #
@@ -66,7 +57,9 @@ config :vega, VegaWeb.Endpoint,
   ]
 
 # Do not include metadata nor timestamps in development logs
-config :logger, :console, format: "[$level] $message\n"
+config :logger, :console,
+  level: :info,
+  format: "[$level] $message\n"
 
 # Set a higher stacktrace during development. Avoid configuring such
 # in production as building large stacktraces may be expensive.

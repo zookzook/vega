@@ -1,12 +1,7 @@
 use Mix.Config
 
-# Configure your database
-config :vega, Vega.Repo,
-  username: "postgres",
-  password: "postgres",
-  database: "vega_test",
-  hostname: "localhost",
-  pool: Ecto.Adapters.SQL.Sandbox
+config :vega, :mongodb,
+       url: "mongodb://localhost:27017,localhost:27018,localhost:27019/vega-test?replicaSet=kliniken"
 
 # We don't run a server during test. If one is required,
 # you can enable the server option below.

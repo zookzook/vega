@@ -1,0 +1,3 @@
+<div class="issues--issue">
+  <%= inspect @issue.t%>
+</div>
