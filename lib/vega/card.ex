@@ -10,8 +10,19 @@ defmodule Vega.Card do
 
   @collection "cards"
 
-  defstruct [:_id, :created, :pos, :modified, :title, :description, :board, :list]
+  defstruct [:_id,    ## the ObjectId of the card
+    :created,         ## creation date
+    :pos,             ## current position for ordering
+    :modified,        ## last modification date
+    :title,           ## the title of the card
+    :description,     ## optional: a description as Markdown
+    :board,           ## the id of the board
+    :list             ## the id of the list
+  ]
 
+  @doc """
+  Create a new card with a title `title` and position `pos`.
+  """
   def new(board, list, user, title, pos) do
     %Card{_id: Mongo.object_id(),
       title: title,
@@ -22,10 +33,16 @@ defmodule Vega.Card do
       pos: pos}
   end
 
+  @doc """
+  Fetch all cards of the list with id `id`.
+  """
   def fetch_all_in_list(id) do
     Mongo.find(:mongo, @collection, %{list: id}) |> Enum.map(fn card -> to_struct(card) end)
   end
 
+  @doc """
+  Convert a map structure to Card-struct.
+  """
   def to_struct(card) do
     %Card{_id: card["_id"],
       title: card["title"],
@@ -37,6 +54,9 @@ defmodule Vega.Card do
   end
 
   #@spec compare(Calendar.date(), Calendar.date()) :: :lt | :eq | :gt
+  @doc """
+  Used for sorting: compare the pos value.
+  """
   def compare(a, b) do
     case a.pos - b.pos do
       x when x < 0 -> :lt
@@ -44,6 +64,5 @@ defmodule Vega.Card do
       _            -> :eq
     end
   end
-  
 
 end

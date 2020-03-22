@@ -1,7 +1,24 @@
 defmodule Vega.Board do
   @moduledoc """
 
-  This module describes a board struct.
+  This module describes a board struct. It is the root of a tree. It contains a lists of `BoardList` structs. Each
+  `BoardList` contains a list of cards. The card is the basic struct which contains the real data. Lists and boards
+  are used to organize and to group the cards.
+
+  Each modification is recorded as an `Issue`, which contains all information that changed. So, we have three
+  collections in the MongoDB:
+
+  1) boards
+  2) cards
+  3) issues
+
+  Since a list or a card can be archived, there exists for lists and cards a collection for the archived documents:
+
+  1) archived_cards
+  2) archived_lists
+
+  The goal of these two collection is better performace by keeping the other collections smaller. If a card is going
+  to get archived it will be moved from the collection `cards` to collection `archived`.
 
   """
 
@@ -28,8 +45,35 @@ defmodule Vega.Board do
   @issues_collection  "issues"
   @cards_collection   "cards"
 
+  ##
+  # Since we support user ordered list, we save the current ordering by using the attribute `:pos`, which is
+  # a float number. The cards are sorted using this attribute. We define a gap between the cards and a starting
+  # position.
+  #
+  # Example: assume we have a list of cards in this order: [a, b, c]. Then we have the following positions:
+  # [100.0, 200.0, 300.0]
+  #
+  # By moving a card to another position, we will calculate the position by using the neighbours pre and next:
+  #
+  # :pos = pre.pos + (next.pos - prev.pos) / 2
+  #
+  # If we move c in front of b, we get the new position (simplified version):
+  #
+  # 100.0 + (200.0 - 100.0) / 2 = 100.0 + 50 = 150.0
+  #
+  # We are using a gap of 100.0 only for better debugging, because we can use a gap of 1.0 as well.
+  #
+  # In case of sorting by date or title, the position will be recalculated by using the `@pos_start`
+  # and `@pos_gap` constants.
+  #
+  @pos_gap   100.0
+  @pos_start 100.0
+
   defstruct [:_id, :created, :modified, :title, :description, :members, :lists]
 
+  @doc """
+  Create a new empty board.
+  """
   def new(title, %User{_id: id}) do
 
     members = %{"admin" => id}
@@ -40,7 +84,9 @@ defmodule Vega.Board do
   end
 
   @doc """
-  Delete a board with all isses and cards attached to the board
+  Delete a board with all isses and cards attached to the board.
+
+  todo: cleanup the archived-collections as well
   """
   def delete(%Board{_id: id}) do
 
@@ -57,7 +103,11 @@ defmodule Vega.Board do
   end
 
   @doc """
-  Set the title of the board. It creates an issue for the historie and returns the new board
+  Set the title of the board. It creates an issue `Vega.Issue.SetTitle` for the history and returns the new board.
+
+  ## Example
+
+    board = Board.set_title(board, user, "New title")
   """
   def set_title(%Board{_id: id} = board, user, title) do
 
@@ -99,8 +149,8 @@ defmodule Vega.Board do
             |> Issue.new(user, board)
             |> to_map()
 
-    ordering = length(lists)
-    column   = title |> BoardList.new(ordering) |> to_map()
+    pos     = length(lists)
+    column  = title |> BoardList.new(pos) |> to_map()
 
     with_transaction(board, fn trans ->
       with {:ok, _} <- Mongo.insert_one(:mongo, @issues_collection, issue, trans),
@@ -111,7 +161,7 @@ defmodule Vega.Board do
   end
 
   @doc"""
-  Delete a list from the board. The ordering attribute of the left lists are new calculated.
+  Delete a list from the board. The pos attribute of the left lists are new calculated.
   """
   def delete_list(%Board{_id: id, lists: lists} = board, user, %BoardList{_id: list_id, title: title}) do
 
@@ -129,7 +179,7 @@ defmodule Vega.Board do
            |> UnorderedBulk.new()
            |> UnorderedBulk.update_one(%{_id: id}, %{"$pull" => %{"lists" => %{"_id" => list_id}}})
 
-    bulk = Enum.reduce(other_lists, bulk, fn {list_id, index}, bulk -> UnorderedBulk.update_one(bulk, %{_id: id, "lists._id": list_id}, %{"$set" => %{"lists.$.ordering" => index}}) end)
+    bulk = Enum.reduce(other_lists, bulk, fn {list_id, index}, bulk -> UnorderedBulk.update_one(bulk, %{_id: id, "lists._id": list_id}, %{"$set" => %{"lists.$.pos" => index}}) end)
 
     with_transaction(board, fn trans ->
      with {:ok, _} <- Mongo.insert_one(:mongo, @issues_collection, issue, trans),
@@ -138,7 +188,6 @@ defmodule Vega.Board do
      end
     end, true)
   end
-
 
   def reorder_list(%Board{_id: id} = board, user, new_lists) do
 
@@ -152,7 +201,7 @@ defmodule Vega.Board do
                   |> Enum.with_index()
                   |> Enum.map(fn {l, index} -> {l._id, index} end)
 
-    bulk = Enum.reduce(other_lists, UnorderedBulk.new(@collection), fn {list_id, index}, bulk -> UnorderedBulk.update_one(bulk, %{_id: id, "lists._id": list_id}, %{"$set" => %{"lists.$.ordering" => index}}) end)
+    bulk = Enum.reduce(other_lists, UnorderedBulk.new(@collection), fn {list_id, index}, bulk -> UnorderedBulk.update_one(bulk, %{_id: id, "lists._id": list_id}, %{"$set" => %{"lists.$.pos" => index}}) end)
 
     with_transaction(board, fn trans ->
       with {:ok, _} <- Mongo.insert_one(:mongo, @issues_collection, issue, trans),
@@ -174,8 +223,8 @@ defmodule Vega.Board do
 
     bulk = UnorderedBulk.new(@cards_collection)
     bulk = cards
-           |> Enum.with_index(1.0)
-           |> Enum.reduce(bulk, fn {card_id, pos}, bulk -> UnorderedBulk.update_one(bulk, %{_id: card_id}, %{"$set" => %{"pos" => pos}}) end)
+           |> Enum.with_index(1)
+           |> Enum.reduce(bulk, fn {card_id, pos}, bulk -> UnorderedBulk.update_one(bulk, %{_id: card_id}, %{"$set" => %{"pos" => pos * @pos_gap}}) end)
 
     with_transaction(board, fn trans ->
       with {:ok, _} <- Mongo.insert_one(:mongo, @issues_collection, issue, trans),
@@ -221,10 +270,10 @@ defmodule Vega.Board do
     card = board |> Card.new(list, user, title, pos) |> to_map()
 
     with_transaction(board, fn trans ->
-                               with {:ok, _} <- Mongo.insert_one(:mongo, @issues_collection, issue, trans),
-                                    {:ok, _} <- Mongo.insert_one(:mongo, @cards_collection, card, trans) do
-                                 :ok
-                               end
+      with {:ok, _} <- Mongo.insert_one(:mongo, @issues_collection, issue, trans),
+          {:ok, _} <- Mongo.insert_one(:mongo, @cards_collection, card, trans) do
+       :ok
+      end
     end, false)
 
     pos
@@ -232,8 +281,8 @@ defmodule Vega.Board do
 
   defp calc_pos(%BoardList{cards: cards}) do
     case List.last(cards) do
-      %Card{pos: pos} -> pos + 1.0
-      nil             -> 1.0
+      %Card{pos: pos} -> pos + @pos_gap
+      nil             -> @pos_start
     end
   end
 
@@ -257,15 +306,9 @@ defmodule Vega.Board do
   end
   defp add_cards_pos(board, list, user, [title|xs], pos) do
     pos = add_card_pos(board, list, user, title, pos)
-    add_cards_pos(board, list, user, xs, pos + 1.0)
+    add_cards_pos(board, list, user, xs, pos + @pos_gap)
   end
 
-  @doc """
-  Move a card after a card within a list and preserve the order of the cards.
-  """
-  def move_card_after(user, board, card, after_card) do
-    board
-  end
 
   @doc """
   Move a card before a card within the cards list and preserve the order of the cards.
@@ -275,9 +318,9 @@ defmodule Vega.Board do
 
   As the result the new board is returned.
   """
-  def move_card_before(user, board, %BoardList{_id: id, cards: cards}, card_id, before_id) do
+  def move_card_before(user, board, %BoardList{_id: id, cards: cards}, card, before_card) do
 
-    with pos <- calc_new_pos_before(cards, before_id) do
+    with pos <- calc_new_pos_before(cards, before_card._id) do
 
       issue = id
               |> MoveCard.new()
@@ -286,7 +329,7 @@ defmodule Vega.Board do
 
       with_transaction(board, fn trans ->
          with {:ok, _} <- Mongo.insert_one(:mongo, @issues_collection, issue, trans),
-              {:ok, _} <- Mongo.update_one(:mongo, @cards_collection, %{_id: card_id}, %{"$set" => %{"pos" => pos}}) do
+              {:ok, _} <- Mongo.update_one(:mongo, @cards_collection, %{_id: card._id}, %{"$set" => %{"pos" => pos}}) do
            :ok
          end
       end, true)
@@ -294,7 +337,7 @@ defmodule Vega.Board do
   end
 
   defp calc_new_pos_before([], _id) do
-    1.0
+    @pos_start
   end
   defp calc_new_pos_before([card], id) do
     case card._id == id do
@@ -314,16 +357,9 @@ defmodule Vega.Board do
   end
 
   @doc """
-  Move a card after a card within another list and preserve the order of the cards.
+  Move a card after to the end of all cards and preserve the order of the cards.
   """
-  def move_card_after(user, board, list, card, after_card) do
-    board
-  end
-
-  @doc """
-  Move a card before a card within another list and preserve the order of the cards.
-  """
-  def move_card_before(user, board, list, card, before_card) do
+  def move_card_to_end(user, board, list, card, after_card) do
     board
   end
 
@@ -339,6 +375,10 @@ defmodule Vega.Board do
     Enum.find(lists, fn %BoardList{_id: id} -> id == list_id end)
   end
 
+  @doc """
+  Execute the funcation by using the transaction api of the MongoDB. In case
+  of an error the changes are roll backed.
+  """
   def with_transaction(board, fun, fetch_result \\ true)
   def with_transaction(board, fun, true) do
     with {:ok, :ok} <- Session.with_transaction(:mongo, fn trans ->
@@ -367,6 +407,10 @@ defmodule Vega.Board do
     |> to_struct()
   end
 
+  @doc """
+  Convert a map structure to a `Board` struct. The function fills the each list with
+  the connected cards. The lists and cards are sorted according the position attribute.
+  """
   def to_struct(nil) do
     nil
   end
@@ -379,6 +423,6 @@ defmodule Vega.Board do
       modified: board["modified"],
       title: board["title"],
       members: board["members"],
-      lists: lists |> Enum.sort(fn (a,b) -> a.ordering <= b.ordering end)}
+      lists: lists |> Enum.sort({:asc, BoardList})}
   end
 end

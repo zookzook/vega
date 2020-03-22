@@ -64,7 +64,7 @@ defmodule VegaWeb.CardsTest do
     assert {:ok, 5, 4} == Board.delete(board)
   end
 
-  test "move card within a list", context do
+  test "move cards within a list", context do
 
     user = context.user
     title = "A board title"
@@ -79,7 +79,7 @@ defmodule VegaWeb.CardsTest do
 
     [card_1, _card_2, _card_3, card_4] = a.cards
 
-    board = Board.move_card_before(user, board, a, card_4._id, card_1._id)
+    board = Board.move_card_before(user, board, a, card_4, card_1)
     [a]   = board.lists
     [card_1, card_2, card_3, card_4] = a.cards
 
@@ -88,7 +88,7 @@ defmodule VegaWeb.CardsTest do
     assert card_3.title == "is"
     assert card_4.title == "a"
 
-    board = Board.move_card_before(user, board, a, card_4._id, card_2._id)
+    board = Board.move_card_before(user, board, a, card_4, card_2)
     [a]   = board.lists
     [card_1, card_2, card_3, card_4] = a.cards
 
@@ -97,7 +97,7 @@ defmodule VegaWeb.CardsTest do
     assert card_3.title == "this"
     assert card_4.title == "is"
 
-    board = Board.move_card_before(user, board, a, card_1._id, card_4._id)
+    board = Board.move_card_before(user, board, a, card_1, card_4)
     [a]   = board.lists
     [card_1, card_2, card_3, card_4] = a.cards
 
@@ -106,11 +106,11 @@ defmodule VegaWeb.CardsTest do
     assert card_3.title == "test"
     assert card_4.title == "is"
 
-    board = Board.move_card_before(user, board, a, card_2._id, card_1._id)
+    board = Board.move_card_before(user, board, a, card_2, card_1)
     [a]   = board.lists
     [_card_1, card_2, _card_3, card_4] = a.cards
 
-    board = Board.move_card_before(user, board, a, card_4._id, card_2._id)
+    board = Board.move_card_before(user, board, a, card_4, card_2)
     [a]   = board.lists
     [card_1, card_2, card_3, card_4] = a.cards
 
