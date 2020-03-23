@@ -24,22 +24,22 @@ defmodule Vega.Board do
 
   import Vega.StructHelper
 
-  alias Vega.Board
+  alias Mongo.BulkWrite
   alias Mongo.Session
-  alias Vega.Issue
-  alias Vega.Card
+  alias Mongo.UnorderedBulk
+  alias Vega.Board
   alias Vega.BoardList
+  alias Vega.Card
+  alias Vega.Issue
   alias Vega.Issue.AddList
   alias Vega.Issue.DeleteList
+  alias Vega.Issue.MoveCard
   alias Vega.Issue.NewCard
+  alias Vega.Issue.ReorderList
   alias Vega.Issue.SetDescription
   alias Vega.Issue.SetTitle
-  alias Vega.Issue.ReorderList
   alias Vega.Issue.SortCards
-  alias Vega.Issue.MoveCard
   alias Vega.User
-  alias Mongo.UnorderedBulk
-  alias Mongo.BulkWrite
 
   @collection         "boards"
   @issues_collection  "issues"
@@ -193,7 +193,7 @@ defmodule Vega.Board do
            {:ok, _} <- Mongo.update_one(:mongo, @collection, %{_id: id}, %{"$push" => %{"lists" => column}}, trans) do
         :ok
       end
-    end, true)
+    end)
   end
 
   @doc"""
@@ -227,7 +227,7 @@ defmodule Vega.Board do
           %Mongo.BulkWriteResult{} <- BulkWrite.write(:mongo, bulk, trans) do
        :ok
      end
-    end, true)
+    end)
   end
 
   def reorder_list(%Board{_id: id} = board, user, new_lists) do
@@ -249,7 +249,7 @@ defmodule Vega.Board do
           %Mongo.BulkWriteResult{} <- BulkWrite.write(:mongo, bulk, trans) do
        :ok
       end
-    end, true)
+    end)
   end
 
   @doc """
@@ -282,7 +282,7 @@ defmodule Vega.Board do
           %Mongo.BulkWriteResult{} <- BulkWrite.write(:mongo, bulk, trans) do
        :ok
       end
-    end, true)
+    end)
 
   end
 
@@ -304,14 +304,14 @@ defmodule Vega.Board do
             |> to_map()
 
     pos = calc_pos(list)
-    card = board |> Card.new(list, user, title, pos) |> to_map()
+    card = board |> Card.new(list, title, pos) |> to_map()
 
     with_transaction(board, fn trans ->
       with {:ok, _} <- Mongo.insert_one(:mongo, @issues_collection, issue, trans),
            {:ok, _} <- Mongo.insert_one(:mongo, @cards_collection, card, trans) do
         :ok
       end
-    end, true)
+    end)
 
   end
 
@@ -358,7 +358,7 @@ defmodule Vega.Board do
            %Mongo.BulkWriteResult{} <- BulkWrite.write(:mongo, card_bulk, trans) do
        :ok
       end
-    end, true)
+    end)
 
   end
 
@@ -372,7 +372,7 @@ defmodule Vega.Board do
             |> Issue.new(user, board)
             |> to_map()
 
-    card = board |> Card.new(list, user, title, pos, time) |> to_map()
+    card = board |> Card.new(list, title, pos, time) |> to_map()
 
     {UnorderedBulk.insert_one(issue_bulk, issue), UnorderedBulk.insert_one(card_bulk, card)}
   end
@@ -399,7 +399,7 @@ defmodule Vega.Board do
               {:ok, _} <- Mongo.update_one(:mongo, @cards_collection, %{_id: card._id}, %{"$set" => %{"pos" => pos}}) do
            :ok
          end
-      end, true)
+      end)
     end
   end
 
@@ -452,7 +452,7 @@ defmodule Vega.Board do
            {:ok, _} <- Mongo.update_one(:mongo, @cards_collection, %{_id: card._id}, %{"$set" => %{"pos" => pos}}) do
        :ok
       end
-    end, true)
+    end)
   end
 
   @doc """
@@ -471,16 +471,11 @@ defmodule Vega.Board do
   Execute the funcation by using the transaction api of the MongoDB. In case
   of an error the changes are roll backed.
   """
-  def with_transaction(board, fun, fetch_result \\ true)
-  def with_transaction(board, fun, true) do
+  def with_transaction(board, fun)
+  def with_transaction(board, fun) do
     with {:ok, :ok} <- Session.with_transaction(:mongo, fn trans ->
       with :ok <- fun.(trans), do: {:ok, :ok}
     end), do: fetch(board)
-  end
-  def with_transaction(board, fun, false) do
-    with {:ok, :ok} <- Session.with_transaction(:mongo, fn trans ->
-     with :ok <- fun.(trans), do: {:ok, :ok}
-    end), do: board
   end
 
   def fetch_one() do
@@ -488,6 +483,7 @@ defmodule Vega.Board do
     |> Mongo.find_one(@collection, %{})
     |> to_struct()
   end
+
   def fetch(%Board{_id: id}) do
     :mongo
     |> Mongo.find_one(@collection, %{_id: id})

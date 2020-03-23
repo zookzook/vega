@@ -23,7 +23,7 @@ defmodule Vega.Card do
   @doc """
   Create a new card with a title `title` and position `pos`.
   """
-  def new(board, list, user, title, pos) do
+  def new(board, list, title, pos) do
     %Card{_id: Mongo.object_id(),
       title: title,
       board: board._id,
@@ -36,7 +36,7 @@ defmodule Vega.Card do
   Create a new card with a title `title`, position `pos` and `time`. This funcation is used, when a sequence of
   cards is created to preserve the order of creating time.
   """
-  def new(board, list, user, title, pos, time) do
+  def new(board, list, title, pos, time) do
     %Card{_id: Mongo.object_id(),
       title: title,
       board: board._id,
@@ -45,6 +45,7 @@ defmodule Vega.Card do
       modified: time,
       pos: pos}
   end
+
   @doc """
   Fetch all cards of the list with id `id`.
   """
