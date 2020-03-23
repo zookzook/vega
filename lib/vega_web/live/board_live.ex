@@ -4,6 +4,7 @@ defmodule VegaWeb.BoardLive do
   alias Vega.Board
   alias Vega.User
   alias Vega.Issue
+  alias Vega.BoardList
   alias Phoenix.LiveView.Socket
 
   def mount(_params, session, socket) do
@@ -40,6 +41,7 @@ defmodule VegaWeb.BoardLive do
     board = Board.add_list(board, user, "doing")
     board = Board.add_list(board, user, "done")
   end
+
   def handle_event("edit", _value, socket) do
     {:noreply, assign(socket, :edit, true)}
   end
@@ -53,6 +55,7 @@ defmodule VegaWeb.BoardLive do
     board = save_title(new_title, board)
     {:noreply, assign(socket, board: board, edit: false, history: Issue.fetch_all(board))}
   end
+
   def handle_event("reorder-lists", [], socket) do
     {:noreply, socket}
   end
@@ -71,6 +74,30 @@ defmodule VegaWeb.BoardLive do
     {:noreply, socket}
   end
 
+  def handle_event("move-card", %{"id" => id, "list" => list_id, "before" => before_id}, %Socket{assigns: %{board: board, current_user: current_user}} = socket) do
+    with list when list != nil <- Board.find_list(board, list_id),
+         card when card != nil <- BoardList.find_card(list, id),
+         before_card when before_card != nil <- BoardList.find_card(list, before_id) do
+      board = Board.move_card_before(board, current_user, list, card, before_card)
+      {:noreply, assign(socket, board: board, history: Issue.fetch_all(board))}
+    else
+      _error ->
+        {:noreply, socket}
+    end
+  end
+
+  def handle_event("move-card-to-end", %{"id" => id, "list" => list_id}, %Socket{assigns: %{board: board, current_user: current_user}} = socket) do
+
+    with list when list != nil <- Board.find_list(board, list_id),
+         card when card != nil <- BoardList.find_card(list, id) do
+      board = Board.move_card_to_end(board, current_user, list, card)
+      {:noreply, assign(socket, board: board, history: Issue.fetch_all(board))}
+    else
+      _error ->
+        {:noreply, socket}
+    end
+  end
+
   def render(assigns) do
     Phoenix.View.render(VegaWeb.PageView, "board.html", assigns)
   end
@@ -84,5 +111,6 @@ defmodule VegaWeb.BoardLive do
       false -> Board.set_title(board, User.fetch(), title)
     end
   end
+
 
 end

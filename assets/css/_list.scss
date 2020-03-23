@@ -1,3 +1,5 @@
+$list-background-color:  #ebecf0;
+
 .list-composer {
   border-radius: 3px;
   flex: 0 0 272px;
@@ -18,7 +20,7 @@
 }
 
 .list {
-  background-color: #ebecf0;
+  background-color: $list-background-color;
   border-radius: 3px;
   display: flex;
   flex-direction: column;

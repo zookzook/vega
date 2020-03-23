@@ -10,7 +10,7 @@
         </div>
         <%= if @add_card do %>
         <%= f = form_for :card, "javascript:void(0);", [phx_submit: :save, phx_target: make_list_id(@list._id), phx_hook: "AutoClose"] %>
-          <div class="list-cards list-card-composer">
+          <div class="list-card-composer">
             <div class="list-card">
               <div class="list-card-details">
               <%= textarea f, :title, placeholder: "Geben Sie einen Titel für diese Karte ein …", class: "list-card-composer-textarea", id: make_text_id(@list._id) , phx_target: make_list_id(@list._id) %>

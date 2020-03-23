@@ -385,7 +385,7 @@ defmodule Vega.Board do
 
   As the result the new board is returned.
   """
-  def move_card_before(user, board, %BoardList{_id: id, cards: cards}, card, before_card) do
+  def move_card_before(board, user, %BoardList{_id: id, cards: cards}, card, before_card) do
 
     with pos <- calc_new_pos_before(cards, before_card._id) do
 
@@ -435,7 +435,7 @@ defmodule Vega.Board do
   It returns the new board.
 
   """
-  def move_card_to_end(user, board, %BoardList{_id: id, cards: cards}, card) do
+  def move_card_to_end(board, user, %BoardList{_id: id, cards: cards}, card) do
 
     pos = case List.last(cards) do
       nil  -> @pos_start
@@ -462,6 +462,9 @@ defmodule Vega.Board do
   """
   def find_list(board, %BoardList{_id: list_id}) do
     find_list(board, list_id)
+  end
+  def find_list(board, list_id) when is_binary(list_id) do
+    find_list(board, BSON.ObjectId.decode!(list_id))
   end
   def find_list(%Board{lists: lists}, list_id) do
     Enum.find(lists, fn %BoardList{_id: id} -> id == list_id end)
