@@ -26,7 +26,7 @@ defmodule VegaWeb.PageController do
     for list <- board.lists do
       for n <- 1..10 do
         card_title = "My card title " <> to_string(n)
-        board = Board.add_card(board, list, user, card_title, false)
+        board = Board.add_card(board, user, list, card_title, false)
       end
     end
 

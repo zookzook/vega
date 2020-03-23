@@ -21,13 +21,13 @@ defmodule VegaWeb.CardsTest do
 
       [a] = board.lists
 
-      board = Board.add_card(board, a, user, "A new card 1")
+      board = Board.add_card(board, user, a, "A new card 1")
 
       [a] = board.lists
-      board = Board.add_card(board, a, user, "A new card 2")
+      board = Board.add_card(board, user, a, "A new card 2")
 
       [a] = board.lists
-      board = Board.add_card(board, a, user, "A new card 3")
+      board = Board.add_card(board, user, a, "A new card 3")
 
       [a] = board.lists
 
@@ -53,7 +53,7 @@ defmodule VegaWeb.CardsTest do
       board = Board.add_list(board, user, "to do")
       [a] = board.lists
 
-      board = Board.add_cards(board, a, user, new_titles)
+      board = Board.add_cards(board, user, a, new_titles)
       [a] = board.lists
 
       [card_1, card_2, card_3, card_4] = a.cards
@@ -80,7 +80,7 @@ defmodule VegaWeb.CardsTest do
       board      = Board.add_list(board, user, "to do")
       [a]        = board.lists
       new_titles = ["this", "is", "a", "test"]
-      board      = Board.add_cards(board, a, user, new_titles)
+      board      = Board.add_cards(board, user, a, new_titles)
       [a]        = board.lists
 
       [card_1, _card_2, _card_3, card_4] = a.cards
@@ -140,7 +140,7 @@ defmodule VegaWeb.CardsTest do
       board      = Board.add_list(board, user, "to do")
       [a]        = board.lists
       new_titles = ["this", "is", "a", "test"]
-      board      = Board.add_cards(board, a, user, new_titles)
+      board      = Board.add_cards(board, user, a, new_titles)
       [a]        = board.lists
 
       [card_1 | _xs] = a.cards
@@ -186,6 +186,43 @@ defmodule VegaWeb.CardsTest do
 
     end
 
+    test "sort cards", context do
+
+      user = context.user
+      title = "A board title"
+      board = Board.new(user, title)
+      assert board != nil
+
+      board      = Board.add_list(board, user, "to do")
+      [a]        = board.lists
+      new_titles = ["this", "is", "a", "test"]
+      board      = Board.add_cards(board, user, a, new_titles)
+      [a]        = board.lists
+
+      cards = Enum.sort(a.cards, fn left, right -> left.title <= right.title end)
+      board      = Board.sort_cards(board, user, cards, "asc title")
+      [a]        = board.lists
+
+      assert ["a", "is", "test", "this"]  == Enum.map(a.cards, fn %{title: title} -> title end)
+      assert [100.0, 200.0, 300.0, 400.0] == Enum.map(a.cards, fn %{pos: pos} -> pos end)
+
+      cards = Enum.sort(a.cards, fn left, right -> left.title >= right.title end)
+      board = Board.sort_cards(board, user, cards, "desc title")
+      [a]   = board.lists
+
+      assert ["this", "test", "is", "a"]  == Enum.map(a.cards, fn %{title: title} -> title end)
+      assert [100.0, 200.0, 300.0, 400.0] == Enum.map(a.cards, fn %{pos: pos} -> pos end)
+
+      cards = Enum.sort(a.cards, fn left, right -> left.created <= right.created end)
+      board = Board.sort_cards(board, user, cards, "asc created")
+      [a]   = board.lists
+
+      assert ["this", "is", "a", "test"]  == Enum.map(a.cards, fn %{title: title} -> title end)
+      assert [100.0, 200.0, 300.0, 400.0] == Enum.map(a.cards, fn %{pos: pos} -> pos end)
+
+      assert {:ok, 8 , 4} == Board.delete(board)
+
+    end
   end
 
 end

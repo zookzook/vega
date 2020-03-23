@@ -74,7 +74,7 @@ defmodule Vega.Board do
     :created,     ## the creation date
     :modified,    ## the last modification date
     :title,       ## the title
-    :description, ## the description
+    :description, ## optional: the description
     :members,     ## the list of members of the board
     :lists        ## the lists of the board
   ]
@@ -82,6 +82,8 @@ defmodule Vega.Board do
   @doc """
   Create a new empty board with the `title`.
 
+  ## Example
+      iex> Vega.Board.new(user, "My first Board")
 
   """
   def new(%User{_id: id}, title) do
@@ -100,12 +102,15 @@ defmodule Vega.Board do
   end
 
   @doc """
-  Delete a board with all isses and cards attached to the board.
+  Delete a board with all isses and cards attached to that board.
+  ## Example
 
-  todo: cleanup the archived-collections as well
+    iex> {:ok, issue, cards} = Vega.Board.delete(board)
+
   """
   def delete(%Board{_id: id}) do
 
+    ## todo: cleanup the archived-collections as well
     with {:ok, n_issues, n_cards} <- Session.with_transaction(:mongo, fn trans ->
       with {:ok, %Mongo.DeleteResult{deleted_count: n_issues}} <- Mongo.delete_many(:mongo, @issues_collection, %{board: id}, trans),
            {:ok, %Mongo.DeleteResult{deleted_count: n_cards}} <- Mongo.delete_many(:mongo, @cards_collection, %{board: id}, trans),
@@ -123,7 +128,8 @@ defmodule Vega.Board do
 
   ## Example
 
-    board = Board.set_title(board, user, "New title")
+    iex> Vega.Board.set_title(board, user, "New title")
+
   """
   def set_title(%Board{_id: id} = board, user, title) do
 
@@ -141,7 +147,12 @@ defmodule Vega.Board do
   end
 
   @doc """
-  Set the description of the board. It creates an issue for the historie and returns the new board
+  Set the description of the board. It creates an issue `Vega.Issue.SetDescription` for the history and returns the new board.
+
+  ## Example
+
+    iex> Vega.Board.set_description(board, user, "## Welcome ##")
+
   """
   def set_description(%Board{_id: id} = board, user, description) do
 
@@ -159,7 +170,16 @@ defmodule Vega.Board do
 
   end
 
+  @doc """
+  Add a new list to the board. It creates an issue `Vega.Issue.AddList` for the history and returns the new board.
+
+  ## Example
+
+    iex> Vega.Board.add_list(board, user, "To do")
+
+  """
   def add_list(%Board{_id: id, lists: lists} = board, user, title) do
+
     issue = title
             |> AddList.new()
             |> Issue.new(user, board)
@@ -177,7 +197,12 @@ defmodule Vega.Board do
   end
 
   @doc"""
-  Delete a list from the board. The pos attribute of the left lists are new calculated.
+  Delete a list from the board. The `:pos` attribute of the left lists are new calculated. It creates an
+  issue `Vega.Issue.DeleteList` for the history and returns the new board.
+
+  ## Example
+
+    iex> Vega.Board.delet_list(board, user, list)
   """
   def delete_list(%Board{_id: id, lists: lists} = board, user, %BoardList{_id: list_id, title: title}) do
 
@@ -228,11 +253,21 @@ defmodule Vega.Board do
   end
 
   @doc """
-  Reorders the list of cards. `cards` is ordered and contains only the IDs of the card.
-  """
-  def sort_cards(board, user, cards) do
+  Reorders the list of cards. `cards` are ordered and reflect the new order.
+  It creates an issue `Vega.Issue.SortCards` for the history and returns the new board. The `:pos` attribute
+  contains the new position of each card. It starts with the value of `@pos_start` and uses for the next positions
+  a gap of `@pos_gap`.
 
-    issue = "asc"
+  ## Example
+
+    iex> [a] = board.lists
+    iex> cards = Enum.sort(a.cards, fn left, right -> left.title >= right.title end)
+    iex> board = Vega.Board.sort_cards(board, user, cards, "asc")
+
+  """
+  def sort_cards(board, user, cards, type) do
+
+    issue = type
             |> SortCards.new()
             |> Issue.new(user, board)
             |> to_map()
@@ -240,7 +275,7 @@ defmodule Vega.Board do
     bulk = UnorderedBulk.new(@cards_collection)
     bulk = cards
            |> Enum.with_index(1)
-           |> Enum.reduce(bulk, fn {card_id, pos}, bulk -> UnorderedBulk.update_one(bulk, %{_id: card_id}, %{"$set" => %{"pos" => pos * @pos_gap}}) end)
+           |> Enum.reduce(bulk, fn {%Card{_id: card_id}, pos}, bulk -> UnorderedBulk.update_one(bulk, %{_id: card_id}, %{"$set" => %{"pos" => pos * @pos_gap}}) end)
 
     with_transaction(board, fn trans ->
       with {:ok, _} <- Mongo.insert_one(:mongo, @issues_collection, issue, trans),
@@ -251,7 +286,17 @@ defmodule Vega.Board do
 
   end
 
-  def add_card(board, list, user, title, fetch_result \\ true) do
+  @doc"""
+  Add a new card with the `title` to the list `list`. It creates an issue `Vega.Issue.NewCard` for the history and returns the new board. The `:pos` attribute
+  contains the new position of new card. It uses the position of the last card and adds the value of `@pos_gap` to it. If the list is empty, than the position is
+  `@pos_start`.
+
+  ## Example
+
+    iex> Vega.Board.add_card(board, user, list, "The new card")
+
+  """
+  def add_card(board, user, list, title) do
 
     issue = title
             |> NewCard.new()
@@ -266,33 +311,8 @@ defmodule Vega.Board do
            {:ok, _} <- Mongo.insert_one(:mongo, @cards_collection, card, trans) do
         :ok
       end
-    end, fetch_result)
+    end, true)
 
-  end
-
-  ##
-  # In case we are adding a list of new cards, we will return the last position. In this case we
-  # can calculate the new position by the result of the previous inserting. That is much faster than
-  # traveling to the last card to read the position.
-  ##
-  defp add_card_pos(board, list, user, title, pos) do
-
-    issue = title
-            |> NewCard.new()
-            |> Issue.new(user, board)
-            |> to_map()
-
-    pos = pos || calc_pos(list)
-    card = board |> Card.new(list, user, title, pos) |> to_map()
-
-    with_transaction(board, fn trans ->
-      with {:ok, _} <- Mongo.insert_one(:mongo, @issues_collection, issue, trans),
-          {:ok, _} <- Mongo.insert_one(:mongo, @cards_collection, card, trans) do
-       :ok
-      end
-    end, false)
-
-    pos
   end
 
   defp calc_pos(%BoardList{cards: cards}) do
@@ -306,25 +326,56 @@ defmodule Vega.Board do
   Creates from a list of title new cards and adds them to the list. For each card a new position is calculated to
   preserve the order. We are using the special function `add_card_pos` that returns the last position to calculate
   the next position for the next new card.
+
+  The creation and modification date use a time gap of one millisecond to preserve the order.
+
+  ## Example
+
+    iex> new_titles = ["this", "is", "a", "test"]
+    iex> board  = Board.add_cards(board, user, list, new_titles)
+
   """
-  def add_cards(board, _list, _user, []) do
+  def add_cards(board, _user, _list, []) do
     board
   end
-  def add_cards(board, list, user, [title]) do
-    add_card(board, list, user, title, true)
+  def add_cards(board, user, list, [title]) do
+    add_card(board, user, list, title)
   end
-  def add_cards(board, list, user, titles) do
-    add_cards_pos(board, list, user, titles, nil)
-  end
-  defp add_cards_pos(board, list, user, [title], pos) do
-    _pos = add_card_pos(board, list, user, title, pos)
-    fetch(board)
-  end
-  defp add_cards_pos(board, list, user, [title|xs], pos) do
-    pos = add_card_pos(board, list, user, title, pos)
-    add_cards_pos(board, list, user, xs, pos + @pos_gap)
+  def add_cards(board, user, list, titles) do
+
+    time       = DateTime.utc_now()
+    pos        = calc_pos(list)
+    issue_bulk = UnorderedBulk.new(@issues_collection)
+    card_bulk  = UnorderedBulk.new(@cards_collection)
+
+    # we are creating two bulks: one for issues and one for the cards
+    {{issue_bulk, card_bulk}, {_pos, _time}} = Enum.reduce(titles, {{issue_bulk, card_bulk}, {pos, time}},
+      fn title, {{i_bulk, c_bulk}, {p, t}} -> {make_insert_card_operation({i_bulk, c_bulk}, board, user, list, title, p, t), {p + @pos_gap, DateTime.add(t, 1, :millisecond)}} end)
+
+    with_transaction(board, fn trans ->
+
+      with %Mongo.BulkWriteResult{} <- BulkWrite.write(:mongo, issue_bulk, trans),
+           %Mongo.BulkWriteResult{} <- BulkWrite.write(:mongo, card_bulk, trans) do
+       :ok
+      end
+    end, true)
+
   end
 
+  ##
+  # updates the issue and card bulk by inserting an insert statement for issue and card.
+  #
+  defp make_insert_card_operation({issue_bulk, card_bulk}, board, user, list, title, pos, time) do
+
+    issue = title
+            |> NewCard.new()
+            |> Issue.new(user, board)
+            |> to_map()
+
+    card = board |> Card.new(list, user, title, pos, time) |> to_map()
+
+    {UnorderedBulk.insert_one(issue_bulk, issue), UnorderedBulk.insert_one(card_bulk, card)}
+  end
 
   @doc """
   Move a card before a card within the cards list and preserve the order of the cards.
@@ -461,6 +512,7 @@ defmodule Vega.Board do
 
     %Board{
       _id: board["_id"],
+      description: board["description"],
       created: board["created"],
       modified: board["modified"],
       title: board["title"],

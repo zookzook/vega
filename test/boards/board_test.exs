@@ -14,39 +14,80 @@ defmodule VegaWeb.BoardTest do
     {:ok, [user: User.fetch()]}
   end
 
-  test "create a board", context do
-    user = context.user
-    id = user._id
-    title = "A board title"
-    board = Board.new(user, title)
-    assert board != nil
-    assert board.title == title
-    assert %{"admin" => ^id} = board.members
-    assert {:ok, 0, 0} == Board.delete(board)
+  describe "basic board CRUD functions" do
+    test "create a board", context do
+      user = context.user
+      id = user._id
+      title = "A board title"
+      board = Board.new(user, title)
+      assert board != nil
+      assert board.title == title
+      assert %{"admin" => ^id} = board.members
+      assert {:ok, 0, 0} == Board.delete(board)
+    end
+
+    test "set title", context do
+      user = context.user
+      title = "A board title"
+      board = Board.new(user, title)
+      assert board != nil
+      assert board.title == title
+
+      title = "The new title"
+
+      board = Board.set_title(board, user, title)
+      assert board.title == title
+
+      assert {:ok, 1, 0} == Board.delete(board)
+    end
+
+    test "set description", context do
+      user = context.user
+      title = "A board title"
+      board = Board.new(user, title)
+      description = "## Hello ##"
+      board = Board.set_description(board, user, description)
+      assert board.description == description
+
+      description = "## Welcome ##"
+      board = Board.set_description(board, user, description)
+      assert board.description == description
+
+      description = nil
+      board = Board.set_description(board, user, description)
+      assert board.description == description
+
+      assert {:ok, 3, 0} == Board.delete(board)
+    end
   end
 
-  test "add new list to board", context do
+  describe "basic list CRUD functions" do
 
-    user = context.user
-    title = "A board title"
-    board = Board.new(user, title)
-    assert board != nil
+    test "add new list to board", context do
 
-    title = "to do"
-    board = Board.add_list(board, user, title)
-    assert board != nil
-    assert (board.lists |> Enum.empty?()) == false
+      user = context.user
+      title = "A board title"
+      board = Board.new(user, title)
+      assert board != nil
 
-    [list] = board.lists
+      title = "to do"
+      board = Board.add_list(board, user, title)
+      assert board != nil
+      assert (board.lists |> Enum.empty?()) == false
 
-    assert list.title == title
+      [list] = board.lists
 
-    [issue] = Issue.fetch_all(board) |> Enum.to_list()
-    assert issue.board == board._id
-    assert issue.t == %Vega.Issue.AddList{m: 4, title: "to do"}
-    assert {:ok, 1, 0} == Board.delete(board)
+      assert list.title == title
 
+      [issue] = Issue.fetch_all(board) |> Enum.to_list()
+      assert issue.board == board._id
+      assert issue.t == %Vega.Issue.AddList{m: 4, title: "to do"}
+      assert {:ok, 1, 0} == Board.delete(board)
+
+    end
   end
+
+
 
   test "add new card to board", context do
 
@@ -61,7 +102,7 @@ defmodule VegaWeb.BoardTest do
     [list] = board.lists
 
     card_title = "My card title"
-    board = Board.add_card(board, list, user, card_title)
+    board = Board.add_card(board, user, list, card_title)
 
     [list] = board.lists
 
@@ -72,6 +113,8 @@ defmodule VegaWeb.BoardTest do
 
     assert {:ok, 2, 1} == Board.delete(board)
   end
+
+  @max_cards 10
 
   test "add many cards to board", context do
 
@@ -85,14 +128,15 @@ defmodule VegaWeb.BoardTest do
     board = Board.add_list(board, user, "done")
 
     for list <- board.lists do
-      for n <- 1..1000 do
-        card_title = "My card title " <> to_string(n)
-        Board.add_card(board, list, user, card_title, false)
-      end
+      cards = Enum.map(1..@max_cards, fn i -> "My card title " <> to_string(i) end)
+      Board.add_cards(board, user, list, cards)
     end
 
     board = Board.fetch(board)
-    assert {:ok, 3003, 3000} == Board.delete(board)
+
+    n_issues = 3 * @max_cards + 3
+    n_cards  = 3 * @max_cards
+    assert {:ok, ^n_issues, ^n_cards} = Board.delete(board)
   end
 
   test "ordering of lists", context do
