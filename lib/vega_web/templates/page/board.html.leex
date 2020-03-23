@@ -1,42 +1,36 @@
 <div class="board-wrapper">
-<div class="board-main-content">
-<div class="board--header">
-    <div class="board--header--left">
-      <%= if @edit do %>
-      <%= f = form_for :board, "#", [phx_submit: :save] %>
-      <%= text_input f, :title, value: @board.title, autofocus: true, class: "board--title__edit", phx_blur: "save", phx_hook: "AutoSize" %>
-      <h1 class="board--title__hidden" id="board_title_ref"><%= @board.title %></h1>
-      <span class="board--admin"><%= @current_user.firstname %> <%= @current_user.lastname %></span>
-      </form>
-      <% else %>
-      <h1 phx-click="edit" class="board--title"><%= @board.title %></h1>
-      <span class="board--admin"><%= @current_user.firstname %> <%= @current_user.lastname %></span>
-      <% end %>
-    </div>
-    <div class="board--header--right">
-      <a class="submit primary" href="javascript:void(0);" phx-click="new">Neu</a>
-    </div>
-</div>
-<div class="board-canvas">
-  <div id="board" phx-hook="Board">
-    <div class="board-lists">
-      <%= for list <- @board.lists do %>
-        <%= live_component @socket, Vega.ListComponent, id: BSON.ObjectId.encode!(list._id), list: list, board: @board %>
-      <% end %>
-      <div class="is-idle list-composer">
-        <div class="list-mod">
-           <a class="btn-new-list" href="javascript:void(0);" phx-click="new-list">Eine neue Liste hinzufügen</a>
-        </div>
+  <div class="board--content">
+    <div class="board--header">
+      <div class="board--header--left">
+        <%= if @edit do %>
+        <%= f = form_for :board, "#", [phx_submit: :save] %>
+        <%= text_input f, :title, value: @board.title, autofocus: true, class: "board--title__edit", phx_blur: "save", phx_hook: "AutoSize" %>
+        <h1 class="board--title__hidden" id="board_title_ref"><%= @board.title %></h1>
+        <span class="board--admin"><%= @current_user.firstname %> <%= @current_user.lastname %></span>
+        </form>
+        <% else %>
+        <h1 phx-click="edit" class="board--title"><%= @board.title %></h1>
+        <span class="board--admin"><%= @current_user.firstname %> <%= @current_user.lastname %></span>
+        <% end %>
+      </div>
+      <div class="board--header--right">
+        <a class="submit primary" href="javascript:void(0);" phx-click="new">Neu</a>
       </div>
     </div>
-    <div class="issues">
-          <%= render_many @history, VegaWeb.PageView, "history.html", as: :issue %>
+    <div class="board--canvas">
+      <div id="board" phx-hook="Board">
+      <div class="board--lists">
+        <%= for list <- @board.lists do %>
+          <%= live_component @socket, Vega.ListComponent, id: BSON.ObjectId.encode!(list._id), list: list, board: @board %>
+        <% end %>
+        <div class="is-idle list--composer">
+         <a class="list--composer--new-list" href="javascript:void(0);" phx-click="new-list">Add a new list</a>
+        </div>
+      </div>
+      <div class="issues">
+            <%= render_many @history, VegaWeb.PageView, "history.html", as: :issue %>
+      </div>
     </div>
-
+    </div>
   </div>
-</div>
-    <div id="ghostarea" class="ghostarea">
-    </div>
-
-</div>
 </div>

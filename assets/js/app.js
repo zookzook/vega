@@ -35,7 +35,6 @@ Hooks.Board = {
     sortable: [],
 
     mounted() {
-
         this.init();
     },
 
@@ -46,22 +45,21 @@ Hooks.Board = {
 
     init() {
         let self = this;
-        let board = document.querySelector(".board-lists");
+        let board = document.querySelector(".board--lists");
 
         this.sortables = [new Sortable(board, {
-            handle: ".list-drag-handle",
+            handle: ".list--drag-handle",
             draggable: ".list",
-            filter: ".list-composer",
-            chosenClass: "list-is-dragging",
+            filter: ".list--composer",
+            chosenClass: "list__is-dragging",
             onClone: function (evt) {
                 let origEl = evt.item;
-                let content = origEl.querySelector(".list-content");
+                let content = origEl.querySelector(".list--content");
                 content.style.opacity = "0";
-                let cloneEl = evt.clone;
             },
             onEnd: function (evt) {
                 let itemEl = evt.item;
-                let content = itemEl.querySelector(".list-content");
+                let content = itemEl.querySelector(".list--content");
                 content.style.opacity = null;
                 if(evt.oldIndex !== evt.newIndex) {
                     let lists     = board.querySelectorAll(".list");

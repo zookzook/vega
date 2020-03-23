@@ -15,6 +15,16 @@ defmodule Vega.User do
     %User{_id: Mongo.object_id(), email: email, firstname: firstname, lastname: lastname}
   end
 
+  def fetch(id) do
+    case Mongo.find_one(:mongo, @collection, %{_id: id}) do
+      nil ->
+        result = new("zookzook@speckbert.de", "Michael", "Maier")
+        Mongo.insert_one(:mongo, @collection, Map.from_struct(result))
+        result
+      user -> to_struct(User, user)
+    end
+  end
+
   def fetch() do
     case Mongo.find_one(:mongo, @collection, %{}) do
       nil ->

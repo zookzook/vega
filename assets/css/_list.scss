@@ -1,11 +1,4 @@
-$list-background-color:  #ebecf0;
-
-.list-composer {
-  border-radius: 3px;
-  flex: 0 0 272px;
-  margin: 0 8px 0 4px;
-  height: 100%;
-}
+$list-background-color: #ebecf0;
 
 .list {
   border-radius: 3px;
@@ -18,7 +11,7 @@ $list-background-color:  #ebecf0;
   }
 }
 
-.list-content {
+.list--content {
   background-color: $list-background-color;
   border-radius: 3px;
   display: flex;
@@ -39,13 +32,12 @@ $list-background-color:  #ebecf0;
 
 }
 
-
-.list-footer {
+.list--footer {
   padding: 10px 8px;
   min-height: 20px;
 }
 
-.list-control {
+.list--control {
   text-decoration: none;
   color: #5e6c84;
   border-radius: 3px;
@@ -68,32 +60,30 @@ $list-background-color:  #ebecf0;
   }
 }
 
-.list-mod {
+.list--composer {
+  border-radius: 3px;
+  flex: 0 0 272px;
+  margin: 0 8px 0 4px;
   cursor: pointer;
-  height: auto;
+  height: 100%;
   min-height: 32px;
   padding: 4px;
   display: flex;
 }
 
-.btn-new-list {
+.list--composer--new-list {
   text-decoration: none;
   padding: 8px;
   color: white;
 }
 
-.list-is-dragging {
+.list__is-dragging {
   background-color: rgba(255, 255, 255, 0.47);
-  box-shadow: inset 0px 0px 2px 0px rgba(0, 0, 0, 0.75);
+  box-shadow: inset 0 0 2px 0 rgba(0, 0, 0, 0.75);
 }
 
-.list-drag-handle {
+.list--drag-handle {
   cursor: pointer;
-  -webkit-touch-callout: none;
-  user-select: none;
-}
-
-.noselect {
   -webkit-touch-callout: none;
   user-select: none;
 }

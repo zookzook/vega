@@ -1,3 +1,4 @@
 <div class="issues--issue">
-  <%= inspect @issue.t%>
+  <div><span class="issue--author"><%= author(@issue) %></span> <%= pretty_issue(@issue.t) %></div>
+  <div class="issue--date"><%= relative_date(@issue.ts) %></div>
 </div>

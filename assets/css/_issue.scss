@@ -1,9 +1,25 @@
 .issues {
-  margin-top: 0.25rem;
-  background-color: rgb(248, 241, 251);
+  margin: 0.5rem;
+  background-color: rgba(248, 241, 251, 0.7);
+  max-width: 30%;
+  border-radius: 3px;
+  padding: 0.25rem;
 }
 
 .issues--issue {
-  margin: 0.25rem 0;
-  padding: 0.5rem;
+  color: #172b4d;
+  background-color: white;
+  border-radius: 3px;
+  padding: 0.25rem;
+  margin: 0.25rem;
+  box-shadow: 0 1px 0 rgba(9,30,66,.25);
+}
+
+.issue--author {
+  font-weight: bold;
+}
+
+.issue--date {
+  color: #5e6c84;
+  font-size: 12px
 }

@@ -1,7 +1,7 @@
 <div class="list" id="list-<%= @id %>">
-    <div class="list-content">
-        <div class="header list-drag-handle noselect">
-            <h2 class="noselect"><%= @list.title%></h2>
+    <div class="list--content">
+        <div class="header list--drag-handle">
+            <h2><%= @list.title%></h2>
         </div>
         <div class="list--cards">
           <%= for card <- @list.cards do %>
@@ -13,16 +13,16 @@
           <div class="card--composer">
             <div class="card">
               <div class="card--details">
-              <%= textarea f, :title, placeholder: "Geben Sie einen Titel für diese Karte ein …", class: "card--composer-textarea", id: make_text_id(@list._id) , phx_target: make_list_id(@list._id) %>
+              <%= textarea f, :title, placeholder: "Enter a title for this card...", class: "card--composer-textarea", id: make_text_id(@list._id) , phx_target: make_list_id(@list._id) %>
               </div>
             </div>
-            <%= submit "Karte hinzufügen",  name: "action", value: "save", class: "submit primary"  %>
-            <%= submit "Abbruch",  name: "action", value: "cancel", class: "add-card-form--cancel" %>
+            <%= submit "Add new card",  name: "action", value: "save", class: "submit submit__primary"  %>
+            <%= submit "Cancel",  name: "action", value: "cancel", class: "submit submit__cancel" %>
           </div>
           </form>
         <% else %>
-        <div class="list-footer">
-            <a phx-click="add-card" class="list-control" phx-target="<%= make_list_id(@list._id)%>" href="javascript:void(0);">Eine weitere Karte hinzufügen</a>
+        <div class="list--footer">
+            <a phx-click="add-card" class="list--control" phx-target="<%= make_list_id(@list._id)%>" href="javascript:void(0);">Add another card</a>
         </div>
         <% end %>
     </div>

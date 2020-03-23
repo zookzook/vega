@@ -17,6 +17,10 @@ defmodule Vega.Issue do
     %Issue{_id: Mongo.object_id(), author_id: author_id, ts: DateTime.utc_now(), t: type, board: board}
   end
 
+  def author(%Issue{author_id: author_id}) do
+    User.fetch(author_id) ## todo caching system
+  end
+
   def fetch_all(nil) do
     []
   end

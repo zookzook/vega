@@ -41,6 +41,7 @@ defmodule Vega.MixProject do
       {:plug_cowboy, "~> 2.0"},
       {:mongodb_driver, "~> 0.6"},
       {:phoenix_live_view, "~> 0.10.0"},
+      {:timex, "~> 3.6.1"},
       {:floki, ">= 0.0.0", only: :test}
     ]
   end

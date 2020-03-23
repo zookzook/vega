@@ -20,7 +20,7 @@ defmodule Vega.Issues do
   @delete_list     IssueConsts.encode(:delete_list)
   @reorder_list    IssueConsts.encode(:reorder_list)
   @sort_cards      IssueConsts.encode(:sort_cards)
-  @move_card      IssueConsts.encode(:move_card)
+  @move_card       IssueConsts.encode(:move_card)
 
   def to_struct(%{"t" => %{"m" => @new_card} = mod} = issue) do
     %Issue{transform(issue) | t: NewCard.to_struct(mod)}
