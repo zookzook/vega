@@ -40,7 +40,7 @@ defmodule Vega.MixProject do
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
       {:mongodb_driver, "~> 0.6"},
-      {:phoenix_live_view, "~> 0.9.0"},
+      {:phoenix_live_view, "~> 0.10.0"},
       {:floki, ">= 0.0.0", only: :test}
     ]
   end

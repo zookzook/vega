@@ -1,4 +1,10 @@
 defmodule Vega.IssueConsts do
+  @moduledoc """
+
+  This module contains the constant of all issues. Each modification is recorded as an issue, so we have the whole
+  history of modifications of the board, lists and cards.
+
+  """
 
   values = [
     new_board: 0,

@@ -8,122 +8,184 @@ defmodule VegaWeb.CardsTest do
     {:ok, [user: User.fetch()]}
   end
 
-  test "add cards with natural order", context do
+  describe "adding cards" do
 
-    user = context.user
-    title = "A board title"
-    board = Board.new(title, user)
-    assert board != nil
+    test "add cards with natural order", context do
 
-    board = Board.add_list(board, user, "to do")
+      user = context.user
+      title = "A board title"
+      board = Board.new(user, title)
+      assert board != nil
 
-    [a] = board.lists
+      board = Board.add_list(board, user, "to do")
 
-    board = Board.add_card(board, a, user, "A new card 1")
+      [a] = board.lists
 
-    [a] = board.lists
-    board = Board.add_card(board, a, user, "A new card 2")
+      board = Board.add_card(board, a, user, "A new card 1")
 
-    [a] = board.lists
-    board = Board.add_card(board, a, user, "A new card 3")
+      [a] = board.lists
+      board = Board.add_card(board, a, user, "A new card 2")
 
-    [a] = board.lists
+      [a] = board.lists
+      board = Board.add_card(board, a, user, "A new card 3")
 
-    [card_1, card_2, card_3] = a.cards
+      [a] = board.lists
 
-    assert card_1.pos == 1.0
-    assert card_2.pos == 2.0
-    assert card_3.pos == 3.0
+      [card_1, card_2, card_3] = a.cards
 
-    assert {:ok, 4, 3} == Board.delete(board)
+      assert card_1.pos == 100.0
+      assert card_2.pos == 200.0
+      assert card_3.pos == 300.0
 
-  end
+      assert {:ok, 4, 3} == Board.delete(board)
 
-  test "add cards to a list", context do
+    end
 
-    user = context.user
-    title = "A board title"
-    board = Board.new(title, user)
-    assert board != nil
+    test "add cards to a list", context do
 
-    new_titles = ["this", "is", "a", "test"]
+      user = context.user
+      title = "A board title"
+      board = Board.new(user, title)
+      assert board != nil
 
-    board = Board.add_list(board, user, "to do")
-    [a] = board.lists
+      new_titles = ["this", "is", "a", "test"]
 
-    board = Board.add_cards(board, a, user, new_titles)
-    [a] = board.lists
+      board = Board.add_list(board, user, "to do")
+      [a] = board.lists
 
-    [card_1, card_2, card_3, card_4] = a.cards
+      board = Board.add_cards(board, a, user, new_titles)
+      [a] = board.lists
 
-    assert card_1.pos == 1.0
-    assert card_2.pos == 2.0
-    assert card_3.pos == 3.0
-    assert card_4.pos == 4.0
+      [card_1, card_2, card_3, card_4] = a.cards
 
-    assert {:ok, 5, 4} == Board.delete(board)
-  end
+      assert card_1.pos == 100.0
+      assert card_2.pos == 200.0
+      assert card_3.pos == 300.0
+      assert card_4.pos == 400.0
 
-  test "move cards within a list", context do
-
-    user = context.user
-    title = "A board title"
-    board = Board.new(title, user)
-    assert board != nil
-
-    board      = Board.add_list(board, user, "to do")
-    [a]        = board.lists
-    new_titles = ["this", "is", "a", "test"]
-    board      = Board.add_cards(board, a, user, new_titles)
-    [a]        = board.lists
-
-    [card_1, _card_2, _card_3, card_4] = a.cards
-
-    board = Board.move_card_before(user, board, a, card_4, card_1)
-    [a]   = board.lists
-    [card_1, card_2, card_3, card_4] = a.cards
-
-    assert card_1.title == "test"
-    assert card_2.title == "this"
-    assert card_3.title == "is"
-    assert card_4.title == "a"
-
-    board = Board.move_card_before(user, board, a, card_4, card_2)
-    [a]   = board.lists
-    [card_1, card_2, card_3, card_4] = a.cards
-
-    assert card_1.title == "test"
-    assert card_2.title == "a"
-    assert card_3.title == "this"
-    assert card_4.title == "is"
-
-    board = Board.move_card_before(user, board, a, card_1, card_4)
-    [a]   = board.lists
-    [card_1, card_2, card_3, card_4] = a.cards
-
-    assert card_1.title == "a"
-    assert card_2.title == "this"
-    assert card_3.title == "test"
-    assert card_4.title == "is"
-
-    board = Board.move_card_before(user, board, a, card_2, card_1)
-    [a]   = board.lists
-    [_card_1, card_2, _card_3, card_4] = a.cards
-
-    board = Board.move_card_before(user, board, a, card_4, card_2)
-    [a]   = board.lists
-    [card_1, card_2, card_3, card_4] = a.cards
-
-    assert card_1.title == "this"
-    assert card_2.title == "is"
-    assert card_3.title == "a"
-    assert card_4.title == "test"
-
-    assert [0.375, 0.5625, 0.75, 1.5] == Enum.map(a.cards, fn %{pos: pos} -> pos end)
-    assert {:ok, 10, 4} == Board.delete(board)
+      assert {:ok, 5, 4} == Board.delete(board)
+    end
 
   end
 
+  describe "move cards" do
 
+    test "move card before other card", context do
+
+      user = context.user
+      title = "A board title"
+      board = Board.new(user, title)
+      assert board != nil
+
+      board      = Board.add_list(board, user, "to do")
+      [a]        = board.lists
+      new_titles = ["this", "is", "a", "test"]
+      board      = Board.add_cards(board, a, user, new_titles)
+      [a]        = board.lists
+
+      [card_1, _card_2, _card_3, card_4] = a.cards
+
+      board = Board.move_card_before(user, board, a, card_4, card_1)
+      [a]   = board.lists
+      [card_1, card_2, card_3, card_4] = a.cards
+
+      assert card_1.title == "test"
+      assert card_2.title == "this"
+      assert card_3.title == "is"
+      assert card_4.title == "a"
+
+      board = Board.move_card_before(user, board, a, card_4, card_2)
+      [a]   = board.lists
+      [card_1, card_2, card_3, card_4] = a.cards
+
+      assert card_1.title == "test"
+      assert card_2.title == "a"
+      assert card_3.title == "this"
+      assert card_4.title == "is"
+
+      board = Board.move_card_before(user, board, a, card_1, card_4)
+      [a]   = board.lists
+      [card_1, card_2, card_3, card_4] = a.cards
+
+      assert card_1.title == "a"
+      assert card_2.title == "this"
+      assert card_3.title == "test"
+      assert card_4.title == "is"
+
+      board = Board.move_card_before(user, board, a, card_2, card_1)
+      [a]   = board.lists
+      [_card_1, card_2, _card_3, card_4] = a.cards
+
+      board = Board.move_card_before(user, board, a, card_4, card_2)
+      [a]   = board.lists
+      [card_1, card_2, card_3, card_4] = a.cards
+
+      assert card_1.title == "this"
+      assert card_2.title == "is"
+      assert card_3.title == "a"
+      assert card_4.title == "test"
+
+      assert [37.5, 56.25, 75.0, 150.0] == Enum.map(a.cards, fn %{pos: pos} -> pos end)
+      assert {:ok, 10, 4} == Board.delete(board)
+
+    end
+
+    test "move card to the end", context do
+
+      user = context.user
+      title = "A board title"
+      board = Board.new(user, title)
+      assert board != nil
+
+      board      = Board.add_list(board, user, "to do")
+      [a]        = board.lists
+      new_titles = ["this", "is", "a", "test"]
+      board      = Board.add_cards(board, a, user, new_titles)
+      [a]        = board.lists
+
+      [card_1 | _xs] = a.cards
+
+      board = Board.move_card_to_end(user, board, a, card_1)
+      [a]   = board.lists
+      [card_1, card_2, card_3, card_4] = a.cards
+
+      assert card_1.title == "is"
+      assert card_2.title == "a"
+      assert card_3.title == "test"
+      assert card_4.title == "this"
+
+      board = Board.move_card_to_end(user, board, a, card_1)
+      [a]   = board.lists
+      [card_1, card_2, card_3, card_4] = a.cards
+
+      assert card_1.title == "a"
+      assert card_2.title == "test"
+      assert card_3.title == "this"
+      assert card_4.title == "is"
+
+      board = Board.move_card_to_end(user, board, a, card_1)
+      [a]   = board.lists
+      [card_1, card_2, card_3, card_4] = a.cards
+
+      assert card_1.title == "test"
+      assert card_2.title == "this"
+      assert card_3.title == "is"
+      assert card_4.title == "a"
+
+      board = Board.move_card_to_end(user, board, a, card_1)
+      [a]   = board.lists
+      [card_1, card_2, card_3, card_4] = a.cards
+
+      assert card_1.title == "this"
+      assert card_2.title == "is"
+      assert card_3.title == "a"
+      assert card_4.title == "test"
+
+      assert [500.0, 600.0, 700.0, 800.0] == Enum.map(a.cards, fn %{pos: pos} -> pos end)
+      assert {:ok, 9, 4} == Board.delete(board)
+
+    end
+
+  end
 
 end

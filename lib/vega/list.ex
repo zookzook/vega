@@ -10,7 +10,7 @@ defmodule Vega.BoardList do
     %BoardList{_id: Mongo.object_id(), title: title, pos: pos}
   end
 
-  def to_struct(%{"_id" => id, "title" => title, "ordering" => ordering} = list) do
+  def to_struct(%{"_id" => id, "title" => title, "pos" => pos} = list) do
     %BoardList{_id: id, pos: pos, title: title, cards: Card.fetch_all_in_list(id) |> Enum.sort({:asc, Card})}
   end
 

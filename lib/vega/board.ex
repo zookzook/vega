@@ -69,15 +69,31 @@ defmodule Vega.Board do
   @pos_gap   100.0
   @pos_start 100.0
 
-  defstruct [:_id, :created, :modified, :title, :description, :members, :lists]
+  defstruct [
+    :_id,         ## the ObjectId of the board
+    :created,     ## the creation date
+    :modified,    ## the last modification date
+    :title,       ## the title
+    :description, ## the description
+    :members,     ## the list of members of the board
+    :lists        ## the lists of the board
+  ]
 
   @doc """
-  Create a new empty board.
-  """
-  def new(title, %User{_id: id}) do
+  Create a new empty board with the `title`.
 
+
+  """
+  def new(%User{_id: id}, title) do
     members = %{"admin" => id}
-    board = %Board{_id: Mongo.object_id(), title: title, created: DateTime.utc_now(), modified: DateTime.utc_now(), members: members}
+    board   = %Board{
+      _id: Mongo.object_id(),
+      title: title,
+      created: DateTime.utc_now(),
+      modified: DateTime.utc_now(),
+      members: members
+    }
+
     with {:ok, _} <- Mongo.insert_one(:mongo, @collection, to_map(board)) do
       fetch(board)
     end
@@ -357,10 +373,35 @@ defmodule Vega.Board do
   end
 
   @doc """
-  Move a card after to the end of all cards and preserve the order of the cards.
+  Move a card after to the end of all cards and preserve the order of the cards. It create a `MoveCard` issue.
+  If cards is empty, then the position is `@pos_start` otherwise the position is `last.pos + @pos_gap`
+
+  * `user` current user
+  * `board` current board
+  * `list` the list of the board
+  * `card` the card to be moved to the end of the list
+
+  It returns the new board.
+
   """
-  def move_card_to_end(user, board, list, card, after_card) do
-    board
+  def move_card_to_end(user, board, %BoardList{_id: id, cards: cards}, card) do
+
+    pos = case List.last(cards) do
+      nil  -> @pos_start
+      last -> last.pos + @pos_gap
+    end
+
+    issue = id
+            |> MoveCard.new()
+            |> Issue.new(user, board)
+            |> to_map()
+
+    with_transaction(board, fn trans ->
+      with {:ok, _} <- Mongo.insert_one(:mongo, @issues_collection, issue, trans),
+           {:ok, _} <- Mongo.update_one(:mongo, @cards_collection, %{_id: card._id}, %{"$set" => %{"pos" => pos}}) do
+       :ok
+      end
+    end, true)
   end
 
   @doc """
@@ -416,13 +457,15 @@ defmodule Vega.Board do
   end
   def to_struct(board) do
 
-    lists = (board["lists"] || [])  |> Enum.map(fn list-> BoardList.to_struct(list) end)
+    lists = (board["lists"] || [])  |> Enum.map(fn list-> BoardList.to_struct(list) end) |> Enum.sort({:asc, BoardList})
 
-    %Board{_id: board["_id"],
+    %Board{
+      _id: board["_id"],
       created: board["created"],
       modified: board["modified"],
       title: board["title"],
       members: board["members"],
-      lists: lists |> Enum.sort({:asc, BoardList})}
+      lists: lists
+    }
   end
 end

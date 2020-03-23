@@ -34,7 +34,7 @@ defmodule VegaWeb.BoardLive do
 
   defp create_example_board(user) do
     title = "A board title"
-    board = Board.new(title, user)
+    board = Board.new(user, title)
 
     board = Board.add_list(board, user, "to do")
     board = Board.add_list(board, user, "doing")

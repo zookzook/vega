@@ -19,7 +19,7 @@ defmodule VegaWeb.Router do
     plug :protect_from_forgery
     plug :put_secure_browser_headers
     plug VegaWeb.Auth
-    plug :put_live_layout, {VegaWeb.LayoutView, "app.html"}
+    plug :put_root_layout, {VegaWeb.LayoutView, :root}
   end
 
   pipeline :api do

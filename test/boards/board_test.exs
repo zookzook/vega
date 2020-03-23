@@ -1,4 +1,4 @@
-defmodule VegaWeb.CardsTest do
+defmodule VegaWeb.BoardTest do
   use ExUnit.Case, async: true
 
   alias Vega.Board
@@ -18,7 +18,7 @@ defmodule VegaWeb.CardsTest do
     user = context.user
     id = user._id
     title = "A board title"
-    board = Board.new(title, user)
+    board = Board.new(user, title)
     assert board != nil
     assert board.title == title
     assert %{"admin" => ^id} = board.members
@@ -29,7 +29,7 @@ defmodule VegaWeb.CardsTest do
 
     user = context.user
     title = "A board title"
-    board = Board.new(title, user)
+    board = Board.new(user, title)
     assert board != nil
 
     title = "to do"
@@ -52,7 +52,7 @@ defmodule VegaWeb.CardsTest do
 
     user = context.user
     title = "A board title"
-    board = Board.new(title, user)
+    board = Board.new(user, title)
     assert board != nil
 
     title = "to do"
@@ -77,7 +77,7 @@ defmodule VegaWeb.CardsTest do
 
     user = context.user
     title = "A board title"
-    board = Board.new(title, user)
+    board = Board.new(user, title)
     assert board != nil
 
     board = Board.add_list(board, user, "to do")
@@ -99,7 +99,7 @@ defmodule VegaWeb.CardsTest do
 
     user = context.user
     title = "A board title"
-    board = Board.new(title, user)
+    board = Board.new(user, title)
     assert board != nil
 
     board = Board.add_list(board, user, "to do")
@@ -108,7 +108,7 @@ defmodule VegaWeb.CardsTest do
 
     [a, b, c] = board.lists
 
-    assert (a.ordering < b.ordering && b.ordering < c.ordering) == true
+    assert (a.pos < b.pos && b.pos < c.pos) == true
 
     assert {:ok, 3, 0} == Board.delete(board)
 
@@ -118,7 +118,7 @@ defmodule VegaWeb.CardsTest do
 
     user = context.user
     title = "A board title"
-    board = Board.new(title, user)
+    board = Board.new(user, title)
     assert board != nil
 
     board = Board.add_list(board, user, "to do")
@@ -127,19 +127,19 @@ defmodule VegaWeb.CardsTest do
 
     [a, b, c] = board.lists
 
-    assert (a.ordering < b.ordering && b.ordering < c.ordering) == true
+    assert (a.pos < b.pos && b.pos < c.pos) == true
 
-    assert a.ordering == 0
-    assert b.ordering == 1
-    assert c.ordering == 2
+    assert a.pos == 0
+    assert b.pos == 1
+    assert c.pos == 2
 
     board = Board.delete_list(board, user, a)
 
     [b, c] = board.lists
 
-    assert (b.ordering < c.ordering) == true
-    assert b.ordering == 0
-    assert c.ordering == 1
+    assert (b.pos < c.pos) == true
+    assert b.pos == 0
+    assert c.pos == 1
 
     assert {:ok, 4, 0} == Board.delete(board)
 
