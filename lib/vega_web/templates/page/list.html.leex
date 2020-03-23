@@ -1,19 +1,19 @@
-<div class="list-wrapper" id="list-<%= @id %>">
-    <div class="list">
+<div class="list" id="list-<%= @id %>">
+    <div class="list-content">
         <div class="header list-drag-handle noselect">
             <h2 class="noselect"><%= @list.title%></h2>
         </div>
-        <div class="list-cards">
+        <div class="list--cards">
           <%= for card <- @list.cards do %>
             <%= live_component @socket, Vega.CardComponent, card: card, list: @list, board: @board %>
           <% end %>
         </div>
         <%= if @add_card do %>
         <%= f = form_for :card, "javascript:void(0);", [phx_submit: :save, phx_target: make_list_id(@list._id), phx_hook: "AutoClose"] %>
-          <div class="list-card-composer">
-            <div class="list-card">
-              <div class="list-card-details">
-              <%= textarea f, :title, placeholder: "Geben Sie einen Titel für diese Karte ein …", class: "list-card-composer-textarea", id: make_text_id(@list._id) , phx_target: make_list_id(@list._id) %>
+          <div class="card--composer">
+            <div class="card">
+              <div class="card--details">
+              <%= textarea f, :title, placeholder: "Geben Sie einen Titel für diese Karte ein …", class: "card--composer-textarea", id: make_text_id(@list._id) , phx_target: make_list_id(@list._id) %>
               </div>
             </div>
             <%= submit "Karte hinzufügen",  name: "action", value: "save", class: "submit primary"  %>

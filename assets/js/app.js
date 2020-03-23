@@ -50,21 +50,21 @@ Hooks.Board = {
 
         this.sortables = [new Sortable(board, {
             handle: ".list-drag-handle",
-            draggable: ".list-wrapper",
+            draggable: ".list",
             filter: ".list-composer",
             chosenClass: "list-is-dragging",
             onClone: function (evt) {
                 let origEl = evt.item;
-                let content = origEl.querySelector(".list");
+                let content = origEl.querySelector(".list-content");
                 content.style.opacity = "0";
                 let cloneEl = evt.clone;
             },
             onEnd: function (evt) {
                 let itemEl = evt.item;
-                let content = itemEl.querySelector(".list");
+                let content = itemEl.querySelector(".list-content");
                 content.style.opacity = null;
                 if(evt.oldIndex !== evt.newIndex) {
-                    let lists     = board.querySelectorAll(".list-wrapper");
+                    let lists     = board.querySelectorAll(".list");
                     let n         = lists.length;
                     let new_order = [];
                     for (let i = 0; i < n; i++) {
@@ -77,27 +77,27 @@ Hooks.Board = {
             },
         })];
 
-        let lists = document.querySelectorAll(".list-cards");
+        let lists = document.querySelectorAll(".list--cards");
         let n  = lists.length;
         for (let i = 0; i < n; i++) {
 
             let s = new Sortable(lists[i], {
-                draggable: ".list-card",
+                draggable: ".card",
                 chosenClass: ".ignore",
                 onClone: function (evt) {
                     let origEl = evt.item;
-                    let content = origEl.querySelector(".list-card-details");
+                    let content = origEl.querySelector(".card--details");
                     content.style.opacity = "0";
-                    origEl.classList.add('card-placeholder');
+                    origEl.classList.add('card--placeholder');
                 },
                 onEnd: function (evt) {
                     let itemEl = evt.item;
-                    let content = itemEl.querySelector(".list-card-details");
+                    let content = itemEl.querySelector(".card--details");
                     content.style.opacity = null;
-                    itemEl.classList.remove('card-placeholder');
+                    itemEl.classList.remove('card--placeholder');
                     if(evt.oldIndex !== evt.newIndex) {
                         let list_id = this.el.parentElement.parentElement.getAttribute('id').substring(5);
-                        let cards = this.el.querySelectorAll(".list-card");
+                        let cards = this.el.querySelectorAll(".card");
                         let n     = cards.length;
                         let id    = cards[evt.newIndex].getAttribute('id').substring(5);
                         if(evt.newIndex === n - 1) {

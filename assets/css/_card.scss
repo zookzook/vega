@@ -1,7 +1,10 @@
+/**
+ * list--cards, cards and composer
+ */
 $list-background-color:  #ebecf0;
 
-.list-card-composer,
-.list-cards {
+.card--composer,        // composer area for creating new cards
+.list--cards {
   flex: 1 1 auto;
   overflow-y: auto;
   overflow-x: hidden;
@@ -9,11 +12,12 @@ $list-background-color:  #ebecf0;
   padding: 0 4px;
   min-height: 0;
 }
-.list-card-composer {
+
+.card--composer {
   margin-bottom: 8px;
 }
 
-.list-card {
+.card {
   background-color: #fff;
   border-radius: 3px;
   box-shadow: 0 1px 0 rgba(9,30,66,.25);
@@ -23,14 +27,16 @@ $list-background-color:  #ebecf0;
   max-width: 300px;
   min-height: 20px;
   text-decoration: none;
+  -webkit-touch-callout: none;
+  user-select: none;
 }
 
-.list-card-details {
+.card--details {
   overflow: hidden;
   padding: 6px 8px 2px;
 }
 
-.list-card-title {
+.card--title {
   display: block;
   margin: 0 0 4px;
   overflow: hidden;
@@ -38,8 +44,14 @@ $list-background-color:  #ebecf0;
   color: #172b4d;
 }
 
-.list-card-composer-textarea,
-.list-card-composer-textarea:focus {
+// placeholder in case of dragging
+.card--placeholder {
+  background-color: darken($list-background-color, 10%);
+}
+
+// composer for creating a new card
+.card--composer-textarea,
+.card--composer-textarea:focus {
   overflow: hidden;
   word-wrap: break-word;
   resize: none;
@@ -53,8 +65,4 @@ $list-background-color:  #ebecf0;
   overflow-y: auto;
   padding: 0;
   width: 100%;
-}
-
-.card-placeholder {
-  background-color: darken($list-background-color, 10%);
 }

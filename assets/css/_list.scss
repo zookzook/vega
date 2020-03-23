@@ -7,7 +7,7 @@ $list-background-color:  #ebecf0;
   height: 100%;
 }
 
-.list-wrapper {
+.list {
   border-radius: 3px;
   flex: 0 0 272px;
   margin: 0 4px;
@@ -16,10 +16,9 @@ $list-background-color:  #ebecf0;
   &:first-child {
     margin-left: 8px;
   }
-
 }
 
-.list {
+.list-content {
   background-color: $list-background-color;
   border-radius: 3px;
   display: flex;
@@ -90,21 +89,11 @@ $list-background-color:  #ebecf0;
 
 .list-drag-handle {
   cursor: pointer;
-  -webkit-touch-callout: none; /* iOS Safari */
-  -webkit-user-select: none; /* Safari */
-  -khtml-user-select: none; /* Konqueror HTML */
-  -moz-user-select: none; /* Old versions of Firefox */
-  -ms-user-select: none; /* Internet Explorer/Edge */
-  user-select: none; /* Non-prefixed version, currently
-                                  supported by Chrome, Opera and Firefox */
+  -webkit-touch-callout: none;
+  user-select: none;
 }
 
 .noselect {
-  -webkit-touch-callout: none; /* iOS Safari */
-  -webkit-user-select: none; /* Safari */
-  -khtml-user-select: none; /* Konqueror HTML */
-  -moz-user-select: none; /* Old versions of Firefox */
-  -ms-user-select: none; /* Internet Explorer/Edge */
-  user-select: none; /* Non-prefixed version, currently
-                                  supported by Chrome, Opera and Firefox */
+  -webkit-touch-callout: none;
+  user-select: none;
 }
