@@ -1,0 +1,32 @@
+## "msgid"s in this file come from POT (.pot) files.
+##
+## Do not add, change, or remove "msgid"s manually here as
+## they're tied to the ones in the corresponding POT file
+## (with the same domain).
+##
+## Use "mix gettext.extract --merge" or "mix gettext.merge"
+## to merge POT files into PO files.
+msgid ""
+msgstr ""
+"Language: de\n"
+"Plural-Forms: nplurals=2\n"
+
+#, elixir-format
+#: lib/vega/issue/issues.ex:62
+msgid "added a new card with title '%{title}' to list '%{list}'"
+msgstr "fügte eine neue Karte '%{title}' zur Liste '%{list}' hinzu"
+
+#, elixir-format
+#: lib/vega/issue/issues.ex:59
+msgid "added a new list '%{title}' to board '%{board}'"
+msgstr "fügte eine neue Liste '%{title}' zum Board '%{board}' hinzu"
+
+#, elixir-format
+#: lib/vega/issue/issues.ex:66
+msgid "moved card '%{a}' in front of '%{b}'"
+msgstr "bewegte die Karte '%{a}' vor Karte '%{b}'"
+
+#, elixir-format
+#: lib/vega/issue/issues.ex:67
+msgid "moved card '%{a}' to the end"
+msgstr "bewegte die Karte '%{a}' ans Ende"

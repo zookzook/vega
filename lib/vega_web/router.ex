@@ -9,6 +9,7 @@ defmodule VegaWeb.Router do
     plug :fetch_live_flash
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug Vega.Plugs.SetLocale
     plug VegaWeb.Auth
   end
 
@@ -18,6 +19,7 @@ defmodule VegaWeb.Router do
     plug :fetch_live_flash
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug Vega.Plugs.SetLocale
     plug VegaWeb.Auth
     plug :put_root_layout, {VegaWeb.LayoutView, :root}
   end

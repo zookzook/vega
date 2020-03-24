@@ -4,13 +4,14 @@
   max-width: 30%;
   border-radius: 3px;
   padding: 0.25rem;
+  white-space: normal;
 }
 
 .issues--issue {
   color: #172b4d;
   background-color: white;
   border-radius: 3px;
-  padding: 0.25rem;
+  padding: 0.50rem;
   margin: 0.25rem;
   box-shadow: 0 1px 0 rgba(9,30,66,.25);
 }
@@ -21,5 +22,6 @@
 
 .issue--date {
   color: #5e6c84;
-  font-size: 12px
+  font-size: 12px;
+  margin-top: 0.50rem;
 }

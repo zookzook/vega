@@ -1,0 +1,31 @@
+## This file is a PO Template file.
+##
+## "msgid"s here are often extracted from source code.
+## Add new translations manually only if they're dynamic
+## translations that can't be statically extracted.
+##
+## Run "mix gettext.extract" to bring this file up to
+## date. Leave "msgstr"s empty as changing them here as no
+## effect: edit them in PO (.po) files instead.
+msgid ""
+msgstr ""
+
+#, elixir-format
+#: lib/vega/issue/issues.ex:62
+msgid "added a new card with title '%{title}' to list '%{list}'"
+msgstr ""
+
+#, elixir-format
+#: lib/vega/issue/issues.ex:59
+msgid "added a new list '%{title}' to board '%{board}'"
+msgstr ""
+
+#, elixir-format
+#: lib/vega/issue/issues.ex:66
+msgid "moved card '%{a}' in front of '%{b}'"
+msgstr ""
+
+#, elixir-format
+#: lib/vega/issue/issues.ex:67
+msgid "moved card '%{a}' to the end"
+msgstr ""

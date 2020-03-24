@@ -26,14 +26,16 @@ defmodule VegaWeb.BoardLive do
 
   def handle_event("new", _value, %Socket{assigns: assigns} = socket) do
 
-    with {:ok, _, _} <- Board.delete(assigns.board) do
+    Mongo.delete_many(:mongo, "cards", %{})
+    Mongo.delete_many(:mongo, "issues", %{})
+    Mongo.delete_many(:mongo, "boards", %{})
 
-      board = create_example_board(assigns.current_user)
-      {:noreply, assign(socket, board: board, history: Issue.fetch_all(board))}
-    end
+    board = create_example_board(assigns.current_user)
+    {:noreply, assign(socket, board: board, history: Issue.fetch_all(board))}
   end
 
   defp create_example_board(user) do
+
     title = "A board title"
     board = Board.new(user, title)
 

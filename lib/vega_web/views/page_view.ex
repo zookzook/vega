@@ -41,21 +41,7 @@ defmodule VegaWeb.PageView do
     end
   end
 
-  def pretty_issue(%NewCard{title: title}) do
-    ["added a new card with the title '", title, "'"]
-  end
-  def pretty_issue(%AddList{title: title}) do
-    ["added a new list with the title '", title, "'"]
-  end
-  def pretty_issue(%ReorderList{order: _order}) do
-    ["moved a list"]
-  end
-  def pretty_issue(%MoveCard{src: _src, dest: _src}) do
-    ["moved a card"]
-  end
-  def pretty_issue(_other) do
-    "??"
-  end
+
 
   @doc"""
   Render a relative date format.

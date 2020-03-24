@@ -10,6 +10,9 @@ use Mix.Config
 config :vega,
   ecto_repos: [Vega.Repo]
 
+config :vega, VegaWeb.Gettext,
+       default_locale: "de", locales: ~w(en de)
+
 config :vega, :mongodb,
    url: "mongodb://localhost:27017,localhost:27018,localhost:27019/vega?replicaSet=kliniken"
 

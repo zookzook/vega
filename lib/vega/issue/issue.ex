@@ -6,7 +6,16 @@ defmodule Vega.Issue do
   alias Vega.Board
   alias Vega.BoardList
 
-  defstruct [:_id, :ts, :modified, :author_id, :t, :board, :list]
+  defstruct [
+    :_id,
+    :ts,
+    :modified,
+    :author_id,
+    :t,
+    :board,
+    :list,
+    :keys,
+    :msg]
 
   @collection "issues"
 
@@ -15,6 +24,16 @@ defmodule Vega.Issue do
   end
   def new(type, %User{_id: author_id}, %Board{_id: board}) do
     %Issue{_id: Mongo.object_id(), author_id: author_id, ts: DateTime.utc_now(), t: type, board: board}
+  end
+  def new(type, %User{_id: author_id}, %Board{_id: board}, %BoardList{_id: list}) do
+    %Issue{_id: Mongo.object_id(), author_id: author_id, ts: DateTime.utc_now(), t: type, board: board, list: list}
+  end
+
+  @doc """
+  Add keys to the issue which are used to format a localized string in the history view of the app.
+  """
+  def add_message_keys(issue, keys \\ []) do
+    %Issue{issue | keys: keys}
   end
 
   def author(%Issue{author_id: author_id}) do

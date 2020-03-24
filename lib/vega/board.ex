@@ -178,11 +178,12 @@ defmodule Vega.Board do
     iex> Vega.Board.add_list(board, user, "To do")
 
   """
-  def add_list(%Board{_id: id, lists: lists} = board, user, title) do
+  def add_list(%Board{_id: id, lists: lists, title: board_title} = board, user, title) do
 
     issue = title
             |> AddList.new()
             |> Issue.new(user, board)
+            |> Issue.add_message_keys(title: title, board: board_title)
             |> to_map()
 
     pos     = length(lists)
@@ -301,6 +302,7 @@ defmodule Vega.Board do
     issue = title
             |> NewCard.new()
             |> Issue.new(user, board)
+            |> Issue.add_message_keys(title: title, list: list.title)
             |> to_map()
 
     pos = calc_pos(list)
@@ -370,6 +372,7 @@ defmodule Vega.Board do
     issue = title
             |> NewCard.new()
             |> Issue.new(user, board)
+            |> Issue.add_message_keys(title: title, list: list.title)
             |> to_map()
 
     card = board |> Card.new(list, title, pos, time) |> to_map()
@@ -392,6 +395,7 @@ defmodule Vega.Board do
       issue = id
               |> MoveCard.new()
               |> Issue.new(user, board)
+              |> Issue.add_message_keys(a: card.title, b: before_card.title)
               |> to_map()
 
       with_transaction(board, fn trans ->
@@ -445,6 +449,7 @@ defmodule Vega.Board do
     issue = id
             |> MoveCard.new()
             |> Issue.new(user, board)
+            |> Issue.add_message_keys(a: card.title)
             |> to_map()
 
     with_transaction(board, fn trans ->
