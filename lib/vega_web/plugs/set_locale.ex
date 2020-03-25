@@ -25,6 +25,14 @@ defmodule Vega.Plugs.SetLocale do
     conn
     |> extract_accept_language()
     |> Enum.find(fn accepted_locale -> Enum.member?(@locales, accepted_locale) end)
+    |> fallback()
+  end
+
+  defp fallback(nil) do
+    "en"
+  end
+  defp fallback(other) do
+    other
   end
 
   defp extract_accept_language(conn) do
@@ -38,7 +46,7 @@ defmodule Vega.Plugs.SetLocale do
         |> Enum.reject(fn lang -> lang == nil end)
         |> ensure_language_fallbacks()
 
-      _ -> ["en"]
+      _ -> []
     end
   end
 
