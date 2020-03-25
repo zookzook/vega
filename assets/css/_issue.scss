@@ -1,8 +1,10 @@
 .issues {
-  margin: 0.5rem;
   background-color: rgba(248, 241, 251, 0.7);
-  max-width: 30%;
   border-radius: 3px;
+  box-shadow: -1px 1px 3px rgba(95, 95, 95, 0.5), inset -3px 3px 5px -5px rgba(0,0,0,1);
+
+  margin: 0.5rem;
+  max-width: 30%;
   padding: 0.25rem;
   white-space: normal;
 }

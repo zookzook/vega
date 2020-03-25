@@ -2,15 +2,6 @@ defmodule VegaWeb.PageView do
   use VegaWeb, :view
 
   alias Vega.Issue
-  alias Vega.Issue.NewCard
-  alias Vega.Issue.SetDescription
-  alias Vega.Issue.AddComment
-  alias Vega.Issue.SetTitle
-  alias Vega.Issue.AddList
-  alias Vega.Issue.DeleteList
-  alias Vega.Issue.ReorderList
-  alias Vega.Issue.SortCards
-  alias Vega.Issue.MoveCard
   alias Vega.Dates
 
   def make_id(prefix,id) do
@@ -58,7 +49,7 @@ defmodule VegaWeb.PageView do
       0 -> format_hours(date)
       1 -> gettext("yesterday")
       2 -> gettext("the day before yesterday")
-      x ->
+      _ ->
         {:ok, result} = Vega.Cldr.DateTime.to_string(date, format: :y_mm_md)
         result
     end

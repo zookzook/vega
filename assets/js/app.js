@@ -63,15 +63,15 @@ Hooks.Board = {
                 let content = itemEl.querySelector(".list--content");
                 content.style.opacity = null;
                 if(evt.oldIndex !== evt.newIndex) {
-                    let lists     = board.querySelectorAll(".list");
-                    let n         = lists.length;
-                    let new_order = [];
-                    for (let i = 0; i < n; i++) {
-                        let list = lists[i];
-                        let id = list.getAttribute("id").substring(5);
-                        new_order.push(id);
-                    } // for
-                    self.pushEvent("reorder-lists", new_order);
+                    let lists = board.querySelectorAll(".list");
+                    let id    = lists[evt.newIndex].getAttribute('id').substring(5);
+                    if(evt.newIndex === n - 1) {
+                        self.pushEvent("move-list-to-end", id);
+                    } // if
+                    else {
+                        let before_id = lists[evt.newIndex + 1].getAttribute("id").substring(5);
+                        self.pushEvent("move-list", {id: id, before: before_id});
+                    } // else
                 } // if
             },
         })];

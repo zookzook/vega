@@ -44,7 +44,7 @@ msgstr "gestern"
 #, elixir-format
 #: lib/vega_web/views/page_view.ex:72
 msgid "%{t} hours ago"
-msgstr "vor %{t} String"
+msgstr "vor %{t} Stunden"
 
 #, elixir-format
 #: lib/vega_web/views/page_view.ex:81

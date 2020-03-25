@@ -5,8 +5,6 @@ defmodule Vega.ListComponent do
 
   alias Vega.Board
   alias Vega.User
-  alias Vega.Issue
-  alias Vega.BoardList, as: BList
   alias Phoenix.LiveView.Socket
 
   def mount(socket) do
@@ -17,11 +15,11 @@ defmodule Vega.ListComponent do
     Phoenix.View.render(VegaWeb.PageView, "list.html", assigns)
   end
 
-  def handle_event("add-card", params, socket) do
+  def handle_event("add-card", _params, socket) do
     {:noreply, assign(socket, add_card: true)}
   end
 
-  def handle_event("save", %{"card" => %{"title" => title}, "action" => "save"} = params, %Socket{assigns: %{board: board, list: list}} = socket) do
+  def handle_event("save", %{"card" => %{"title" => title}, "action" => "save"}, %Socket{assigns: %{board: board, list: list}} = socket) do
     user   = User.fetch()
     titles = title
              |> String.split("\n")

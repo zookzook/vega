@@ -14,9 +14,10 @@ defmodule Vega.IssueConsts do
     add_list: 4,
     new_card: 5,
     delete_list: 6,
-    reorder_list: 7,
+    free: 7,
     sort_cards: 8,
-    move_card: 9
+    move_card: 9,
+    move_list: 10
   ]
 
   for {key, value} <- values do

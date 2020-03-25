@@ -34,8 +34,8 @@ defmodule Vega.Board do
   alias Vega.Issue.AddList
   alias Vega.Issue.DeleteList
   alias Vega.Issue.MoveCard
+  alias Vega.Issue.MoveList
   alias Vega.Issue.NewCard
-  alias Vega.Issue.ReorderList
   alias Vega.Issue.SetDescription
   alias Vega.Issue.SetTitle
   alias Vega.Issue.SortCards
@@ -179,7 +179,7 @@ defmodule Vega.Board do
     iex> Vega.Board.add_list(board, user, "To do")
 
   """
-  def add_list(%Board{_id: id, lists: lists, title: board_title} = board, user, title) do
+  def add_list(%Board{_id: id, title: board_title} = board, user, title) do
 
     issue = title
             |> AddList.new()
@@ -187,7 +187,7 @@ defmodule Vega.Board do
             |> Issue.add_message_keys(title: title, board: board_title)
             |> to_map()
 
-    pos     = length(lists)
+    pos     = calc_pos(board)
     column  = title |> BoardList.new(pos) |> to_map()
 
     with_transaction(board, fn trans ->
@@ -199,57 +199,77 @@ defmodule Vega.Board do
   end
 
   @doc"""
-  Delete a list from the board. The `:pos` attribute of the left lists are new calculated. It creates an
+  Delete a list from the board. It creates an
   issue `Vega.Issue.DeleteList` for the history and returns the new board.
 
   ## Example
 
     iex> Vega.Board.delet_list(board, user, list)
   """
-  def delete_list(%Board{_id: id, lists: lists} = board, user, %BoardList{_id: list_id, title: title}) do
+  def delete_list(%Board{_id: id} = board, user, %BoardList{_id: list_id, title: title}) do
 
     issue = title
             |> DeleteList.new()
             |> Issue.new(user, board)
             |> to_map()
 
-    other_lists = lists
-                  |> Enum.reject(fn l -> l._id == list_id end)
-                  |> Enum.with_index()
-                  |> Enum.map(fn {l, index} -> {l._id, index} end)
-
-    bulk = @collection
-           |> UnorderedBulk.new()
-           |> UnorderedBulk.update_one(%{_id: id}, %{"$pull" => %{"lists" => %{"_id" => list_id}}})
-
-    bulk = Enum.reduce(other_lists, bulk, fn {list_id, index}, bulk -> UnorderedBulk.update_one(bulk, %{_id: id, "lists._id": list_id}, %{"$set" => %{"lists.$.pos" => index}}) end)
-
     with_transaction(board, fn trans ->
      with {:ok, _} <- Mongo.insert_one(:mongo, @issues_collection, issue, trans),
-          %Mongo.BulkWriteResult{} <- BulkWrite.write(:mongo, bulk, trans) do
+          {:ok, _} <- Mongo.update_one(:mongo, @collection, %{_id: id}, %{"$pull" => %{"lists" => %{"_id" => list_id}}}, trans) do
        :ok
      end
     end)
   end
 
-  def reorder_list(%Board{_id: id} = board, user, new_lists) do
+  @doc """
+  Move a list before another list within the board and preserve the order of the lists.
+  * `lists` the list of lists
+  * `list_id` the id of the card to be moved to before the card with the id `before_id`
+  * `before_id` the id of the card where the other card should moved in front of it
 
-    issue = new_lists
-            |> Enum.map(fn %BoardList{title: title} -> title end)
-            |> ReorderList.new()
+  As the result the new board is returned.
+  """
+  def move_list_before(%Board{_id: id, lists: lists} = board, user, list, before_list) do
+
+    with pos <- calc_new_pos_before(lists, before_list._id) do
+
+      issue = MoveList.new()
+              |> Issue.new(user, board)
+              |> Issue.add_message_keys(a: list.title, b: before_list.title)
+              |> to_map()
+
+      with_transaction(board, fn trans ->
+        with {:ok, _} <- Mongo.insert_one(:mongo, @issues_collection, issue, trans),
+             {:ok, _} <- Mongo.update_one(:mongo, @collection, %{_id: id, "lists._id": list._id}, %{"$set" => %{"lists.$.pos" => pos}}) do
+          :ok
+        end
+      end)
+    end
+  end
+
+  @doc """
+  Move a list after to the end of all lists and preserve the order of the cards. It create a `MoveList` issue.
+  If 'lists' of the board is empty, then the position is `@pos_start` otherwise the position is `last.pos + @pos_gap`
+
+  * `user` current user
+  * `board` current board
+  * `list` the list to be moved to the end of the lists
+
+  It returns the new board.
+
+  """
+  def move_list_to_end(%Board{_id: id} = board, user, list) do
+
+    pos   = calc_pos(board)
+    issue = MoveList.new()
             |> Issue.new(user, board)
+            |> Issue.add_message_keys(a: list.title)
             |> to_map()
-
-    other_lists = new_lists
-                  |> Enum.with_index()
-                  |> Enum.map(fn {l, index} -> {l._id, index} end)
-
-    bulk = Enum.reduce(other_lists, UnorderedBulk.new(@collection), fn {list_id, index}, bulk -> UnorderedBulk.update_one(bulk, %{_id: id, "lists._id": list_id}, %{"$set" => %{"lists.$.pos" => index}}) end)
 
     with_transaction(board, fn trans ->
       with {:ok, _} <- Mongo.insert_one(:mongo, @issues_collection, issue, trans),
-          %Mongo.BulkWriteResult{} <- BulkWrite.write(:mongo, bulk, trans) do
-       :ok
+           {:ok, _} <- Mongo.update_one(:mongo, @collection, %{_id: id, "lists._id": list._id}, %{"$set" => %{"lists.$.pos" => pos}}) do
+        :ok
       end
     end)
   end
@@ -316,13 +336,6 @@ defmodule Vega.Board do
       end
     end)
 
-  end
-
-  defp calc_pos(%BoardList{cards: cards}) do
-    case List.last(cards) do
-      %Card{pos: pos} -> pos + @pos_gap
-      nil             -> @pos_start
-    end
   end
 
   @doc """
@@ -428,6 +441,20 @@ defmodule Vega.Board do
     end
   end
 
+  defp calc_pos(%BoardList{cards: cards}) do
+    case List.last(cards) do
+      %Card{pos: pos} -> pos + @pos_gap
+      nil             -> @pos_start
+    end
+  end
+
+  defp calc_pos(%Board{lists: lists}) do
+    case List.last(lists) do
+      %BoardList{pos: pos} -> pos + @pos_gap
+      nil                  -> @pos_start
+    end
+  end
+
   @doc """
   Move a card after to the end of all cards and preserve the order of the cards. It create a `MoveCard` issue.
   If cards is empty, then the position is `@pos_start` otherwise the position is `last.pos + @pos_gap`
@@ -440,12 +467,9 @@ defmodule Vega.Board do
   It returns the new board.
 
   """
-  def move_card_to_end(board, user, %BoardList{_id: id, cards: cards}, card) do
+  def move_card_to_end(board, user, %BoardList{_id: id} = list, card) do
 
-    pos = case List.last(cards) do
-      nil  -> @pos_start
-      last -> last.pos + @pos_gap
-    end
+    pos = calc_pos(list)
 
     issue = id
             |> MoveCard.new()

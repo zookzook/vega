@@ -1,5 +1,13 @@
 defmodule Vega.Plugs.SetLocale do
-  @moduledoc false
+  @moduledoc """
+
+  This plug reads the locale setting from the requests and set the value to the `VegaWeb.Gettext` and `Vega.Cldr` module.
+
+  The locale value is stored in the session as well. In the `mount` function of each live component the value is set to
+  the process context, so `VegaWeb.Gettext` and `Vega.Cldr` contains the right settings. Each live component has an own
+  process, therefore we need to transfer the locale to the process context.
+
+  """
 
   import Plug.Conn
 
@@ -28,6 +36,9 @@ defmodule Vega.Plugs.SetLocale do
     |> fallback()
   end
 
+  ##
+  # We always fall back to "en"
+  #
   defp fallback(nil) do
     "en"
   end

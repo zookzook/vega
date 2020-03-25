@@ -2,9 +2,10 @@ $list-background-color: #ebecf0;
 
 .list {
   border-radius: 3px;
+  box-shadow: 0 1px 0 rgba(9,30,66,.25);
   flex: 0 0 272px;
-  margin: 0 4px;
   height: 100%;
+  margin: 0 4px;
 
   &:first-child {
     margin-left: 8px;

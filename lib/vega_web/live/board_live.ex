@@ -8,6 +8,7 @@ defmodule VegaWeb.BoardLive do
   alias Phoenix.LiveView.Socket
 
   def mount(_params, session, socket) do
+
     set_locale(session)
 
     current_user = User.fetch()
@@ -42,16 +43,6 @@ defmodule VegaWeb.BoardLive do
     {:noreply, assign(socket, board: board, history: Issue.fetch_all(board))}
   end
 
-  defp create_example_board(user) do
-
-    title = "A board title"
-    board = Board.new(user, title)
-
-    board = Board.add_list(board, user, "to do")
-    board = Board.add_list(board, user, "doing")
-    board = Board.add_list(board, user, "done")
-  end
-
   def handle_event("edit", _value, socket) do
     {:noreply, assign(socket, :edit, true)}
   end
@@ -66,22 +57,24 @@ defmodule VegaWeb.BoardLive do
     {:noreply, assign(socket, board: board, edit: false, history: Issue.fetch_all(board))}
   end
 
-  def handle_event("reorder-lists", [], socket) do
-    {:noreply, socket}
-  end
-  def handle_event("reorder-lists", ordering, %Socket{assigns: %{board: board, current_user: current_user}} = socket) when is_list(ordering) do
-    lists    = Enum.reduce(board.lists, %{}, fn list, map -> Map.put(map, BSON.ObjectId.encode!(list._id), list) end)
-    ordering = Enum.map(ordering, fn list_id -> lists[list_id] end)
-    case map_size(lists) == length(ordering) do
-      true ->
-        board = Board.reorder_list(board, current_user, ordering)
-        {:noreply, assign(socket, board: board, history: Issue.fetch_all(board))}
-      false ->
-        {:noreply, socket}
+  def handle_event("move-list", %{"id" => id, "before" => before_id}, %Socket{assigns: %{board: board, current_user: current_user}} = socket) do
+    with list when list != nil               <- Board.find_list(board, id),
+         before_list when before_list != nil <- Board.find_list(board, before_id) do
+      board = Board.move_list_before(board, current_user, list, before_list)
+      {:noreply, assign(socket, board: board, history: Issue.fetch_all(board))}
+    else
+      _error -> {:noreply, socket}
     end
   end
-  def handle_event("reorder-lists", _other, socket) do
-    {:noreply, socket}
+
+  def handle_event("move-list-to-end", id, %Socket{assigns: %{board: board, current_user: current_user}} = socket) do
+    with list when list != nil <- Board.find_list(board, id) do
+      board = Board.move_list_to_end(board, current_user, list)
+      {:noreply, assign(socket, board: board, history: Issue.fetch_all(board))}
+    else
+      _error ->
+        {:noreply, socket}
+    end
   end
 
   def handle_event("move-card", %{"id" => id, "list" => list_id, "before" => before_id}, %Socket{assigns: %{board: board, current_user: current_user}} = socket) do
@@ -121,5 +114,14 @@ defmodule VegaWeb.BoardLive do
     end
   end
 
+  defp create_example_board(user) do
+
+    title = "A board title"
+    board = Board.new(user, title)
+
+    board = Board.add_list(board, user, "to do")
+    board = Board.add_list(board, user, "doing")
+    Board.add_list(board, user, "done")
+  end
 
 end

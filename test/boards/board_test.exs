@@ -173,17 +173,17 @@ defmodule VegaWeb.BoardTest do
 
     assert (a.pos < b.pos && b.pos < c.pos) == true
 
-    assert a.pos == 0
-    assert b.pos == 1
-    assert c.pos == 2
+    assert a.pos == 100.0
+    assert b.pos == 200.0
+    assert c.pos == 300.0
 
     board = Board.delete_list(board, user, a)
 
     [b, c] = board.lists
 
     assert (b.pos < c.pos) == true
-    assert b.pos == 0
-    assert c.pos == 1
+    assert b.pos == 200.0
+    assert c.pos == 300.0
 
     assert {:ok, 4, 0} == Board.delete(board)
 
