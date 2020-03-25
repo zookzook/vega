@@ -12,62 +12,62 @@ msgstr ""
 "Plural-Forms: nplurals=2\n"
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:74
+#: lib/vega/issue/issues.ex:75
 msgid "added a new card with title '%{title}' to list '%{list}'"
 msgstr ""
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:68
+#: lib/vega/issue/issues.ex:69
 msgid "added a new list '%{title}' to board '%{board}'"
 msgstr ""
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:81
+#: lib/vega/issue/issues.ex:82
 msgid "moved card '%{a}' in front of '%{b}'"
 msgstr ""
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:82
+#: lib/vega/issue/issues.ex:83
 msgid "moved card '%{a}' to the end"
 msgstr ""
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:62
+#: lib/vega/issue/issues.ex:63
 msgid "changed title '%{title}' of board '%{board}'"
 msgstr ""
 
 #, elixir-format
-#: lib/vega_web/views/page_view.ex:59
+#: lib/vega_web/views/page_view.ex:50
 msgid "yesterday"
 msgstr ""
 
 #, elixir-format
-#: lib/vega_web/views/page_view.ex:72
+#: lib/vega_web/views/page_view.ex:63
 msgid "%{t} hours ago"
 msgstr ""
 
 #, elixir-format
-#: lib/vega_web/views/page_view.ex:81
+#: lib/vega_web/views/page_view.ex:72
 msgid "%{t} minutes ago"
 msgstr ""
 
 #, elixir-format
-#: lib/vega_web/views/page_view.ex:71
+#: lib/vega_web/views/page_view.ex:62
 msgid "an hour ago"
 msgstr ""
 
 #, elixir-format
-#: lib/vega_web/views/page_view.ex:79
+#: lib/vega_web/views/page_view.ex:70
 msgid "few seconds ago"
 msgstr ""
 
 #, elixir-format
-#: lib/vega_web/views/page_view.ex:80
+#: lib/vega_web/views/page_view.ex:71
 msgid "one minute ago"
 msgstr ""
 
 #, elixir-format
-#: lib/vega_web/views/page_view.ex:60
+#: lib/vega_web/views/page_view.ex:51
 msgid "the day before yesterday"
 msgstr ""
 
@@ -94,4 +94,14 @@ msgstr ""
 #, elixir-format
 #: lib/vega_web/templates/page/list.html.leex:16
 msgid "Enter a title for this card..."
+msgstr ""
+
+#, elixir-format, fuzzy
+#: lib/vega/issue/issues.ex:91
+msgid "moved list '%{a}' in front of '%{b}'"
+msgstr ""
+
+#, elixir-format, fuzzy
+#: lib/vega/issue/issues.ex:92
+msgid "moved list '%{a}' to the end"
 msgstr ""

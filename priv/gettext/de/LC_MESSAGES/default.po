@@ -12,62 +12,62 @@ msgstr ""
 "Plural-Forms: nplurals=2\n"
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:74
+#: lib/vega/issue/issues.ex:75
 msgid "added a new card with title '%{title}' to list '%{list}'"
 msgstr "fügte eine neue Karte '%{title}' zur Liste '%{list}' hinzu"
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:68
+#: lib/vega/issue/issues.ex:69
 msgid "added a new list '%{title}' to board '%{board}'"
 msgstr "fügte eine neue Liste '%{title}' zum Board '%{board}' hinzu"
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:81
+#: lib/vega/issue/issues.ex:82
 msgid "moved card '%{a}' in front of '%{b}'"
 msgstr "bewegte die Karte '%{a}' vor Karte '%{b}'"
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:82
+#: lib/vega/issue/issues.ex:83
 msgid "moved card '%{a}' to the end"
 msgstr "bewegte die Karte '%{a}' ans Ende"
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:62
+#: lib/vega/issue/issues.ex:63
 msgid "changed title '%{title}' of board '%{board}'"
 msgstr "änderte den Titel '%{title}' vom Board '%{board}'"
 
 #, elixir-format
-#: lib/vega_web/views/page_view.ex:59
+#: lib/vega_web/views/page_view.ex:50
 msgid "yesterday"
 msgstr "gestern"
 
 #, elixir-format
-#: lib/vega_web/views/page_view.ex:72
+#: lib/vega_web/views/page_view.ex:63
 msgid "%{t} hours ago"
 msgstr "vor %{t} Stunden"
 
 #, elixir-format
-#: lib/vega_web/views/page_view.ex:81
+#: lib/vega_web/views/page_view.ex:72
 msgid "%{t} minutes ago"
 msgstr "vor %{t} Minuten"
 
 #, elixir-format
-#: lib/vega_web/views/page_view.ex:71
+#: lib/vega_web/views/page_view.ex:62
 msgid "an hour ago"
 msgstr "vor einer Stunde"
 
 #, elixir-format
-#: lib/vega_web/views/page_view.ex:79
+#: lib/vega_web/views/page_view.ex:70
 msgid "few seconds ago"
 msgstr "vor einigen Sekunden"
 
 #, elixir-format
-#: lib/vega_web/views/page_view.ex:80
+#: lib/vega_web/views/page_view.ex:71
 msgid "one minute ago"
 msgstr "vor einer Minute"
 
 #, elixir-format
-#: lib/vega_web/views/page_view.ex:60
+#: lib/vega_web/views/page_view.ex:51
 msgid "the day before yesterday"
 msgstr "vorgestern"
 
@@ -95,3 +95,13 @@ msgstr "Abbruch"
 #: lib/vega_web/templates/page/list.html.leex:16
 msgid "Enter a title for this card..."
 msgstr "Geben Sie einen Titel für diese Karte ein..."
+
+#, elixir-format, fuzzy
+#: lib/vega/issue/issues.ex:91
+msgid "moved list '%{a}' in front of '%{b}'"
+msgstr "bewegte die Liste '%{a}' vor Liste '%{b}'"
+
+#, elixir-format, fuzzy
+#: lib/vega/issue/issues.ex:92
+msgid "moved list '%{a}' to the end"
+msgstr "bewegte die Liste '%{a}' ans Ende"
