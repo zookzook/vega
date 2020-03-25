@@ -102,9 +102,6 @@ Hooks.Board = {
                         if(evt.newIndex === n - 1) {
                             self.pushEvent("move-card-to-end", {id: id, list: list_id});
                         }
-                        else if(evt.newIndex === 0) {
-                            self.pushEvent("move-card", {id: id, before: null, list: list_id});
-                        }
                         else {
                             let before_id = cards[evt.newIndex + 1].getAttribute("id").substring(5);
                             self.pushEvent("move-card", {id: id, before: before_id, list: list_id});

@@ -91,8 +91,7 @@ defmodule VegaWeb.BoardLive do
       board = Board.move_card_before(board, current_user, list, card, before_card)
       {:noreply, assign(socket, board: board, history: Issue.fetch_all(board))}
     else
-      _error ->
-        {:noreply, socket}
+      _error -> {:noreply, socket}
     end
   end
 
