@@ -8,6 +8,8 @@ defmodule VegaWeb.BoardLive do
   alias Phoenix.LiveView.Socket
 
   def mount(_params, session, socket) do
+    set_locale(session)
+
     current_user = User.fetch()
 
     board = case Board.fetch_one() do
@@ -18,6 +20,12 @@ defmodule VegaWeb.BoardLive do
     current_user = User.fetch()
     history = Issue.fetch_all(board)
     {:ok, assign(socket, board: board, current_user: current_user, edit: false, history: history)}
+  end
+
+  def set_locale(session) do
+    locale = session["locale"] || "en"
+    Gettext.put_locale(locale)
+    Vega.Cldr.put_locale(locale)
   end
 
   def handle_info({:updated_board, board}, socket) do

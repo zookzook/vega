@@ -56,10 +56,11 @@ defmodule VegaWeb.PageView do
     days = date |> Dates.to_local() |> Timex.diff(Timex.now(), :days) |> abs()
     case days do
       0 -> format_hours(date)
-      1 -> "yesterday"
-      2 -> "the day before yesterday"
-      x when x > 30 -> "30+ days ago"
-      x -> [to_string(x), " days ago"]
+      1 -> gettext("yesterday")
+      2 -> gettext("the day before yesterday")
+      x ->
+        {:ok, result} = Vega.Cldr.DateTime.to_string(date, format: :y_mm_md)
+        result
     end
   end
 
@@ -67,17 +68,17 @@ defmodule VegaWeb.PageView do
     hours = date |> Dates.to_local() |> Timex.diff(Timex.now(), :hours) |> abs()
     case hours do
       0 -> format_minutes(date)
-      1 -> "an hour ago"
-      x -> [to_string(x), " hours ago"]
+      1 -> gettext("an hour ago")
+      x -> gettext("%{t} hours ago", t: to_string(x))
     end
   end
 
   def format_minutes(date) do
     minutes = date |> Dates.to_local() |> Timex.diff(Timex.now(), :minutes) |> abs()
     case minutes do
-      0 -> "few seconds ago"
-      1 -> "one minute ago"
-      x -> [to_string(x), " minutes ago"]
+      0 -> gettext("few seconds ago")
+      1 -> gettext("one minute ago")
+      x -> gettext("%{t} minutes ago", t: to_string(x))
     end
   end
 end

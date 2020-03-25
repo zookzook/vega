@@ -42,6 +42,8 @@ defmodule Vega.MixProject do
       {:mongodb_driver, "~> 0.6"},
       {:phoenix_live_view, "~> 0.10.0"},
       {:timex, "~> 3.6.1"},
+      {:ex_cldr, "~> 2.13"},
+      {:ex_cldr_dates_times, "~> 2.3"},
       {:floki, ">= 0.0.0", only: :test}
     ]
   end

@@ -12,21 +12,86 @@ msgstr ""
 "Plural-Forms: nplurals=2\n"
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:62
+#: lib/vega/issue/issues.ex:74
 msgid "added a new card with title '%{title}' to list '%{list}'"
 msgstr "fügte eine neue Karte '%{title}' zur Liste '%{list}' hinzu"
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:59
+#: lib/vega/issue/issues.ex:68
 msgid "added a new list '%{title}' to board '%{board}'"
 msgstr "fügte eine neue Liste '%{title}' zum Board '%{board}' hinzu"
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:66
+#: lib/vega/issue/issues.ex:81
 msgid "moved card '%{a}' in front of '%{b}'"
 msgstr "bewegte die Karte '%{a}' vor Karte '%{b}'"
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:67
+#: lib/vega/issue/issues.ex:82
 msgid "moved card '%{a}' to the end"
 msgstr "bewegte die Karte '%{a}' ans Ende"
+
+#, elixir-format
+#: lib/vega/issue/issues.ex:62
+msgid "changed title '%{title}' of board '%{board}'"
+msgstr "änderte den Titel '%{title}' vom Board '%{board}'"
+
+#, elixir-format
+#: lib/vega_web/views/page_view.ex:59
+msgid "yesterday"
+msgstr "gestern"
+
+#, elixir-format
+#: lib/vega_web/views/page_view.ex:72
+msgid "%{t} hours ago"
+msgstr "vor %{t} String"
+
+#, elixir-format
+#: lib/vega_web/views/page_view.ex:81
+msgid "%{t} minutes ago"
+msgstr "vor %{t} Minuten"
+
+#, elixir-format
+#: lib/vega_web/views/page_view.ex:71
+msgid "an hour ago"
+msgstr "vor einer Stunde"
+
+#, elixir-format
+#: lib/vega_web/views/page_view.ex:79
+msgid "few seconds ago"
+msgstr "vor einigen Sekunden"
+
+#, elixir-format
+#: lib/vega_web/views/page_view.ex:80
+msgid "one minute ago"
+msgstr "vor einer Minute"
+
+#, elixir-format
+#: lib/vega_web/views/page_view.ex:60
+msgid "the day before yesterday"
+msgstr "vorgestern"
+
+#, elixir-format
+#: lib/vega_web/templates/page/board.html.leex:26
+msgid "Add a new list"
+msgstr "Neue Liste hinzufügen"
+
+#, elixir-format
+#: lib/vega_web/templates/page/list.html.leex:25
+msgid "Add another card"
+msgstr "Eine neue Karte hinzufügen"
+
+#, elixir-format
+#: lib/vega_web/templates/page/list.html.leex:19
+msgid "Add new card"
+msgstr "Neue Karte hinzufügen"
+
+#, elixir-format
+#: lib/vega_web/templates/page/list.html.leex:20
+msgid "Cancel"
+msgstr "Abbruch"
+
+#, elixir-format
+#: lib/vega_web/templates/page/list.html.leex:16
+msgid "Enter a title for this card..."
+msgstr "Geben Sie einen Titel für diese Karte ein..."

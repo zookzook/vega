@@ -55,18 +55,36 @@ defmodule Vega.Issues do
     %Issue{_id: issue["_id"], ts: issue["ts"], author_id: issue["author_id"], board: issue["board"], list: issue["list"], keys: issue["keys"] || []}
   end
 
+  ##
+  # set the title of a board
+  #
+  defp add_msg(issue, @set_title) do
+    %Issue{issue | msg: VegaWeb.Gettext.gettext("changed title '%{title}' of board '%{board}'", map_to_keywords(issue.keys))}
+  end
+  ##
+  # Create a new list
+  #
   defp add_msg(issue, @add_list) do
     %Issue{issue | msg: VegaWeb.Gettext.gettext("added a new list '%{title}' to board '%{board}'", map_to_keywords(issue.keys))}
   end
+  ##
+  # Create a new card
+  #
   defp add_msg(issue, @new_card) do
     %Issue{issue | msg: VegaWeb.Gettext.gettext("added a new card with title '%{title}' to list '%{list}'", map_to_keywords(issue.keys))}
   end
+  ##
+  # Move a card
+  #
   defp add_msg(issue, @move_card) do
     case Map.has_key?(issue.keys, "b") do
-      true -> %Issue{issue | msg: VegaWeb.Gettext.gettext("moved card '%{a}' in front of '%{b}'", map_to_keywords(issue.keys))}
+      true  -> %Issue{issue | msg: VegaWeb.Gettext.gettext("moved card '%{a}' in front of '%{b}'", map_to_keywords(issue.keys))}
       false -> %Issue{issue | msg: VegaWeb.Gettext.gettext("moved card '%{a}' to the end", map_to_keywords(issue.keys))}
     end
   end
+  ##
+  # Catch-All function
+  #
   defp add_msg(issue, type) do
     %Issue{issue | msg: to_string(type) <> "-??"}
   end

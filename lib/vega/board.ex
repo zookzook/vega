@@ -136,6 +136,7 @@ defmodule Vega.Board do
     issue = title
             |> SetTitle.new()
             |> Issue.new(user, board)
+            |> Issue.add_message_keys(title: title, board: board.title)
             |> to_map()
 
     with_transaction(board, fn trans ->

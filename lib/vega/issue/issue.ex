@@ -1,5 +1,15 @@
 defmodule Vega.Issue do
 
+  @moduledoc """
+  The issue contains the details of the history of all modifications. For each modification an issue document
+  is created to record all details and references that belong to the modification.
+
+  At the front end a human friendly message is rendered: The field `:msg` contains the text of the modification while
+  the field `:keys` contains the relevant information as a simple map structure, which is used to build the text of
+  the modification with the help of `Gettext` to localize the message. This is done in function `Issues.to_struct/1`.
+
+  """
+
   alias Vega.Issue
   alias Vega.Issues
   alias Vega.User
@@ -7,15 +17,16 @@ defmodule Vega.Issue do
   alias Vega.BoardList
 
   defstruct [
-    :_id,
-    :ts,
-    :modified,
-    :author_id,
-    :t,
-    :board,
-    :list,
-    :keys,
-    :msg]
+    :_id,       ## the id
+    :ts,        ## timestamp
+    :modified,  ## last modification date
+    :author_id, ## id of the user
+    :t,         ## the type of modification
+    :board,     ## the id of the board
+    :list,      ## the id of the list
+    :keys,      ## keys for gettext
+    :msg        ## the localized message of the modification
+  ]
 
   @collection "issues"
 

@@ -6,6 +6,7 @@ import "phoenix_html"
 import {Socket} from "phoenix"
 import LiveSocket from "phoenix_live_view"
 import Sortable from 'sortablejs'
+import {autoSize} from './autosize'
 
 let Hooks = {};
 
@@ -117,29 +118,6 @@ Hooks.Board = {
     }
 
 };
-
-function autoSize() {
-
-    let input = document.getElementById('board_title');
-    let ref = document.getElementById('board_title_ref');
-
-    function new_width() {
-        let left = parseInt(window.getComputedStyle(ref, null).getPropertyValue('padding-left'), 10);
-        let right = parseInt(window.getComputedStyle(ref, null).getPropertyValue('padding-right'), 10);
-        let width = ref.getBoundingClientRect().width - left - right;
-        input.style.width = width + "px";
-    }
-
-    let update = function (e) {
-        if(e.key.length === 1) {
-            ref.innerHTML = input.value + e.key;
-            new_width()
-        } // if
-    };
-
-    input.addEventListener('keydown', update);
-    new_width();
-}
 
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content");
 let liveSocket = new LiveSocket("/live", Socket, {params: {_csrf_token: csrfToken}, hooks: Hooks});

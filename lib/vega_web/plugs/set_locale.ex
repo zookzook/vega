@@ -1,6 +1,8 @@
 defmodule Vega.Plugs.SetLocale do
   @moduledoc false
 
+  import Plug.Conn
+
   ## based on the code from https://github.com/smeevil/set_locale/blob/master/lib/set_locale.ex with some
   ## modifications
 
@@ -11,10 +13,12 @@ defmodule Vega.Plugs.SetLocale do
   end
 
   def call(conn, _opts) do
-    conn
-    |> get_locale_from_header()
-    |> Gettext.put_locale()
-    conn
+
+    locale = get_locale_from_header(conn)
+    Gettext.put_locale(locale)
+    Vega.Cldr.put_locale(locale)
+    put_session(conn, :locale, locale)
+
   end
 
   defp get_locale_from_header(conn) do

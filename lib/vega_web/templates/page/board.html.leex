@@ -3,15 +3,14 @@
     <div class="board--header">
       <div class="board--header--left">
         <%= if @edit do %>
-        <%= f = form_for :board, "#", [phx_submit: :save] %>
+        <%= f = form_for :board, "javascript:void(0);", [phx_submit: :save, class: "board--form-composer"] %>
         <%= text_input f, :title, value: @board.title, autofocus: true, class: "board--title__edit", phx_blur: "save", phx_hook: "AutoSize" %>
         <h1 class="board--title__hidden" id="board_title_ref"><%= @board.title %></h1>
-        <span class="board--admin"><%= @current_user.firstname %> <%= @current_user.lastname %></span>
         </form>
         <% else %>
         <h1 phx-click="edit" class="board--title"><%= @board.title %></h1>
-        <span class="board--admin"><%= @current_user.firstname %> <%= @current_user.lastname %></span>
         <% end %>
+        <span class="board--admin"><%= @current_user.firstname %> <%= @current_user.lastname %></span>
       </div>
       <div class="board--header--right">
         <a class="submit primary" href="javascript:void(0);" phx-click="new">Neu</a>
@@ -24,7 +23,7 @@
           <%= live_component @socket, Vega.ListComponent, id: BSON.ObjectId.encode!(list._id), list: list, board: @board %>
         <% end %>
         <div class="is-idle list--composer">
-         <a class="list--composer--new-list" href="javascript:void(0);" phx-click="new-list">Add a new list</a>
+         <a class="list--composer--new-list" href="javascript:void(0);" phx-click="new-list"><%= gettext("Add a new list") %></a>
         </div>
       </div>
       <div class="issues">

@@ -12,21 +12,86 @@ msgstr ""
 "Plural-Forms: nplurals=2\n"
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:62
+#: lib/vega/issue/issues.ex:74
 msgid "added a new card with title '%{title}' to list '%{list}'"
 msgstr ""
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:59
+#: lib/vega/issue/issues.ex:68
 msgid "added a new list '%{title}' to board '%{board}'"
 msgstr ""
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:66
+#: lib/vega/issue/issues.ex:81
 msgid "moved card '%{a}' in front of '%{b}'"
 msgstr ""
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:67
+#: lib/vega/issue/issues.ex:82
 msgid "moved card '%{a}' to the end"
+msgstr ""
+
+#, elixir-format
+#: lib/vega/issue/issues.ex:62
+msgid "changed title '%{title}' of board '%{board}'"
+msgstr ""
+
+#, elixir-format
+#: lib/vega_web/views/page_view.ex:59
+msgid "yesterday"
+msgstr ""
+
+#, elixir-format
+#: lib/vega_web/views/page_view.ex:72
+msgid "%{t} hours ago"
+msgstr ""
+
+#, elixir-format
+#: lib/vega_web/views/page_view.ex:81
+msgid "%{t} minutes ago"
+msgstr ""
+
+#, elixir-format
+#: lib/vega_web/views/page_view.ex:71
+msgid "an hour ago"
+msgstr ""
+
+#, elixir-format
+#: lib/vega_web/views/page_view.ex:79
+msgid "few seconds ago"
+msgstr ""
+
+#, elixir-format
+#: lib/vega_web/views/page_view.ex:80
+msgid "one minute ago"
+msgstr ""
+
+#, elixir-format
+#: lib/vega_web/views/page_view.ex:60
+msgid "the day before yesterday"
+msgstr ""
+
+#, elixir-format
+#: lib/vega_web/templates/page/board.html.leex:26
+msgid "Add a new list"
+msgstr ""
+
+#, elixir-format
+#: lib/vega_web/templates/page/list.html.leex:25
+msgid "Add another card"
+msgstr ""
+
+#, elixir-format
+#: lib/vega_web/templates/page/list.html.leex:19
+msgid "Add new card"
+msgstr ""
+
+#, elixir-format
+#: lib/vega_web/templates/page/list.html.leex:20
+msgid "Cancel"
+msgstr ""
+
+#, elixir-format
+#: lib/vega_web/templates/page/list.html.leex:16
+msgid "Enter a title for this card..."
 msgstr ""
