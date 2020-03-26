@@ -44,10 +44,6 @@ $list-background-color:  #ebecf0;
   color: #172b4d;
 }
 
-// placeholder in case of dragging
-.card--placeholder {
-  background-color: darken($list-background-color, 10%);
-}
 
 // composer for creating a new card
 .card--composer-textarea,
@@ -65,4 +61,19 @@ $list-background-color:  #ebecf0;
   overflow-y: auto;
   padding: 0;
   width: 100%;
+}
+
+
+// ghost card is dragging
+.card__dragging {
+  opacity: 1 !important;
+}
+
+// placeholder in case of dragging
+.card--placeholder  {
+  background-color: darken($list-background-color, 10%);
+}
+
+.card--placeholder .card--details {
+  opacity: 0;
 }

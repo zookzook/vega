@@ -12,27 +12,27 @@ msgstr ""
 "Plural-Forms: nplurals=2\n"
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:75
+#: lib/vega/issue/issues.ex:56
 msgid "added a new card with title '%{title}' to list '%{list}'"
 msgstr "fügte eine neue Karte '%{title}' zur Liste '%{list}' hinzu"
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:69
+#: lib/vega/issue/issues.ex:44
 msgid "added a new list '%{title}' to board '%{board}'"
 msgstr "fügte eine neue Liste '%{title}' zum Board '%{board}' hinzu"
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:82
+#: lib/vega/issue/issues.ex:65
 msgid "moved card '%{a}' in front of '%{b}'"
 msgstr "bewegte die Karte '%{a}' vor Karte '%{b}'"
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:83
+#: lib/vega/issue/issues.ex:66
 msgid "moved card '%{a}' to the end"
 msgstr "bewegte die Karte '%{a}' ans Ende"
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:63
+#: lib/vega/issue/issues.ex:32
 msgid "changed title '%{title}' of board '%{board}'"
 msgstr "änderte den Titel '%{title}' vom Board '%{board}'"
 
@@ -96,12 +96,32 @@ msgstr "Abbruch"
 msgid "Enter a title for this card..."
 msgstr "Geben Sie einen Titel für diese Karte ein..."
 
-#, elixir-format, fuzzy
-#: lib/vega/issue/issues.ex:91
+#, elixir-format
+#: lib/vega/issue/issues.ex:74
 msgid "moved list '%{a}' in front of '%{b}'"
 msgstr "bewegte die Liste '%{a}' vor Liste '%{b}'"
 
-#, elixir-format, fuzzy
-#: lib/vega/issue/issues.ex:92
+#, elixir-format
+#: lib/vega/issue/issues.ex:75
 msgid "moved list '%{a}' to the end"
 msgstr "bewegte die Liste '%{a}' ans Ende"
+
+#, elixir-format
+#: lib/vega/issue/issues.ex:63
+msgid "moved card '%{a}' in front of '%{b}' of list '%{list}"
+msgstr "bewegte die Karte '%{a}' vor Karte '%{b}' der Liste '%{list}'"
+
+#, elixir-format
+#: lib/vega/issue/issues.ex:64
+msgid "moved card '%{a}' to the end of list '%{list}'"
+msgstr "bewegte die Karte '%{a}' ans Ende der Liste '%{list}'"
+
+#, elixir-format
+#: lib/vega/issue/issues.ex:38
+msgid "changed the description '%{description}' of board '%{board}'"
+msgstr "änderte die Beschreibung '%{description}' vom Board '%{board}'"
+
+#, elixir-format
+#: lib/vega/issue/issues.ex:50
+msgid "deleted the list '%{title}' from board '%{board}'"
+msgstr "löschte die Liste '%{title}' vom Board '%{board}'"

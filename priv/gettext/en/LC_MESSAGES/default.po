@@ -12,27 +12,27 @@ msgstr ""
 "Plural-Forms: nplurals=2\n"
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:75
+#: lib/vega/issue/issues.ex:56
 msgid "added a new card with title '%{title}' to list '%{list}'"
 msgstr ""
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:69
+#: lib/vega/issue/issues.ex:44
 msgid "added a new list '%{title}' to board '%{board}'"
 msgstr ""
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:82
+#: lib/vega/issue/issues.ex:65
 msgid "moved card '%{a}' in front of '%{b}'"
 msgstr ""
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:83
+#: lib/vega/issue/issues.ex:66
 msgid "moved card '%{a}' to the end"
 msgstr ""
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:63
+#: lib/vega/issue/issues.ex:32
 msgid "changed title '%{title}' of board '%{board}'"
 msgstr ""
 
@@ -96,12 +96,32 @@ msgstr ""
 msgid "Enter a title for this card..."
 msgstr ""
 
-#, elixir-format, fuzzy
-#: lib/vega/issue/issues.ex:91
+#, elixir-format
+#: lib/vega/issue/issues.ex:74
 msgid "moved list '%{a}' in front of '%{b}'"
 msgstr ""
 
-#, elixir-format, fuzzy
-#: lib/vega/issue/issues.ex:92
+#, elixir-format
+#: lib/vega/issue/issues.ex:75
 msgid "moved list '%{a}' to the end"
+msgstr ""
+
+#, elixir-format
+#: lib/vega/issue/issues.ex:63
+msgid "moved card '%{a}' in front of '%{b}' of list '%{list}"
+msgstr ""
+
+#, elixir-format
+#: lib/vega/issue/issues.ex:64
+msgid "moved card '%{a}' to the end of list '%{list}'"
+msgstr ""
+
+#, elixir-format
+#: lib/vega/issue/issues.ex:38
+msgid "changed the description '%{description}' of board '%{board}'"
+msgstr ""
+
+#, elixir-format
+#: lib/vega/issue/issues.ex:50
+msgid "deleted the list '%{title}' from board '%{board}'"
 msgstr ""

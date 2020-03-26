@@ -103,7 +103,6 @@
 
 #board {
   user-select: none;
-  white-space: nowrap;
   margin-bottom: 8px;
   overflow-x: auto;
   overflow-y: hidden;
@@ -113,4 +112,5 @@
   right: 0;
   bottom: 0;
   left: 0;
+  hyphens: auto;
 }

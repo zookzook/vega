@@ -31,15 +31,18 @@ defmodule Vega.Board do
   alias Vega.BoardList
   alias Vega.Card
   alias Vega.Issue
-  alias Vega.Issue.AddList
-  alias Vega.Issue.DeleteList
-  alias Vega.Issue.MoveCard
-  alias Vega.Issue.MoveList
-  alias Vega.Issue.NewCard
-  alias Vega.Issue.SetDescription
-  alias Vega.Issue.SetTitle
-  alias Vega.Issue.SortCards
   alias Vega.User
+  alias Vega.IssueConsts
+
+  @new_card        IssueConsts.encode(:new_card)
+  @set_description IssueConsts.encode(:set_description)
+  # todo: @add_comment     IssueConsts.encode(:add_comment)
+  @set_title       IssueConsts.encode(:set_title)
+  @add_list        IssueConsts.encode(:add_list)
+  @delete_list     IssueConsts.encode(:delete_list)
+  @sort_cards      IssueConsts.encode(:sort_cards)
+  @move_card       IssueConsts.encode(:move_card)
+  @move_list       IssueConsts.encode(:move_list)
 
   @collection         "boards"
   @issues_collection  "issues"
@@ -133,8 +136,7 @@ defmodule Vega.Board do
   """
   def set_title(%Board{_id: id} = board, user, title) do
 
-    issue = title
-            |> SetTitle.new()
+    issue = @set_title
             |> Issue.new(user, board)
             |> Issue.add_message_keys(title: title, board: board.title)
             |> to_map()
@@ -157,9 +159,9 @@ defmodule Vega.Board do
   """
   def set_description(%Board{_id: id} = board, user, description) do
 
-    issue = description
-            |> SetDescription.new()
+    issue = @set_description
             |> Issue.new(user, board)
+            |> Issue.add_message_keys(description: description, board: board.title)
             |> to_map()
 
     with_transaction(board, fn trans ->
@@ -181,8 +183,7 @@ defmodule Vega.Board do
   """
   def add_list(%Board{_id: id, title: board_title} = board, user, title) do
 
-    issue = title
-            |> AddList.new()
+    issue = @add_list
             |> Issue.new(user, board)
             |> Issue.add_message_keys(title: title, board: board_title)
             |> to_map()
@@ -199,8 +200,7 @@ defmodule Vega.Board do
   end
 
   @doc"""
-  Delete a list from the board. It creates an
-  issue `Vega.Issue.DeleteList` for the history and returns the new board.
+  Delete a list from the board and all cards attached to this list.
 
   ## Example
 
@@ -208,17 +208,19 @@ defmodule Vega.Board do
   """
   def delete_list(%Board{_id: id} = board, user, %BoardList{_id: list_id, title: title}) do
 
-    issue = title
-            |> DeleteList.new()
+    issue = @delete_list
             |> Issue.new(user, board)
+            |> Issue.add_message_keys(a: title, board: board.title)
             |> to_map()
 
     with_transaction(board, fn trans ->
      with {:ok, _} <- Mongo.insert_one(:mongo, @issues_collection, issue, trans),
+          {:ok, _} <- Mongo.delete_many(:mongo, @cards_collection, %{list: id}, trans),
           {:ok, _} <- Mongo.update_one(:mongo, @collection, %{_id: id}, %{"$pull" => %{"lists" => %{"_id" => list_id}}}, trans) do
        :ok
      end
     end)
+
   end
 
   @doc """
@@ -233,7 +235,7 @@ defmodule Vega.Board do
 
     with pos <- calc_new_pos_before(lists, before_list._id) do
 
-      issue = MoveList.new()
+      issue = @move_list
               |> Issue.new(user, board)
               |> Issue.add_message_keys(a: list.title, b: before_list.title)
               |> to_map()
@@ -261,7 +263,7 @@ defmodule Vega.Board do
   def move_list_to_end(%Board{_id: id} = board, user, list) do
 
     pos   = calc_pos(board)
-    issue = MoveList.new()
+    issue = @move_list
             |> Issue.new(user, board)
             |> Issue.add_message_keys(a: list.title)
             |> to_map()
@@ -289,9 +291,9 @@ defmodule Vega.Board do
   """
   def sort_cards(board, user, cards, type) do
 
-    issue = type
-            |> SortCards.new()
+    issue = @sort_cards
             |> Issue.new(user, board)
+            |> Issue.add_message_keys(type: type)
             |> to_map()
 
     bulk = UnorderedBulk.new(@cards_collection)
@@ -320,8 +322,7 @@ defmodule Vega.Board do
   """
   def add_card(board, user, list, title) do
 
-    issue = title
-            |> NewCard.new()
+    issue = @new_card
             |> Issue.new(user, board)
             |> Issue.add_message_keys(title: title, list: list.title)
             |> to_map()
@@ -383,8 +384,7 @@ defmodule Vega.Board do
   #
   defp make_insert_card_operation({issue_bulk, card_bulk}, board, user, list, title, pos, time) do
 
-    issue = title
-            |> NewCard.new()
+    issue = @new_card
             |> Issue.new(user, board)
             |> Issue.add_message_keys(title: title, list: list.title)
             |> to_map()
@@ -400,21 +400,31 @@ defmodule Vega.Board do
   * `card_id` the id of the card to be moved to before the card with the id `before_id`
   * `before_id` the id of the card where the other card should moved in front of it
 
+    (board, current_user, card, from_list, to_list, before_card)
+
   As the result the new board is returned.
   """
-  def move_card_before(board, user, %BoardList{_id: id, cards: cards}, card, before_card) do
+  def move_card_before(board, user, card, %BoardList{_id: from_id}, %BoardList{_id: id, cards: cards} = to_list, before_card) do
 
     with pos <- calc_new_pos_before(cards, before_card._id) do
 
-      issue = id
-              |> MoveCard.new()
-              |> Issue.new(user, board)
-              |> Issue.add_message_keys(a: card.title, b: before_card.title)
-              |> to_map()
+      issue = case from_id == id do
+        true -> ## card was moved within the same list
+          @move_card
+          |> Issue.new(user, board)
+          |> Issue.add_message_keys(a: card.title, b: before_card.title)
+          |> to_map()
+
+        false ->
+            @move_card ## card was moved between two lists
+            |> Issue.new(user, board)
+            |> Issue.add_message_keys(a: card.title, b: before_card.title, list: to_list.title)
+            |> to_map()
+      end
 
       with_transaction(board, fn trans ->
          with {:ok, _} <- Mongo.insert_one(:mongo, @issues_collection, issue, trans),
-              {:ok, _} <- Mongo.update_one(:mongo, @cards_collection, %{_id: card._id}, %{"$set" => %{"pos" => pos}}) do
+              {:ok, _} <- Mongo.update_one(:mongo, @cards_collection, %{_id: card._id}, %{"$set" => %{"pos" => pos, "list" => id}}) do
            :ok
          end
       end)
@@ -424,9 +434,9 @@ defmodule Vega.Board do
   defp calc_new_pos_before([], _id) do
     @pos_start
   end
-  defp calc_new_pos_before([card], id) do
-    case card._id == id do
-      true  -> card.pos / 2
+  defp calc_new_pos_before([item], id) do
+    case item._id == id do
+      true  -> item.pos / 2
       false -> 0.0
     end
   end
@@ -467,23 +477,31 @@ defmodule Vega.Board do
   It returns the new board.
 
   """
-  def move_card_to_end(board, user, %BoardList{_id: id} = list, card) do
+  def move_card_to_end(board, user, card, %BoardList{_id: from_id}, %BoardList{_id: id} = to_list) do
 
-    pos = calc_pos(list)
+    pos = calc_pos(to_list)
 
-    issue = id
-            |> MoveCard.new()
-            |> Issue.new(user, board)
-            |> Issue.add_message_keys(a: card.title)
-            |> to_map()
+    issue = case from_id == id do
+
+      true -> @move_card
+              |> Issue.new(user, board)
+              |> Issue.add_message_keys(a: card.title)
+              |> to_map()
+
+      false -> @move_card
+              |> Issue.new(user, board)
+              |> Issue.add_message_keys(a: card.title, list: to_list.title)
+              |> to_map()
+    end
 
     with_transaction(board, fn trans ->
       with {:ok, _} <- Mongo.insert_one(:mongo, @issues_collection, issue, trans),
-           {:ok, _} <- Mongo.update_one(:mongo, @cards_collection, %{_id: card._id}, %{"$set" => %{"pos" => pos}}) do
+           {:ok, _} <- Mongo.update_one(:mongo, @cards_collection, %{_id: card._id}, %{"$set" => %{"pos" => pos, "list" => id}}) do
        :ok
       end
     end)
   end
+
 
   @doc """
   Get the list from the board. The usual case is that the board was

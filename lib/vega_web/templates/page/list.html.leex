@@ -1,9 +1,9 @@
-<div class="list" id="list-<%= @id %>">
+<div class="list" id="list-<%= @id %>" data-id="<%= @id %>">
     <div class="list--content">
         <div class="header list--drag-handle">
             <h2><%= @list.title%></h2>
         </div>
-        <div class="list--cards">
+        <div class="list--cards" data-id="<%= @id %>">
           <%= for card <- @list.cards do %>
             <%= live_component @socket, Vega.CardComponent, card: card, list: @list, board: @board %>
           <% end %>

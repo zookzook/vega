@@ -19,9 +19,8 @@ defmodule Vega.Issue do
   defstruct [
     :_id,       ## the id
     :ts,        ## timestamp
-    :modified,  ## last modification date
     :author_id, ## id of the user
-    :t,         ## the type of modification
+    :t,         ## the type of modification see Vega.IssueConsts
     :board,     ## the id of the board
     :list,      ## the id of the list
     :keys,      ## keys for gettext

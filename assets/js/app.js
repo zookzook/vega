@@ -52,24 +52,18 @@ Hooks.Board = {
             handle: ".list--drag-handle",
             draggable: ".list",
             filter: ".list--composer",
-            chosenClass: "list__is-dragging",
-            onClone: function (evt) {
-                let origEl = evt.item;
-                let content = origEl.querySelector(".list--content");
-                content.style.opacity = "0";
-            },
+            chosenClass: "list__dragging",
+            ghostClass: "list--placeholder",
+            forceFallback: true,
             onEnd: function (evt) {
-                let itemEl = evt.item;
-                let content = itemEl.querySelector(".list--content");
-                content.style.opacity = null;
                 if(evt.oldIndex !== evt.newIndex) {
                     let lists = board.querySelectorAll(".list");
-                    let id    = lists[evt.newIndex].getAttribute('id').substring(5);
+                    let id    = lists[evt.newIndex].getAttribute('data-id');
                     if(evt.newIndex === n - 1) {
                         self.pushEvent("move-list-to-end", id);
                     } // if
                     else {
-                        let before_id = lists[evt.newIndex + 1].getAttribute("id").substring(5);
+                        let before_id = lists[evt.newIndex + 1].getAttribute('data-id');
                         self.pushEvent("move-list", {id: id, before: before_id});
                     } // else
                 } // if
@@ -81,32 +75,34 @@ Hooks.Board = {
         for (let i = 0; i < n; i++) {
 
             let s = new Sortable(lists[i], {
+                group: 'lists',
                 draggable: ".card",
                 chosenClass: ".ignore",
-                onClone: function (evt) {
-                    let origEl = evt.item;
-                    let content = origEl.querySelector(".card--details");
-                    content.style.opacity = "0";
-                    origEl.classList.add('card--placeholder');
-                },
+                forceFallback: true,
+                fallbackClass: "card__dragging",
+                ghostClass: "card--placeholder",
                 onEnd: function (evt) {
-                    let itemEl = evt.item;
-                    let content = itemEl.querySelector(".card--details");
-                    content.style.opacity = null;
-                    itemEl.classList.remove('card--placeholder');
-                    if(evt.oldIndex !== evt.newIndex) {
-                        let list_id = this.el.parentElement.parentElement.getAttribute('id').substring(5);
-                        let cards = this.el.querySelectorAll(".card");
-                        let n     = cards.length;
-                        let id    = cards[evt.newIndex].getAttribute('id').substring(5);
+                    let to_id   = evt.to.getAttribute('data-id');
+                    let from_id = evt.from.getAttribute('data-id');
+
+                    if(evt.oldIndex !== evt.newIndex || to_id !== from_id) {
+                        let cards   = evt.to.querySelectorAll(".card");
+                        let n       = cards.length;
+                        let id      = cards[evt.newIndex].getAttribute('data-id');
                         if(evt.newIndex === n - 1) {
-                            self.pushEvent("move-card-to-end", {id: id, list: list_id});
-                        }
+                            self.pushEvent("move-card-to-end", {id: id, to: to_id, from: from_id});
+                        } // if
                         else {
-                            let before_id = cards[evt.newIndex + 1].getAttribute("id").substring(5);
-                            self.pushEvent("move-card", {id: id, before: before_id, list: list_id});
+                            let before_id = cards[evt.newIndex + 1].getAttribute('data-id');
+                            self.pushEvent("move-card", {id: id, before: before_id, to: to_id, from: from_id});
                         } // else
                     } // if
+
+                    let cards = document.querySelectorAll(".list--cards");
+                    let n = cards.length;
+                    for(let i = 0; i < n; i++) {
+                        cards[i].draggable = true;
+                    } // for
                 },
             });
 

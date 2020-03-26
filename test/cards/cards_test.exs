@@ -85,7 +85,7 @@ defmodule VegaWeb.CardsTest do
 
       [card_1, _card_2, _card_3, card_4] = a.cards
 
-      board = Board.move_card_before(board, user, a, card_4, card_1)
+      board = Board.move_card_before(board, user, card_4, a, a, card_1)
       [a]   = board.lists
       [card_1, card_2, card_3, card_4] = a.cards
 
@@ -94,7 +94,7 @@ defmodule VegaWeb.CardsTest do
       assert card_3.title == "is"
       assert card_4.title == "a"
 
-      board = Board.move_card_before(board, user, a, card_4, card_2)
+      board = Board.move_card_before(board, user, card_4, a, a, card_2)
       [a]   = board.lists
       [card_1, card_2, card_3, card_4] = a.cards
 
@@ -103,7 +103,7 @@ defmodule VegaWeb.CardsTest do
       assert card_3.title == "this"
       assert card_4.title == "is"
 
-      board = Board.move_card_before(board, user, a, card_1, card_4)
+      board = Board.move_card_before(board, user, card_1, a, a, card_4)
       [a]   = board.lists
       [card_1, card_2, card_3, card_4] = a.cards
 
@@ -112,11 +112,11 @@ defmodule VegaWeb.CardsTest do
       assert card_3.title == "test"
       assert card_4.title == "is"
 
-      board = Board.move_card_before(board, user, a, card_2, card_1)
+      board = Board.move_card_before(board, user, card_2, a, a, card_1)
       [a]   = board.lists
       [_card_1, card_2, _card_3, card_4] = a.cards
 
-      board = Board.move_card_before(board, user, a, card_4, card_2)
+      board = Board.move_card_before(board, user, card_4, a, a, card_2)
       [a]   = board.lists
       [card_1, card_2, card_3, card_4] = a.cards
 
@@ -145,7 +145,7 @@ defmodule VegaWeb.CardsTest do
 
       [card_1 | _xs] = a.cards
 
-      board = Board.move_card_to_end(board, user, a, card_1)
+      board = Board.move_card_to_end(board, user, card_1, a, a)
       [a]   = board.lists
       [card_1, card_2, card_3, card_4] = a.cards
 
@@ -154,7 +154,7 @@ defmodule VegaWeb.CardsTest do
       assert card_3.title == "test"
       assert card_4.title == "this"
 
-      board = Board.move_card_to_end(board, user, a, card_1)
+      board = Board.move_card_to_end(board, user, card_1, a, a)
       [a]   = board.lists
       [card_1, card_2, card_3, card_4] = a.cards
 
@@ -163,7 +163,7 @@ defmodule VegaWeb.CardsTest do
       assert card_3.title == "this"
       assert card_4.title == "is"
 
-      board = Board.move_card_to_end(board, user, a, card_1)
+      board = Board.move_card_to_end(board, user, card_1, a, a)
       [a]   = board.lists
       [card_1, card_2, card_3, card_4] = a.cards
 
@@ -172,7 +172,7 @@ defmodule VegaWeb.CardsTest do
       assert card_3.title == "is"
       assert card_4.title == "a"
 
-      board = Board.move_card_to_end(board, user, a, card_1)
+      board = Board.move_card_to_end(board, user, card_1, a, a)
       [a]   = board.lists
       [card_1, card_2, card_3, card_4] = a.cards
 

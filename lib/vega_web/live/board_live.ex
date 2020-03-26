@@ -77,27 +77,34 @@ defmodule VegaWeb.BoardLive do
     end
   end
 
-  def handle_event("move-card", %{"id" => id, "list" => list_id, "before" => before_id}, %Socket{assigns: %{board: board, current_user: current_user}} = socket) do
-    with list when list != nil <- Board.find_list(board, list_id),
-         card when card != nil <- BoardList.find_card(list, id),
-         before_card when before_card != nil <- BoardList.find_card(list, before_id) do
-      board = Board.move_card_before(board, current_user, list, card, before_card)
+  def handle_event("move-card", %{"id" => id, "to" => to_id, "from" => from_id, "before" => before_id} = params,
+                   %Socket{assigns: %{board: board, current_user: current_user}} = socket) do
+
+    IO.puts inspect params
+    with to_list when to_list != nil         <- Board.find_list(board, to_id),
+         from_list when from_list != nil     <- Board.find_list(board, from_id),
+         card when card != nil               <- BoardList.find_card(from_list, id),
+         before_card when before_card != nil <- BoardList.find_card(to_list, before_id) do
+      board = Board.move_card_before(board, current_user, card, from_list, to_list, before_card)
       {:noreply, assign(socket, board: board, history: Issue.fetch_all(board))}
     else
       _error -> {:noreply, socket}
     end
+
   end
 
-  def handle_event("move-card-to-end", %{"id" => id, "list" => list_id}, %Socket{assigns: %{board: board, current_user: current_user}} = socket) do
+  def handle_event("move-card-to-end", %{"id" => id, "to" => to_id, "from" => from_id},
+                   %Socket{assigns: %{board: board, current_user: current_user}} = socket) do
 
-    with list when list != nil <- Board.find_list(board, list_id),
-         card when card != nil <- BoardList.find_card(list, id) do
-      board = Board.move_card_to_end(board, current_user, list, card)
+    with to_list when to_list != nil     <- Board.find_list(board, to_id),
+         from_list when from_list != nil <- Board.find_list(board, from_id),
+         card when card != nil           <- BoardList.find_card(from_list, id) do
+      board = Board.move_card_to_end(board, current_user, card, from_list, to_list)
       {:noreply, assign(socket, board: board, history: Issue.fetch_all(board))}
     else
-      _error ->
-        {:noreply, socket}
+      _error -> {:noreply, socket}
     end
+
   end
 
   def render(assigns) do
