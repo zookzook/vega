@@ -10,17 +10,19 @@
         <% else %>
         <h1 phx-click="edit" class="board--title"><%= @board.title %></h1>
         <% end %>
-        <span class="board--admin"><%= @current_user.firstname %> <%= @current_user.lastname %></span>
+        <span class="board--admin"><%= @current_user.name %></span>
       </div>
       <div class="board--header--right">
-        <a class="submit primary" href="javascript:void(0);" phx-click="new">Neu</a>
+        <a class="submit primary submit__border" href="javascript:void(0);" phx-click="new">Neu</a>
+        <a class="submit primary submit__border" href="/"><%= gettext "Home" %></a>
+        <a class="submit primary submit__border" href="<%= Routes.auth_path(@socket, :delete) %>"><%= gettext "Logout" %></a>
       </div>
     </div>
     <div class="board--canvas">
       <div id="board" phx-hook="Board">
       <div class="board--lists">
         <%= for list <- @board.lists do %>
-          <%= live_component @socket, Vega.ListComponent, id: BSON.ObjectId.encode!(list._id), list: list, board: @board %>
+          <%= live_component @socket, Vega.ListComponent, id: BSON.ObjectId.encode!(list._id), list: list, board: @board, current_user: @current_user %>
         <% end %>
         <div class="is-idle list--composer">
          <a class="list--composer--new-list" href="javascript:void(0);" phx-click="new-list"><%= gettext("Add a new list") %></a>

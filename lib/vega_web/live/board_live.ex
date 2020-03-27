@@ -11,14 +11,13 @@ defmodule VegaWeb.BoardLive do
 
     set_locale(session)
 
-    current_user = User.fetch()
+    current_user = User.fetch(session["user_id"])
 
     board = case Board.fetch_one() do
       nil -> create_example_board(current_user)
       other -> other
     end
 
-    current_user = User.fetch()
     history = Issue.fetch_all(board)
     {:ok, assign(socket, board: board, current_user: current_user, edit: false, history: history)}
   end
@@ -47,13 +46,13 @@ defmodule VegaWeb.BoardLive do
     {:noreply, assign(socket, :edit, true)}
   end
 
-  def handle_event("save", %{"board" => %{"title" => new_title}}, %Socket{assigns: %{board: board}} = socket) do
-    board = save_title(new_title, board)
+  def handle_event("save", %{"board" => %{"title" => new_title}}, %Socket{assigns: %{current_user: user, board: board}} = socket) do
+    board = save_title(new_title, board, user)
     history = Issue.fetch_all(board)
     {:noreply, assign(socket, board: board, edit: false, history: history)}
   end
-  def handle_event("save", %{"type" => "blur", "value" => new_title}, %Socket{assigns: %{board: board}} = socket) do
-    board = save_title(new_title, board)
+  def handle_event("save", %{"type" => "blur", "value" => new_title}, %Socket{assigns: %{current_user: user, board: board}} = socket) do
+    board = save_title(new_title, board, user)
     {:noreply, assign(socket, board: board, edit: false, history: Issue.fetch_all(board))}
   end
 
@@ -111,24 +110,24 @@ defmodule VegaWeb.BoardLive do
     Phoenix.View.render(VegaWeb.PageView, "board.html", assigns)
   end
 
-  defp save_title("", board) do
+  defp save_title("", board, _user) do
     board
   end
-  defp save_title(title, board) do
+  defp save_title(title, board, user) do
     case title == board.title do
       true  -> board
-      false -> Board.set_title(board, User.fetch(), title)
+      false -> Board.set_title(board, user, title)
     end
   end
 
   defp create_example_board(user) do
 
-    title = "A board title"
+    title = "Vega"
     board = Board.new(user, title)
 
-    board = Board.add_list(board, user, "to do")
-    board = Board.add_list(board, user, "doing")
-    Board.add_list(board, user, "done")
+    board = Board.add_list(board, user, "To do")
+    board = Board.add_list(board, user, "Doing")
+    Board.add_list(board, user, "Done")
   end
 
 end

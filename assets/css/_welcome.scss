@@ -1,0 +1,19 @@
+.welcome {
+  display: flex;
+  justify-content: center;
+}
+
+.welcome--content {
+  margin-top: 5rem;
+  max-width: 50%;
+
+  h1 {
+    color: white;
+    font-weight: 200;
+    font-size: 2rem;
+  }
+}
+
+.welcome--nav {
+  margin-top: 1rem;
+}

@@ -6,48 +6,74 @@ defmodule Vega.User do
   """
 
   alias Vega.User
+  import Vega.StructHelper
 
-  defstruct _id: nil, email: nil, firstname: nil, lastname: nil
+  defstruct [
+    :_id,         ## the id of the user
+    :name,        ## Name
+    :login,       ## login struct: a map with keys type and login
+    :email,       ## email - optional
+    :avatar_url   ## avatar_url - optional
+  ]
 
   @collection "users"
 
-  def new(email, firstname, lastname) do
-    %User{_id: Mongo.object_id(), email: email, firstname: firstname, lastname: lastname}
+  def new_github(github_user) do
+    %User{_id: Mongo.object_id(),
+      email: github_user["email"],
+      name: github_user["name"],
+      avatar_url: github_user["avatar_url"],
+      login: %{type: "github", login: github_user["login"]}
+    }
   end
 
+  def login_github(github_user) do
+    case fetch_github(github_user) do
+      nil->
+        user = new_github(github_user)
+        with {:ok, _} <- Mongo.insert_one(:mongo, @collection, to_map(user)) do
+          user
+        end
+      user -> user
+    end
+  end
+
+  def fetch_github(github_user) do
+    :mongo
+    |> Mongo.find_one(@collection, %{"login.type" => "github", "login.login" => github_user["login"]})
+    |> to_struct()
+  end
+
+  def fetch(nil) do
+    nil
+  end
+  def fetch(id) when is_binary(id) do
+    fetch(BSON.ObjectId.decode!(id))
+  end
   def fetch(id) do
-    case Mongo.find_one(:mongo, @collection, %{_id: id}) do
-      nil ->
-        result = new("zookzook@speckbert.de", "Michael", "Maier")
-        Mongo.insert_one(:mongo, @collection, Map.from_struct(result))
-        result
-      user -> to_struct(User, user)
-    end
+    Mongo.find_one(:mongo, @collection, %{_id: id}) |> to_struct()
   end
 
-  def fetch() do
-    case Mongo.find_one(:mongo, @collection, %{}) do
-      nil ->
-        result = new("zookzook@speckbert.de", "Michael", "Maier")
-        Mongo.insert_one(:mongo, @collection, Map.from_struct(result))
-        result
-      user -> to_struct(User, user)
-    end
+  def fake(login) do
+    user = %{
+      "email" => "zookzook@unitybox.de",
+      "name" => "Michael Maier",
+      "login" => login
+    }
+    login_github(user)
   end
 
-  ## todo: refactor this to one module
-  defp to_struct(kind, attrs) do
-    struct = struct(kind)
-
-    struct
-    |> Map.to_list()
-    |> Enum.reduce(struct, fn {k, _}, acc ->
-      case Map.fetch(attrs, Atom.to_string(k)) do
-        {:ok, v} -> %{acc | k => v}
-        :error   -> acc
-      end
-    end)
-
+  def to_struct(nil) do
+    nil
+  end
+  def to_struct(%{"_id" => id, "login" => login} = user) do
+    %User{
+      _id:        id,
+      email:      user["email"],
+      name:       user["name"],
+      avatar_url: user["avatar_url"],
+      login:      login
+    }
   end
 
 end

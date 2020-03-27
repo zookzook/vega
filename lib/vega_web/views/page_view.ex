@@ -26,7 +26,7 @@ defmodule VegaWeb.PageView do
 
   def author(issue) do
     with user when user != nil <- Issue.author(issue) do
-      [user.firstname, " ", user.lastname]
+      user.name
     else
       _error -> ["??"]
     end

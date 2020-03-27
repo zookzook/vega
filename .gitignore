@@ -36,3 +36,5 @@ npm-debug.log
 *.iml
 /.idea/
 /.data/
+
+vega.sh

@@ -16,8 +16,8 @@
               <%= textarea f, :title, placeholder: gettext("Enter a title for this card..."), class: "card--composer-textarea", id: make_text_id(@list._id) , phx_target: make_list_id(@list._id) %>
               </div>
             </div>
-            <%= submit gettext("Add new card"),  name: "action", value: "save", class: "submit submit__primary"  %>
-            <%= submit gettext("Cancel"),  name: "action", value: "cancel", class: "submit submit__cancel" %>
+            <%= submit gettext("Add new card"),  name: "action", value: "save", class: "submit submit__primary submit__shadow-box submit__next" %>
+            <%= submit gettext("Cancel"),  name: "action", value: "cancel", class: "add-card-form--cancel submit submit__cancel submit__shadow-box" %>
           </div>
           </form>
         <% else %>

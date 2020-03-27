@@ -4,7 +4,6 @@ defmodule Vega.ListComponent do
   use Phoenix.LiveComponent
 
   alias Vega.Board
-  alias Vega.User
   alias Phoenix.LiveView.Socket
 
   def mount(socket) do
@@ -19,8 +18,7 @@ defmodule Vega.ListComponent do
     {:noreply, assign(socket, add_card: true)}
   end
 
-  def handle_event("save", %{"card" => %{"title" => title}, "action" => "save"}, %Socket{assigns: %{board: board, list: list}} = socket) do
-    user   = User.fetch()
+  def handle_event("save", %{"card" => %{"title" => title}, "action" => "save"}, %Socket{assigns: %{current_user: user, board: board, list: list}} = socket) do
     titles = title
              |> String.split("\n")
              |> Enum.map(fn str -> String.trim(str) end)

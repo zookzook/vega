@@ -14,20 +14,23 @@
 }
 
 .board--title {
+  border-radius: 0.25rem;
+  border: 1px solid white;
+  cursor: pointer;
   display: inline-block;
   font-size: 1rem;
   font-weight: 400;
-  border: 1px solid white;
-  border-radius: 0.25rem;
-  padding: 0.375rem 0.75rem;
   line-height: 1.5;
-  cursor: pointer;
   margin-bottom: 0;
+  margin-top: 0;
+  margin-right: 4px;
+  padding: 0.375rem 0.75rem;
   white-space: pre;
+  box-sizing: border-box;
+
   &:hover {
     text-decoration: none;
     background-color: rgba(9,30,66,.08);
-    color: #172b4d;
   }
 }
 
@@ -43,27 +46,27 @@
 
 .board--title__hidden,
 .board--title__edit {
-  background-clip: padding-box;
   background-color: #fff;
   border-radius: 0.25rem;
   border: 1px solid #ced4da;
+  box-sizing: border-box;
   color: #495057;
-  display: inline;
+  display: inline-block;
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.5;
+  margin-bottom: 0;
+  margin-top: 0;
   padding: 0.375rem 0.75rem;
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
   white-space: pre;
   width: auto;
-  margin-bottom: 0;
 
   &:focus {
     color: #495057;
     background-color: #fff;
     border-color: #495057;
     outline: 0;
-    box-shadow: 0 0 0 0.2rem rgba(84, 32, 66, 0.25);
   }
 }
 

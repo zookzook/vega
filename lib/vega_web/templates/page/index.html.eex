@@ -1,17 +1,16 @@
-<section class="container">
-    <div class="row">
-        <div class="col-12">
-            Welcome <%= @current_user.firstname %> <%= @current_user.lastname %>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-12">
-            <h1><%= @board.title %></h1>
-            <div class="row">
-                <div class="col-12">
-                    <%= render_many @board.lists, VegaWeb.PageView, "list.html", as: :list %>
-                </div>
+<section class="welcome">
+    <div class="welcome--content">
+            <%= if @current_user do %>
+            <h1>Welcome <%= @current_user.name %>!</h1>
+            <div class="welcome--nav">
+                <a class="submit submit__primary submit__border" href="/board">To your boards</a>
             </div>
+            <% else %>
+            <h1>Welcome to Vega!</h1>
+            <div class="welcome--nav">
+                <a class="submit submit__primary submit__border" href="<%= Routes.auth_path(@conn, :index, "github") %>">Sign in with GitHub</a>
+            </div>
+            <% end %>
         </div>
     </div>
 </section>

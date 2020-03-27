@@ -31,8 +31,8 @@ defmodule Vega.Board do
   alias Vega.BoardList
   alias Vega.Card
   alias Vega.Issue
-  alias Vega.User
   alias Vega.IssueConsts
+  alias Vega.User
 
   @new_card        IssueConsts.encode(:new_card)
   @set_description IssueConsts.encode(:set_description)
