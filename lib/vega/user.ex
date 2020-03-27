@@ -11,7 +11,7 @@ defmodule Vega.User do
   defstruct [
     :_id,         ## the id of the user
     :name,        ## Name
-    :login,       ## login struct: a map with keys type and login
+    :login,       ## login struct: a map with keys provider and login
     :email,       ## email - optional
     :avatar_url   ## avatar_url - optional
   ]
@@ -23,7 +23,7 @@ defmodule Vega.User do
       email: github_user["email"],
       name: github_user["name"],
       avatar_url: github_user["avatar_url"],
-      login: %{type: "github", login: github_user["login"]}
+      login: %{provider: "github", login: github_user["login"]}
     }
   end
 
@@ -40,7 +40,7 @@ defmodule Vega.User do
 
   def fetch_github(github_user) do
     :mongo
-    |> Mongo.find_one(@collection, %{"login.type" => "github", "login.login" => github_user["login"]})
+    |> Mongo.find_one(@collection, %{"login.provider" => "github", "login.login" => github_user["login"]})
     |> to_struct()
   end
 

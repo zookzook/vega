@@ -19,6 +19,9 @@ defmodule Vega.ListComponent do
   end
 
   def handle_event("save", %{"card" => %{"title" => title}, "action" => "save"}, %Socket{assigns: %{current_user: user, board: board, list: list}} = socket) do
+
+    IO.puts "Save called"
+
     titles = title
              |> String.split("\n")
              |> Enum.map(fn str -> String.trim(str) end)
@@ -33,7 +36,8 @@ defmodule Vega.ListComponent do
         {:noreply, assign(socket, add_card: false, board: board, list: list)}
     end
   end
-  def handle_event("save", _params, socket) do
+  def handle_event("save", params, socket) do
+    IO.puts "No params: " <> inspect params
     {:noreply, assign(socket, add_card: false)}
   end
 

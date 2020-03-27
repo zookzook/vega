@@ -38,3 +38,5 @@ npm-debug.log
 /.data/
 
 vega.sh
+vega-a.sh
+vega-b.sh

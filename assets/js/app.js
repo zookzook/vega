@@ -18,6 +18,7 @@ Hooks.AutoSize = {
 
 Hooks.AutoClose = {
     mounted() {
+
         let current = this.el.querySelector('.add-card-form--cancel');
         let cancel = document.querySelectorAll(".add-card-form--cancel");
         let n  = cancel.length;
@@ -28,6 +29,16 @@ Hooks.AutoClose = {
         } // for
 
         this.el.querySelector('textarea').focus();
+
+        // todo: refactor this kind of solution
+        const trackingInput = document.querySelector('input[name="action"]');
+        let buttons = this.el.querySelectorAll('button');
+        n = buttons.length;
+        for (let i = 0; i < n; i++) {
+            buttons[i].addEventListener('click', function(evt) {
+                trackingInput.value = evt.target.getAttribute('value');
+            });
+        }
     }
 };
 

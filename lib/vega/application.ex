@@ -11,7 +11,7 @@ defmodule Vega.Application do
     children = [
       # Start the endpoint when the application starts
       {Mongo, [name: :mongo, url: Application.get_env(:vega, :mongodb)[:url], timeout: 60_000, pool_size: 10, idle_interval: 10_000]},
-      VegaWeb.Endpoint
+      VegaWeb.Endpoint,
       # Starts a worker by calling: Vega.Worker.start_link(arg)
       # {Vega.Worker, arg},
     ]
