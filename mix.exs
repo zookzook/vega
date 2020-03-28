@@ -45,6 +45,7 @@ defmodule Vega.MixProject do
       {:ex_cldr, "~> 2.13"},
       {:ex_cldr_dates_times, "~> 2.3"},
       {:oauth2, "~> 2.0"},
+      {:libcluster, "~> 3.2"},
       {:floki, ">= 0.0.0", only: :test}
     ]
   end

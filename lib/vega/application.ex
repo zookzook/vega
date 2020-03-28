@@ -12,6 +12,7 @@ defmodule Vega.Application do
       # Start the endpoint when the application starts
       {Mongo, [name: :mongo, url: Application.get_env(:vega, :mongodb)[:url], timeout: 60_000, pool_size: 10, idle_interval: 10_000]},
       VegaWeb.Endpoint,
+      {Cluster.Supervisor, [Application.get_env(:libcluster, :topologies), [name: Vega.ClusterSupervisor]]},
       # Starts a worker by calling: Vega.Worker.start_link(arg)
       # {Vega.Worker, arg},
     ]
