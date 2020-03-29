@@ -24,9 +24,22 @@
         <%= for list <- @board.lists do %>
           <%= live_component @socket, Vega.ListComponent, id: BSON.ObjectId.encode!(list._id), list: list, board: @board, current_user: @current_user %>
         <% end %>
-        <div class="is-idle list--composer">
-         <a class="list--composer--new-list" href="javascript:void(0);" phx-click="new-list"><%= gettext("Add a new list") %></a>
+        <%= if @list_composer do %>
+            <div class="list--composer">
+              <%= f = form_for :new_list, "javascript:void(0);", [phx_submit: :save, class: "list--composer--form"] %>
+                  <%= text_input f, :title, placeholder: gettext("Enter a title for the new list..."), class: "list--composer-input", phx_hook: "Focus"%>
+                  <input type="hidden" name="action" />
+                  <div class="composer--controls">
+                    <%= submit gettext("Add new list"), class: "submit submit__primary submit__shadow-box submit__next" %>
+                    <a class="add-list-form--cancel submit submit__cancel submit__shadow-box" phx-click="cancel-add-list" href="javascript:void(0);" ><%= gettext("Cancel") %></a>
+                  </div>
+              </form>
+          </div>
+        <% else %>
+        <div class="list--composer is-idle" phx-click="add-list">
+            <a class="list--composer--new-list" href="javascript:void(0);" ><%= gettext("Add a new list") %></a>
         </div>
+        <% end %>
       </div>
       <div class="issues">
             <%= render_many @history, VegaWeb.PageView, "history.html", as: :issue %>

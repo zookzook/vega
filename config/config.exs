@@ -18,7 +18,7 @@ config :vega, :mongodb,
 
 # Configures the endpoint
 config :vega, VegaWeb.Endpoint,
-  url: [host: "localhost"],
+  url: [host: "lvh.me"],
   secret_key_base: "mDuucO+oaLXjtnaTHVS3HXA/um73iGvJDWanDp86Poht3raBddI4GaKQV3kRqvi5",
   render_errors: [view: VegaWeb.ErrorView, accepts: ~w(html json)],
   pubsub: [name: Vega.PubSub, adapter: Phoenix.PubSub.PG2],
@@ -38,8 +38,8 @@ config :libcluster,
            # The selected clustering strategy. Required.
            strategy: Cluster.Strategy.Epmd,
            # Configuration for the provided strategy. Optional.
-           config: [hosts: [:"a@127.0.0.1"]],
-           # config: [hosts: [:"a@127.0.0.1", :"b@127.0.0.1"]],
+           #config: [hosts: [:"a@127.0.0.1"]],
+           config: [hosts: [:"a@127.0.0.1", :"b@127.0.0.1"]],
            # The function to use for connecting nodes. The node
            # name will be appended to the argument list. Optional
            connect: {:net_kernel, :connect_node, []},

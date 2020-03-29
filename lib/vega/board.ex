@@ -34,6 +34,7 @@ defmodule Vega.Board do
   alias Vega.IssueConsts
   alias Vega.User
 
+  @new_board       IssueConsts.encode(:new_board)
   @new_card        IssueConsts.encode(:new_card)
   @set_description IssueConsts.encode(:set_description)
   # todo: @add_comment     IssueConsts.encode(:add_comment)
@@ -89,7 +90,7 @@ defmodule Vega.Board do
       iex> Vega.Board.new(user, "My first Board")
 
   """
-  def new(%User{_id: id}, title) do
+  def new(%User{_id: id} = user, title) do
     members = %{"admin" => id}
     board   = %Board{
       _id: Mongo.object_id(),
@@ -99,9 +100,17 @@ defmodule Vega.Board do
       members: members
     }
 
-    with {:ok, _} <- Mongo.insert_one(:mongo, @collection, to_map(board)) do
-      fetch(board)
-    end
+    issue = @new_board
+            |> Issue.new(user, board)
+            |> Issue.add_message_keys(title: title, board: board.title)
+            |> to_map()
+
+    with_transaction(board, fn trans ->
+      with {:ok, _} <- Mongo.insert_one(:mongo, @issues_collection, issue, trans),
+           {:ok, _} <- Mongo.insert_one(:mongo, @collection, to_map(board), trans)  do
+        :ok
+      end
+    end)
   end
 
   @doc """

@@ -5,6 +5,7 @@ defmodule Vega.Issues do
   alias Vega.IssueConsts
   alias Vega.Issue
 
+  @new_board       IssueConsts.encode(:new_board)
   @new_card        IssueConsts.encode(:new_card)
   @set_description IssueConsts.encode(:set_description)
   # todo: @add_comment     IssueConsts.encode(:add_comment)
@@ -25,6 +26,12 @@ defmodule Vega.Issues do
     %Issue{_id: issue["_id"], ts: issue["ts"], author_id: issue["author_id"], board: issue["board"], t: issue["t"], list: issue["list"], keys: issue["keys"] || []}
   end
 
+  ##
+  # Set the title of a board
+  #
+  defp add_msg(%Issue{t: @new_board} = issue) do
+    %Issue{issue | msg: gettext("create a new board '%{title}'", map_to_keywords(issue.keys))}
+  end
   ##
   # Set the title of a board
   #

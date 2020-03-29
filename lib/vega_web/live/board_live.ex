@@ -20,7 +20,12 @@ defmodule VegaWeb.BoardLive do
     if connected?(socket), do: subscribe(board)
 
     history = Issue.fetch_all(board)
-    {:ok, assign(socket, board: board, current_user: current_user, edit: false, history: history)}
+    {:ok, assign(socket,
+      board: board,
+      current_user: current_user,
+      history: history,
+      edit: false,
+      list_composer: Enum.empty?(board.lists))}
   end
 
   @doc """
@@ -51,7 +56,23 @@ defmodule VegaWeb.BoardLive do
     Mongo.delete_many(:mongo, "boards", %{})
 
     board = create_example_board(assigns.current_user)
-    {:noreply, broadcast_update(socket, board)}
+    {:noreply, broadcast_update(socket, board, list_composer: Enum.empty?(board.lists))}
+  end
+
+  def handle_event("add-list", _value, socket) do
+    {:noreply, assign(socket, list_composer: true)}
+  end
+  def handle_event("cancel-add-list", _params, socket) do
+    {:noreply, assign(socket, list_composer: false)}
+  end
+
+  def handle_event("save", %{"new_list" => %{"title" => title}},  %Socket{assigns: %{current_user: user, board: board}} = socket) do
+    case title do
+      ""     -> {:noreply, socket}
+      _other ->
+        board = Board.add_list(board, user, title)
+        {:noreply, broadcast_update(socket, board, list_composer: false)}
+    end
   end
 
   def handle_event("edit", _value, socket) do
@@ -147,11 +168,12 @@ defmodule VegaWeb.BoardLive do
   defp create_example_board(user) do
 
     title = "Vega"
-    board = Board.new(user, title)
+    Board.new(user, title)
+    #board = Board.new(user, title)
 
-    board = Board.add_list(board, user, "To do")
-    board = Board.add_list(board, user, "Doing")
-    Board.add_list(board, user, "Done")
+    #board = Board.add_list(board, user, "To do")
+    #board = Board.add_list(board, user, "Doing")
+    #Board.add_list(board, user, "Done")
   end
 
   ##

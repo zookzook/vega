@@ -12,82 +12,83 @@ msgstr ""
 "Plural-Forms: nplurals=2\n"
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:56
+#: lib/vega/issue/issues.ex:63
 msgid "added a new card with title '%{title}' to list '%{list}'"
 msgstr "fügte eine neue Karte '%{title}' zur Liste '%{list}' hinzu"
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:44
+#: lib/vega/issue/issues.ex:51
 msgid "added a new list '%{title}' to board '%{board}'"
 msgstr "fügte eine neue Liste '%{title}' zum Board '%{board}' hinzu"
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:65
+#: lib/vega/issue/issues.ex:72
 msgid "moved card '%{a}' in front of '%{b}'"
 msgstr "bewegte die Karte '%{a}' vor Karte '%{b}'"
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:66
+#: lib/vega/issue/issues.ex:73
 msgid "moved card '%{a}' to the end"
 msgstr "bewegte die Karte '%{a}' ans Ende"
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:32
+#: lib/vega/issue/issues.ex:39
 msgid "changed title '%{title}' of board '%{board}'"
 msgstr "änderte den Titel '%{title}' vom Board '%{board}'"
 
 #, elixir-format
-#: lib/vega_web/views/page_view.ex:50
+#: lib/vega_web/views/page_view.ex:56
 msgid "yesterday"
 msgstr "gestern"
 
 #, elixir-format
-#: lib/vega_web/views/page_view.ex:63
+#: lib/vega_web/views/page_view.ex:69
 msgid "%{t} hours ago"
 msgstr "vor %{t} Stunden"
 
 #, elixir-format
-#: lib/vega_web/views/page_view.ex:72
+#: lib/vega_web/views/page_view.ex:78
 msgid "%{t} minutes ago"
 msgstr "vor %{t} Minuten"
 
 #, elixir-format
-#: lib/vega_web/views/page_view.ex:62
+#: lib/vega_web/views/page_view.ex:68
 msgid "an hour ago"
 msgstr "vor einer Stunde"
 
 #, elixir-format
-#: lib/vega_web/views/page_view.ex:70
+#: lib/vega_web/views/page_view.ex:76
 msgid "few seconds ago"
 msgstr "vor einigen Sekunden"
 
 #, elixir-format
-#: lib/vega_web/views/page_view.ex:71
+#: lib/vega_web/views/page_view.ex:77
 msgid "one minute ago"
 msgstr "vor einer Minute"
 
 #, elixir-format
-#: lib/vega_web/views/page_view.ex:51
+#: lib/vega_web/views/page_view.ex:57
 msgid "the day before yesterday"
 msgstr "vorgestern"
 
 #, elixir-format
-#: lib/vega_web/templates/page/board.html.leex:26
+#: lib/vega_web/templates/page/board.html.leex:40
 msgid "Add a new list"
 msgstr "Neue Liste hinzufügen"
 
 #, elixir-format
-#: lib/vega_web/templates/page/list.html.leex:25
+#: lib/vega_web/templates/page/list.html.leex:26
 msgid "Add another card"
 msgstr "Eine neue Karte hinzufügen"
 
 #, elixir-format
-#: lib/vega_web/templates/page/list.html.leex:19
+#: lib/vega_web/templates/page/list.html.leex:20
 msgid "Add new card"
 msgstr "Neue Karte hinzufügen"
 
 #, elixir-format
-#: lib/vega_web/templates/page/list.html.leex:20
+#: lib/vega_web/templates/page/board.html.leex:34
+#: lib/vega_web/templates/page/list.html.leex:21
 msgid "Cancel"
 msgstr "Abbruch"
 
@@ -97,31 +98,56 @@ msgid "Enter a title for this card..."
 msgstr "Geben Sie einen Titel für diese Karte ein..."
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:74
+#: lib/vega/issue/issues.ex:81
 msgid "moved list '%{a}' in front of '%{b}'"
 msgstr "bewegte die Liste '%{a}' vor Liste '%{b}'"
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:75
+#: lib/vega/issue/issues.ex:82
 msgid "moved list '%{a}' to the end"
 msgstr "bewegte die Liste '%{a}' ans Ende"
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:63
+#: lib/vega/issue/issues.ex:70
 msgid "moved card '%{a}' in front of '%{b}' of list '%{list}"
 msgstr "bewegte die Karte '%{a}' vor Karte '%{b}' der Liste '%{list}'"
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:64
+#: lib/vega/issue/issues.ex:71
 msgid "moved card '%{a}' to the end of list '%{list}'"
 msgstr "bewegte die Karte '%{a}' ans Ende der Liste '%{list}'"
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:38
+#: lib/vega/issue/issues.ex:45
 msgid "changed the description '%{description}' of board '%{board}'"
 msgstr "änderte die Beschreibung '%{description}' vom Board '%{board}'"
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:50
+#: lib/vega/issue/issues.ex:57
 msgid "deleted the list '%{title}' from board '%{board}'"
 msgstr "löschte die Liste '%{title}' vom Board '%{board}'"
+
+#, elixir-format
+#: lib/vega_web/templates/page/board.html.leex:33
+msgid "Add new list"
+msgstr "Neue Liste hinzufügen"
+
+#, elixir-format
+#: lib/vega_web/templates/page/board.html.leex:30
+msgid "Enter a title for the new list..."
+msgstr "Geben Sie einen Titel ein..."
+
+#, elixir-format
+#: lib/vega_web/templates/page/board.html.leex:17
+msgid "Home"
+msgstr "Home"
+
+#, elixir-format
+#: lib/vega_web/templates/page/board.html.leex:18
+msgid "Logout"
+msgstr "Abmelden"
+
+#, elixir-format
+#: lib/vega/issue/issues.ex:33
+msgid "create a new board '%{title}'"
+msgstr "erstellte ein neues Board '%{title}"

@@ -52,32 +52,6 @@ $list-background-color: #ebecf0;
   }
 }
 
-.is-idle {
-  background-color: hsla(0,0%,100%,.24);
-  cursor: pointer;
-
-  &:hover {
-    background-color: hsla(0,0%,100%,.32);
-  }
-}
-
-.list--composer {
-  border-radius: 3px;
-  flex: 0 0 272px;
-  margin: 0 8px 0 4px;
-  cursor: pointer;
-  height: 100%;
-  min-height: 32px;
-  padding: 4px;
-  display: flex;
-}
-
-.list--composer--new-list {
-  text-decoration: none;
-  padding: 8px;
-  color: white;
-}
-
 // placeholder in case of dragging
 .list--placeholder  {
   background-color: darken($list-background-color, 10%);
@@ -98,3 +72,70 @@ $list-background-color: #ebecf0;
   -webkit-touch-callout: none;
   user-select: none;
 }
+
+.list--composer--form {
+  display: flex;
+  flex-direction: column;
+}
+
+.list--composer-input {
+  display: block;
+  margin: 0 0 4px 0;
+}
+
+.list--composer--new-list {
+  text-decoration: none;
+  padding: 8px;
+  color: white;
+}
+
+.list--composer {
+
+  background-color: #ebecf0;
+  border-radius: 3px;
+  border: 1px solid white;
+  cursor: pointer;
+  flex: 0 0 272px;
+  height: 100%;
+  margin: 0 8px 0 4px;
+  min-height: 32px;
+  padding: 4px;
+  display: flex;
+
+  .list--composer--new-list {
+    display: none;
+  }
+
+  .list--composer--form {
+    width: 100%;
+  }
+
+  &.is-idle {
+
+    max-height: 20px;
+    background-color: hsla(0,0%,100%,.24);
+
+    .list--composer--form {
+      display: none;
+    }
+
+    .list--composer--new-list {
+      display: block;
+    }
+
+    .list--composer-input {
+      display: none;
+    }
+
+    .composer--controls {
+      display: none;
+    }
+
+    &:hover {
+      background-color: hsla(0,0%,100%,.32);
+    }
+  }
+
+}
+
+

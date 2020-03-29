@@ -8,7 +8,28 @@ import LiveSocket from "phoenix_live_view"
 import Sortable from 'sortablejs'
 import {autoSize} from './autosize'
 
+/*
+        // todo: refactor this kind of solution
+        const trackingInput = document.querySelector('input[name="action"]');
+        let buttons = this.el.querySelectorAll('button');
+        n = buttons.length;
+        for (let i = 0; i < n; i++) {
+            buttons[i].addEventListener('click', function(evt) {
+                trackingInput.value = evt.target.getAttribute('value');
+            });
+        }
+ */
+
 let Hooks = {};
+
+Hooks.Focus = {
+    mounted() {
+        this.el.focus();
+    },
+    updated() {
+        this.el.focus();
+    }
+};
 
 Hooks.AutoSize = {
     mounted() {
@@ -29,16 +50,6 @@ Hooks.AutoClose = {
         } // for
 
         this.el.querySelector('textarea').focus();
-
-        // todo: refactor this kind of solution
-        const trackingInput = document.querySelector('input[name="action"]');
-        let buttons = this.el.querySelectorAll('button');
-        n = buttons.length;
-        for (let i = 0; i < n; i++) {
-            buttons[i].addEventListener('click', function(evt) {
-                trackingInput.value = evt.target.getAttribute('value');
-            });
-        }
     }
 };
 

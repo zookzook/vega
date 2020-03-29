@@ -32,6 +32,12 @@ defmodule VegaWeb.PageView do
     end
   end
 
+  def is_idle_class(true) do
+    []
+  end
+  def is_idle_class(false) do
+    "is-idle"
+  end
 
 
   @doc"""
