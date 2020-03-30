@@ -3,18 +3,26 @@
   border-radius: 3px;
   box-shadow: -1px 1px 3px rgba(95, 95, 95, 0.5), inset -3px 3px 5px -5px rgba(0,0,0,1);
 
-  margin: 0.5rem;
-  max-width: 30%;
-  padding: 0.25rem;
+  margin: 3rem 0.5rem 0.5rem 0.5rem;
+  width: 270px;
+  padding: 0.5rem;
   white-space: normal;
+
+  h2 {
+    color: #172b4d;
+    margin: 0.25rem 0.25rem 0.5rem 0.25rem;
+    font-weight: 200;
+  }
 }
 
 .issues--issue {
+  font-size: 0.80rem;
+  line-height: 1.25rem;
   color: #172b4d;
   background-color: white;
   border-radius: 3px;
   padding: 0.50rem;
-  margin: 0.25rem;
+  margin: 0.25rem 0;
   box-shadow: 0 1px 0 rgba(9,30,66,.25);
 }
 
@@ -26,4 +34,22 @@
   color: #5e6c84;
   font-size: 12px;
   margin-top: 0.50rem;
+}
+
+.issue--footer {
+  margin-top: 0.5rem;
+}
+
+.issue--control {
+  text-decoration: none;
+  color: #5e6c84;
+  border-radius: 3px;
+  display: block;
+  flex: 1 0 auto;
+  padding: 4px 8px;
+  &:hover {
+    text-decoration: none;
+    background-color: rgba(9,30,66,.08);
+    color: #172b4d;
+  }
 }

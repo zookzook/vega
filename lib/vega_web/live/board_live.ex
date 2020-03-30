@@ -1,29 +1,36 @@
 defmodule VegaWeb.BoardLive do
-  use Phoenix.LiveView
 
-  alias Phoenix.LiveView.Socket
+  use VegaWeb, :live
+
   alias Vega.Board
   alias Vega.BoardList
   alias Vega.Issue
-  alias Vega.User
 
-  def mount(_params, session, socket) do
+  def mount(params, session, socket) do
+    socket = session
+             |> set_locale()
+             |> fetch_user(socket)
+             |> assign_asserts("board")
 
-    set_locale(session)
-    current_user = User.fetch(session["user_id"])
+    params["id"]
+    |> Board.fetch()
+    |> mount_board(socket)
+  end
 
-    board = case Board.fetch_one() do
-      nil   -> create_example_board(current_user)
-      other -> other
+  defp mount_board(nil, socket) do
+    {:ok, redirect(socket, to: "/")}
+  end
+  defp mount_board(board, socket) do
+
+    if connected?(socket) do
+      subscribe(board)
     end
 
-    if connected?(socket), do: subscribe(board)
-
-    history = Issue.fetch_all(board)
     {:ok, assign(socket,
+      body_class: VegaWeb.PageView.get_color(board),
       board: board,
-      current_user: current_user,
-      history: history,
+      current_user: fetch_user(socket),
+      history: Issue.fetch_all(board),
       edit: false,
       list_composer: Enum.empty?(board.lists))}
   end
@@ -41,7 +48,7 @@ defmodule VegaWeb.BoardLive do
   @doc"""
   Handle all different events:
 
-  * 'new' create a new Board (and delete the others)
+  * 'clean' cleans the database
   * 'edit' turns the edit Title mode on
   * 'save' saves the title
   * 'move-list' moves a list within the board
@@ -49,14 +56,13 @@ defmodule VegaWeb.BoardLive do
   * 'move-card' moves a card within the same list or to other lists
   * 'move-card-to-end' moves a card to the end of a list
   """
-  def handle_event("new", _value, %Socket{assigns: assigns} = socket) do
+  def handle_event("clean", _value, socket) do
 
     Mongo.delete_many(:mongo, "cards", %{})
     Mongo.delete_many(:mongo, "issues", %{})
     Mongo.delete_many(:mongo, "boards", %{})
 
-    board = create_example_board(assigns.current_user)
-    {:noreply, broadcast_update(socket, board, list_composer: Enum.empty?(board.lists))}
+    {:noreply, redirect(socket, to: Routes.page_path(VegaWeb.Endpoint, :index))}
   end
 
   def handle_event("add-list", _value, socket) do
@@ -160,20 +166,6 @@ defmodule VegaWeb.BoardLive do
       true  -> board
       false -> Board.set_title(board, user, title)
     end
-  end
-
-  ##
-  # Create a simple sample board
-  #
-  defp create_example_board(user) do
-
-    title = "Vega"
-    Board.new(user, title)
-    #board = Board.new(user, title)
-
-    #board = Board.add_list(board, user, "To do")
-    #board = Board.add_list(board, user, "Doing")
-    #Board.add_list(board, user, "Done")
   end
 
   ##

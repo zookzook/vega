@@ -24,5 +24,8 @@ defmodule Vega.StructHelper do
     Enum.reject(map, fn {_key, value} -> is_nil(value) end)
     |> Enum.into(%{})
   end
+  def filter_nils(keyword) when is_list(keyword) do
+    Enum.reject(keyword, fn {_key, value} -> is_nil(value) end)
+  end
 
 end

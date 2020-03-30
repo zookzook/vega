@@ -75,6 +75,8 @@ defmodule Vega.Board do
 
   defstruct [
     :_id,         ## the ObjectId of the board
+    :options,     ## options for styling etc.
+    :id,          ## the ObjectId as string
     :created,     ## the creation date
     :modified,    ## the last modification date
     :title,       ## the title
@@ -90,14 +92,15 @@ defmodule Vega.Board do
       iex> Vega.Board.new(user, "My first Board")
 
   """
-  def new(%User{_id: id} = user, title) do
-    members = %{"admin" => id}
+  def new(%User{_id: id} = user, title, opts) do
+    members = %{"role" => "admin", "id" => id}
     board   = %Board{
       _id: Mongo.object_id(),
       title: title,
       created: DateTime.utc_now(),
       modified: DateTime.utc_now(),
-      members: members
+      members: members,
+      options: opts
     }
 
     issue = @new_board
@@ -550,9 +553,13 @@ defmodule Vega.Board do
     |> to_struct()
   end
   def fetch(id) do
-    :mongo
-    |> Mongo.find_one(@collection, %{_id: BSON.ObjectId.decode!(id)})
-    |> to_struct()
+    with {:ok, id} <-  BSON.ObjectId.decode(id) do
+      :mongo
+      |> Mongo.find_one(@collection, %{_id: id})
+      |> to_struct()
+    else
+      _error -> nil
+    end
   end
 
   @doc """
@@ -566,14 +573,17 @@ defmodule Vega.Board do
 
     lists = (board["lists"] || [])  |> Enum.map(fn list-> BoardList.to_struct(list) end) |> Enum.sort({:asc, BoardList})
 
+    options = board["options"]
     %Board{
       _id: board["_id"],
+      id: BSON.ObjectId.encode!(board["_id"]),
       description: board["description"],
       created: board["created"],
       modified: board["modified"],
       title: board["title"],
       members: board["members"],
-      lists: lists
+      lists: lists,
+      options: [color: options["color"]] |> filter_nils()
     }
   end
 end

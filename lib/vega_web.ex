@@ -25,6 +25,52 @@ defmodule VegaWeb do
       import VegaWeb.Gettext
       alias VegaWeb.Router.Helpers, as: Routes
       import Phoenix.LiveView.Controller
+      alias Plug.Conn
+
+      defp fetch_user(%Conn{assigns: %{current_user: user}}) do
+        user
+      end
+      defp fetch_user(_other) do
+        nil
+      end
+
+      defp assign_asserts(conn, assert) do
+        merge_assigns(conn, css: [assert], js: [assert])
+      end
+    end
+  end
+
+  def live do
+    quote do
+      use Phoenix.LiveView
+
+      alias VegaWeb.Router.Helpers, as: Routes
+      alias Phoenix.LiveView.Socket
+      alias Vega.User
+
+      ##
+      # Set the locale
+      #
+      defp set_locale(session) do
+        locale = session["locale"] || "en"
+        Gettext.put_locale(locale)
+        Vega.Cldr.put_locale(locale)
+        session
+      end
+
+      ##
+      # fetch the user from session or socket assigns
+      #
+      defp fetch_user(%{"user_id" => user_id}, socket) do
+        assign(socket, current_user: User.fetch(user_id))
+      end
+      defp fetch_user(%Socket{assigns: assigns}) do
+        assigns.current_user
+      end
+
+      defp assign_asserts(socket, assert) do
+        assign(socket, css: [assert], js: [assert])
+      end
     end
   end
 

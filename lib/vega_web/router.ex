@@ -36,7 +36,9 @@ defmodule VegaWeb.Router do
 
   scope "/board", VegaWeb do
     pipe_through :live_pipe
-    live "/", BoardLive
+
+    live "/new", NewBoardLive
+    live "/:id", BoardLive
   end
 
   scope "/auth", VegaWeb do

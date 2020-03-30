@@ -1,4 +1,10 @@
+@import "colors";
+* {
+  box-sizing: border-box;
+}
+
 body {
   font-size: 14px;
-  background-color: darkcyan;
+  background-color: $default-color;
 }
+

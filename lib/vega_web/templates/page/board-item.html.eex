@@ -1,0 +1,3 @@
+<a href="<%= Routes.live_path(@conn, VegaWeb.BoardLive, @board.id )%>" class="board <%= get_color(@board["options"]) %>">
+    <h3><%= @board["title"] %></h3>
+</a>

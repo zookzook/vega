@@ -13,7 +13,7 @@
         <span class="board--admin"><%= @current_user.name %></span>
       </div>
       <div class="board--header--right">
-        <a class="submit primary submit__border" href="javascript:void(0);" phx-click="new">Neu</a>
+        <a class="submit primary submit__border" href="javascript:void(0);" phx-click="clean"><%= gettext "Clean" %></a>
         <a class="submit primary submit__border" href="/"><%= gettext "Home" %></a>
         <a class="submit primary submit__border" href="<%= Routes.auth_path(@socket, :delete) %>"><%= gettext "Logout" %></a>
       </div>
@@ -42,7 +42,11 @@
         <% end %>
       </div>
       <div class="issues">
-            <%= render_many @history, VegaWeb.PageView, "history.html", as: :issue %>
+        <h2>History</h2>
+        <%= render_many @history, VegaWeb.PageView, "history.html", as: :issue %>
+        <div class="issue--footer">
+            <a class="issue--control" href="javascript:void(0);"><%= gettext("See full history") %></a>
+        </div>
       </div>
     </div>
     </div>

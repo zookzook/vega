@@ -37,37 +37,37 @@ msgid "changed title '%{title}' of board '%{board}'"
 msgstr "änderte den Titel '%{title}' vom Board '%{board}'"
 
 #, elixir-format
-#: lib/vega_web/views/page_view.ex:56
+#: lib/vega_web/views/page_view.ex:77
 msgid "yesterday"
 msgstr "gestern"
 
 #, elixir-format
-#: lib/vega_web/views/page_view.ex:69
+#: lib/vega_web/views/page_view.ex:90
 msgid "%{t} hours ago"
 msgstr "vor %{t} Stunden"
 
 #, elixir-format
-#: lib/vega_web/views/page_view.ex:78
+#: lib/vega_web/views/page_view.ex:99
 msgid "%{t} minutes ago"
 msgstr "vor %{t} Minuten"
 
 #, elixir-format
-#: lib/vega_web/views/page_view.ex:68
+#: lib/vega_web/views/page_view.ex:89
 msgid "an hour ago"
 msgstr "vor einer Stunde"
 
 #, elixir-format
-#: lib/vega_web/views/page_view.ex:76
+#: lib/vega_web/views/page_view.ex:97
 msgid "few seconds ago"
 msgstr "vor einigen Sekunden"
 
 #, elixir-format
-#: lib/vega_web/views/page_view.ex:77
+#: lib/vega_web/views/page_view.ex:98
 msgid "one minute ago"
 msgstr "vor einer Minute"
 
 #, elixir-format
-#: lib/vega_web/views/page_view.ex:57
+#: lib/vega_web/views/page_view.ex:78
 msgid "the day before yesterday"
 msgstr "vorgestern"
 
@@ -138,11 +138,13 @@ msgid "Enter a title for the new list..."
 msgstr "Geben Sie einen Titel ein..."
 
 #, elixir-format
+#: lib/vega_web/templates/board/new.html.leex:6
 #: lib/vega_web/templates/page/board.html.leex:17
 msgid "Home"
 msgstr "Home"
 
 #, elixir-format
+#: lib/vega_web/templates/board/new.html.leex:7
 #: lib/vega_web/templates/page/board.html.leex:18
 msgid "Logout"
 msgstr "Abmelden"
@@ -150,4 +152,64 @@ msgstr "Abmelden"
 #, elixir-format
 #: lib/vega/issue/issues.ex:33
 msgid "create a new board '%{title}'"
-msgstr "erstellte ein neues Board '%{title}"
+msgstr "erstellte ein neues Board '%{title}'"
+
+#, elixir-format, fuzzy
+#: lib/vega_web/templates/board/new.html.leex:23
+msgid "Add new board"
+msgstr "Neues Board hinzufügen"
+
+#, elixir-format
+#: lib/vega_web/templates/page/board.html.leex:16
+msgid "Clean"
+msgstr "Leeren"
+
+#, elixir-format
+#: lib/vega_web/templates/board/new.html.leex:15
+msgid "Colors"
+msgstr "Farben"
+
+#, elixir-format, fuzzy
+#: lib/vega_web/templates/board/new.html.leex:12
+msgid "Create a new board"
+msgstr "Ein neues Board anlegen"
+
+#, elixir-format, fuzzy
+#: lib/vega_web/templates/board/new.html.leex:14
+msgid "Enter a title for the new board..."
+msgstr "Geben Sie einen Titel ein..."
+
+#, elixir-format
+#: lib/vega_web/templates/page/board.html.leex:48
+msgid "See full history"
+msgstr "Vollständige Historie anzeigen"
+
+#, elixir-format
+#: lib/vega_web/views/page_view.ex:106
+msgid "Select color blue"
+msgstr "Wähle die Farbe Blau"
+
+#, elixir-format
+#: lib/vega_web/views/page_view.ex:107
+msgid "Select color green"
+msgstr "Wähle die Farbe Grüne"
+
+#, elixir-format
+#: lib/vega_web/views/page_view.ex:104
+msgid "Select color orange"
+msgstr "Wähle die Farbe Orange"
+
+#, elixir-format
+#: lib/vega_web/views/page_view.ex:109
+msgid "Select color pink"
+msgstr "Wähle die Farbe Pink"
+
+#, elixir-format
+#: lib/vega_web/views/page_view.ex:108
+msgid "Select color purple"
+msgstr "Wähle die Farbe Lila"
+
+#, elixir-format
+#: lib/vega_web/views/page_view.ex:105
+msgid "Select color red"
+msgstr "Wähle die Farbe Rot"

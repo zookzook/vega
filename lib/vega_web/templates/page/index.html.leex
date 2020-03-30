@@ -1,0 +1,39 @@
+<section class="welcome">
+  <div class="welcome--content">
+      <%= if @current_user do %>
+      <h1>Welcome <%= @current_user.name %>!</h1>
+      <div class="boards--groups">
+        <%= if non_empty(@starred) do %>
+        <div class="boards--group">
+          <h2>Gekennzeichnete Boards</h2>
+          <div class="boards">
+            <%= render_many(@starred, VegaWeb.PageView, "board-item.html", as: :board) %>
+          </div>
+        </div>
+        <% end %>
+        <%= if non_empty(@visited) do %>
+        <div class="boards--group">
+          <h2>Besuchte Boards</h2>
+          <div class="boards">
+            <%= render_many(@visited, VegaWeb.PageView, "board-item.html", as: :board) %>
+          </div>
+        </div>
+        <% end %>
+        <div class="boards--group">
+          <h2>Persönliche Boards</h2>
+          <div class="boards">
+            <%= render_many(@personal, VegaWeb.PageView, "board-item.html", as: :board, conn: @conn) %>
+            <a href="<%= Routes.live_path(@conn, VegaWeb.NewBoardLive) %>" class="board board__new">
+              <h3>Neues Board erstellen</h3>
+            </a>
+          </div>
+        </div>
+      </div>
+      <% else %>
+      <h1>Welcome to Vega!</h1>
+      <div class="welcome--nav">
+          <a class="submit submit__primary submit__border" href="<%= Routes.auth_path(@conn, :index, "github") %>">Sign in with GitHub</a>
+      </div>
+      <% end %>
+  </div>
+</section>

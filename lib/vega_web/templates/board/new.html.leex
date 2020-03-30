@@ -1,0 +1,31 @@
+<div class="page-wrapper">
+    <div class="page--header">
+      <div class="page--header--left">
+      </div>
+      <div class="page--header--right">
+        <a class="submit primary submit__border" href="/"><%= gettext "Home" %></a>
+        <a class="submit primary submit__border" href="<%= Routes.auth_path(@socket, :delete) %>"><%= gettext "Logout" %></a>
+      </div>
+    </div>
+    <div class="layout">
+      <div class="content">
+        <h1><%= gettext "Create a new board" %></h1>
+        <%= f = form_for :new_board, "javascript:void(0);", [phx_change: :validate, phx_submit: :save, class: "form__border new-board-form"] %>
+        <%= text_input f, :title, value: @title, placeholder: gettext("Enter a title for the new board..."), class: "composer-input", phx_hook: "Focus" %>
+        <h2><%= gettext "Colors" %></h2>
+        <div class="board--colors">
+          <%= for color <- ["orange", "red", "green", "blue", "purple", "pink"] do %>
+           <a href="javascript:void(0);" title="<%= Gettext.gettext(VegaWeb.Gettext, "Select color " <> color)%>" class="board--color board__<%= color %> <%= is_active(@color, color)%>" phx-click="select" phx-value-color="<%= color %>"></a>
+          <% end %>
+        </div>
+        <div class="controls">
+          <%= if has_title(@title) do %>
+          <%= submit gettext("Add new board"), class: "submit submit__primary submit__shadow-box submit__next" %>
+          <% end %>
+        </div>
+        </form>
+      </div>
+
+    </div>
+
+</div>

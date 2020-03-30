@@ -3,7 +3,7 @@ $list-background-color: #ebecf0;
 .list {
   border-radius: 3px;
   box-shadow: 0 1px 0 rgba(9,30,66,.25);
-  flex: 0 0 272px;
+  flex: 0 0 270px;
   height: 100%;
   margin: 0 4px;
 
@@ -120,7 +120,8 @@ $list-background-color: #ebecf0;
     }
 
     .list--composer--new-list {
-      display: block;
+      display: flex;
+      align-items: center;
     }
 
     .list--composer-input {

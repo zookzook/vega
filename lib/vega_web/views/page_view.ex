@@ -3,6 +3,27 @@ defmodule VegaWeb.PageView do
 
   alias Vega.Issue
   alias Vega.Dates
+  alias Vega.Board
+
+  def get_color(%{"color" => color}) when not is_nil(color) do
+    "background__" <> color
+  end
+  def get_color(%Board{options: nil}) do
+    nil
+  end
+  def get_color(%Board{options: opts}) do
+    case Keyword.get(opts, :color) do
+      nil   -> nil
+      color -> "background__" <> color
+    end
+  end
+  def get_color(_other) do
+    nil
+  end
+
+  def non_empty(xs) do
+    not Enum.empty?(xs)
+  end
 
   def make_id(prefix,id) do
     ["#", prefix, BSON.ObjectId.encode!(id)]
@@ -77,5 +98,14 @@ defmodule VegaWeb.PageView do
       1 -> gettext("one minute ago")
       x -> gettext("%{t} minutes ago", t: to_string(x))
     end
+  end
+
+  def _translate() do
+    gettext("Select color orange")
+    gettext("Select color red")
+    gettext("Select color blue")
+    gettext("Select color green")
+    gettext("Select color purple")
+    gettext("Select color pink")
   end
 end

@@ -1,0 +1,113 @@
+@import "start";
+@import "page";
+@import "colors";
+
+.layout {
+  display: flex;
+  justify-content: center;
+
+  .content {
+    margin-top: 5rem;
+    width: 386px;
+
+    h1 {
+      color: white;
+      font-weight: 200;
+      font-size: 2rem;
+    }
+    h2 {
+      margin-top: 12px;
+    }
+  }
+}
+
+.new-board-form {
+  margin-top: 6px;
+}
+.form__border {
+  background-color: rgba(255, 255, 255, 0.15);
+  border: 1px solid white;
+  border-radius: 3px;
+  padding: 6px;
+
+  h1, h2, h3, h4, h5, h6 {
+    color: white;
+  }
+}
+
+.controls {
+  margin-top: 6px;
+}
+
+.composer-input {
+  width: 100%;
+}
+
+.board--colors {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 6px;
+}
+
+.board--color {
+  border-radius: 3px;
+  border: 1px solid white;
+  cursor: pointer;
+  height: 80px;
+  margin-bottom: 6px;
+  margin-right: 6px;
+  width: 180px;
+}
+
+.board__is-active {
+  box-shadow: inset 0 0 10px 0 rgba(0,0,0,1);
+}
+
+.board__red {
+  background-color: $board-color-red;
+  &:hover {
+    background-color: lighten($board-color-red, 10%);
+    text-decoration: none;
+  }
+}
+
+.board__green {
+  background-color: $board-color-green;
+  &:hover {
+    background-color: lighten($board-color-green, 10%);
+    text-decoration: none;
+  }
+}
+
+.board__blue {
+  background-color: $board-color-blue;
+  &:hover {
+    background-color: lighten($board-color-blue, 10%);
+    text-decoration: none;
+  }
+}
+
+.board__pink {
+  background-color: $board-color-pink;
+  &:hover {
+    background-color: lighten($board-color-pink, 10%);
+    text-decoration: none;
+  }
+}
+
+.board__purple {
+  background-color: $board-color-purple;
+  &:hover {
+    background-color: lighten($board-color-purple, 10%);
+    text-decoration: none;
+  }
+}
+
+.board__orange {
+  background-color: $board-color-orange;
+  &:hover {
+    background-color: lighten($board-color-orange, 10%);
+    text-decoration: none;
+  }
+}
