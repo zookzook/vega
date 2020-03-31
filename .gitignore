@@ -37,6 +37,8 @@ npm-debug.log
 /.idea/
 /.data/
 
+/tmp/
+
 vega.sh
 vega-a.sh
 vega-b.sh
