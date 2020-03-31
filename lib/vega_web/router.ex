@@ -32,6 +32,7 @@ defmodule VegaWeb.Router do
   scope "/", VegaWeb do
     pipe_through :browser
     get "/", PageController, :index
+    get "/", PageController, :clear_db
   end
 
   scope "/board", VegaWeb do
@@ -45,7 +46,8 @@ defmodule VegaWeb.Router do
     pipe_through :browser
 
     get "/logout", AuthController, :delete
-    get "/fake", AuthController, :fake
+    post "/fake/login", AuthController, :fake_login
+    get "/fake", AuthController, :fake_form
     get "/:provider", AuthController, :index
     get "/:provider/callback", AuthController, :callback
     delete "/logout", AuthController, :delete

@@ -23,6 +23,7 @@ module.exports = (env, options) => ({
     'board': ['./js/board.js'],
     'welcome': ['./js/welcome.js'],
     'new-board': ['./js/new-board.js'],
+    'fake-login': ['./js/fake-login.js'],
     // 'hello': ['./js/hello.js'],
   },
   output: {

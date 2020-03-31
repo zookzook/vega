@@ -14,11 +14,20 @@ defmodule VegaWeb.PageController do
 
     conn
     |> merge_assigns(personal: personal, visited: visited, starred: starred)
-    |> merge_assigns(css: "welcome", js: "welcome")
     |> assign_asserts("welcome")
     |> render("index.html")
   end
 
+  def clear_db(conn, _param) do
+    Mongo.delete_many(:mongo, "cards", %{})
+    Mongo.delete_many(:mongo, "issues", %{})
+    Mongo.delete_many(:mongo, "boards", %{})
+
+    conn
+    |> merge_assigns(personal: [], visited: [], starred: [])
+    |> assign_asserts("welcome")
+    |> render("index.html")
+  end
 
 
 end

@@ -17,8 +17,8 @@
               </div>
             </div>
             <input type="hidden" name="action" />
-            <%= submit gettext("Add new card"), class: "submit submit__primary submit__shadow-box submit__next" %>
-            <a class="add-card-form--cancel submit submit__cancel submit__shadow-box" phx-target="<%= make_list_id(@list._id)%>" phx-click="cancel-add-card" href="javascript:void(0);" ><%= gettext("Cancel") %></a>
+            <%= submit gettext("Add new card"), class: "submit submit-primary submit-shadow-box submit-next" %>
+            <a class="add-card-form--cancel submit submit-cancel submit-shadow-box" phx-target="<%= make_list_id(@list._id)%>" phx-click="cancel-add-card" href="javascript:void(0);" ><%= gettext("Cancel") %></a>
           </div>
           </form>
         <% else %>

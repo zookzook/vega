@@ -43,7 +43,11 @@ defmodule Vega.User do
     |> Mongo.find_one(@collection, %{"login.provider" => "github", "login.login" => github_user["login"]})
     |> to_struct()
   end
-
+  def fetch_by_login(login) do
+    :mongo
+    |> Mongo.find_one(@collection, %{"login.provider" => "github", "login.login" => login})
+    |> to_struct()
+  end
   def fetch(nil) do
     nil
   end
@@ -54,15 +58,17 @@ defmodule Vega.User do
     Mongo.find_one(:mongo, @collection, %{_id: id}) |> to_struct()
   end
 
-  def fake(login) do
+  def fake(login, name, email) do
     user = %{
-      "email" => "zookzook@unitybox.de",
-      "name" => "Michael Maier",
+      "email" => email,
+      "name" => name,
       "login" => login
     }
     login_github(user)
   end
-
+  def fake(login) do
+    fetch_by_login(login)
+  end
   def to_struct(nil) do
     nil
   end

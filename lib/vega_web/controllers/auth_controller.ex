@@ -18,15 +18,35 @@ defmodule VegaWeb.AuthController do
     |> redirect(to: "/")
   end
 
-  def fake(conn, %{"login" => login}) do
+  def fake_login(conn, %{"account" => %{"login" => login, "name" => name, "email" => email}}) when name != "" and email != "" do
+    do_login(conn, User.fake(login, name, email))
+  end
+  def fake_login(conn, %{"account" => %{"login" => login}}) do
+    do_login(conn, User.fake(login))
+  end
 
-    user = User.fake(login)
-
+  defp do_login(conn, nil) do
+    conn
+    |> assign_asserts("fake-login")
+    |> render("fake-form.html")
+  end
+  defp do_login(conn, user) do
     conn
     |> put_session(:user_id, BSON.ObjectId.encode!(user._id))
     |> assign(:current_user, user)
     |> configure_session(renew: true)
-    |> redirect(to: "/")
+    |> redirect(to: Routes.page_path(conn, :index))
+  end
+
+
+
+  @doc """
+  Render the overview of the boards connected to the current user
+  """
+  def fake_form(conn, _params) do
+    conn
+    |> assign_asserts("fake-login")
+    |> render("fake-form.html")
   end
 
   @doc """

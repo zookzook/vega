@@ -1,4 +1,14 @@
-<section class="welcome">
+<div class="page-wrapper">
+    <div class="page-header">
+      <div class="page-header-left">
+      </div>
+      <div class="page-header-right">
+        <a class="submit primary submit-border" href="<%= Routes.page_path(@conn, :clear_db)%>"><%= gettext "Clear Database" %></a>
+        <a class="submit primary submit-border" href="<%= Routes.auth_path(@conn, :delete) %>"><%= gettext "Logout" %></a>
+        <a class="submit primary submit-border" href="<%= Routes.auth_path(@conn, :fake_form)%>"><%= gettext "Fake Login" %></a>
+      </div>
+    </div>
+  <div class="welcome">
   <div class="content">
       <%= if @current_user do %>
       <h1>Welcome <%= @current_user.name %>!</h1>
@@ -32,8 +42,10 @@
       <% else %>
       <h1>Welcome to Vega!</h1>
       <div class="nav">
-          <a class="submit submit__primary submit__border" href="<%= Routes.auth_path(@conn, :index, "github") %>">Sign in with GitHub</a>
+          <a class="submit submit-primary submit-border" href="<%= Routes.auth_path(@conn, :index, "github") %>">Sign in with GitHub</a>
       </div>
       <% end %>
   </div>
-</section>
+</div>
+</div>
+

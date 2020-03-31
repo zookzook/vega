@@ -13,9 +13,8 @@
         <span class="board--admin"><%= @current_user.name %></span>
       </div>
       <div class="board--header--right">
-        <a class="submit primary submit__border" href="javascript:void(0);" phx-click="clean"><%= gettext "Clean" %></a>
-        <a class="submit primary submit__border" href="/"><%= gettext "Home" %></a>
-        <a class="submit primary submit__border" href="<%= Routes.auth_path(@socket, :delete) %>"><%= gettext "Logout" %></a>
+        <a class="submit primary submit-border" href="/"><%= gettext "Home" %></a>
+        <a class="submit primary submit-border" href="<%= Routes.auth_path(@socket, :delete) %>"><%= gettext "Logout" %></a>
       </div>
     </div>
     <div class="board--canvas">
@@ -30,8 +29,8 @@
                   <%= text_input f, :title, placeholder: gettext("Enter a title for the new list..."), class: "list--composer-input", phx_hook: "Focus"%>
                   <input type="hidden" name="action" />
                   <div class="composer--controls">
-                    <%= submit gettext("Add new list"), class: "submit submit__primary submit__shadow-box submit__next" %>
-                    <a class="add-list-form--cancel submit submit__cancel submit__shadow-box" phx-click="cancel-add-list" href="javascript:void(0);" ><%= gettext("Cancel") %></a>
+                    <%= submit gettext("Add new list"), class: "submit submit-primary submit-shadow-box submit-next" %>
+                    <a class="add-list-form--cancel submit submit-cancel submit-shadow-box" phx-click="cancel-add-list" href="javascript:void(0);" ><%= gettext("Cancel") %></a>
                   </div>
               </form>
           </div>

@@ -1,16 +1,16 @@
 <div class="page-wrapper">
-    <div class="page--header">
-      <div class="page--header--left">
+    <div class="page-header">
+      <div class="page-header-left">
       </div>
-      <div class="page--header--right">
-        <a class="submit primary submit__border" href="/"><%= gettext "Home" %></a>
-        <a class="submit primary submit__border" href="<%= Routes.auth_path(@socket, :delete) %>"><%= gettext "Logout" %></a>
+      <div class="page-header-right">
+        <a class="submit primary submit-border" href="/"><%= gettext "Home" %></a>
+        <a class="submit primary submit-border" href="<%= Routes.auth_path(@socket, :delete) %>"><%= gettext "Logout" %></a>
       </div>
     </div>
     <div class="layout">
       <div class="content">
         <h1><%= gettext "Create a new board" %></h1>
-        <%= f = form_for :new_board, "javascript:void(0);", [phx_change: :validate, phx_submit: :save, class: "form__border new-board-form"] %>
+        <%= f = form_for :new_board, "javascript:void(0);", [phx_change: :validate, phx_submit: :save, class: "form-border new-board-form"] %>
             <div class="row">
                 <%= text_input f, :title, value: @title, placeholder: gettext("Enter a title for the new board..."), class: "composer-input", phx_hook: "Focus" %>
                 <div class="board--colors" phx-hook="Color">
@@ -20,7 +20,7 @@
                 </div>
             </div>
             <div class="controls">
-              <%= submit gettext("Add new board"), disabled: not has_title(@title), class: "submit submit__primary submit__shadow-box submit__next" %>
+              <%= submit gettext("Add new board"), disabled: not has_title(@title), class: "submit submit-primary submit-shadow-box submit-next" %>
             </div>
         </form>
       </div>

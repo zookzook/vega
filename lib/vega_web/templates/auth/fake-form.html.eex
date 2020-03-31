@@ -1,0 +1,22 @@
+<div class="page-wrapper">
+    <div class="page-header">
+      <div class="page-header-left">
+      </div>
+      <div class="page-header-right">
+        <a class="submit primary submit-border" href="/"><%= gettext "Home" %></a>
+      </div>
+    </div>
+    <div class="layout">
+      <div class="content">
+        <h1><%= gettext "Create a fake account" %></h1>
+        <%= f = form_for :account, Routes.auth_path(@conn, :fake_login), [class: "form-border"] %>
+            <%= text_input f, :login, autofocus: true, placeholder: gettext("Enter a login...") %>
+            <%= text_input f, :name, placeholder: gettext("Enter a name...") %>
+            <%= text_input f, :email, placeholder: gettext("Enter an email...") %>
+            <div class="controls">
+              <%= submit gettext("Login"), class: "submit submit-primary submit-shadow-box" %>
+            </div>
+        </form>
+      </div>
+    </div>
+</div>

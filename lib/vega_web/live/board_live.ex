@@ -48,7 +48,6 @@ defmodule VegaWeb.BoardLive do
   @doc"""
   Handle all different events:
 
-  * 'clean' cleans the database
   * 'edit' turns the edit Title mode on
   * 'save' saves the title
   * 'move-list' moves a list within the board
@@ -56,15 +55,6 @@ defmodule VegaWeb.BoardLive do
   * 'move-card' moves a card within the same list or to other lists
   * 'move-card-to-end' moves a card to the end of a list
   """
-  def handle_event("clean", _value, socket) do
-
-    Mongo.delete_many(:mongo, "cards", %{})
-    Mongo.delete_many(:mongo, "issues", %{})
-    Mongo.delete_many(:mongo, "boards", %{})
-
-    {:noreply, redirect(socket, to: Routes.page_path(VegaWeb.Endpoint, :index))}
-  end
-
   def handle_event("add-list", _value, socket) do
     {:noreply, assign(socket, list_composer: true)}
   end
@@ -166,15 +156,6 @@ defmodule VegaWeb.BoardLive do
       true  -> board
       false -> Board.set_title(board, user, title)
     end
-  end
-
-  ##
-  # Set the locale
-  #
-  defp set_locale(session) do
-    locale = session["locale"] || "en"
-    Gettext.put_locale(locale)
-    Vega.Cldr.put_locale(locale)
   end
 
   ##
