@@ -1,0 +1,25 @@
+$default-color: darkcyan;
+
+$board-color-default: darkcyan;
+$board-color-pink: rgba(143, 0, 118, 0.99);
+$board-color-green: #186A3B;
+$board-color-red: #78281F;
+$board-color-blue: #21618C;
+$board-color-purple: #512E5F;
+$board-color-orange: #935116;
+
+$colors-map: ("default": $board-color-default,
+              "pink": $board-color-pink,
+              "green": $board-color-green,
+              "red": $board-color-red,
+              "blue": $board-color-blue,
+              "purple": $board-color-purple,
+              "orange": $board-color-orange);
+
+$color-list: $board-color-default,
+             $board-color-pink,
+             $board-color-green,
+             $board-color-red,
+             $board-color-blue,
+             $board-color-purple,
+             $board-color-orange;

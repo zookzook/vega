@@ -17,7 +17,7 @@ defmodule VegaWeb.NewBoardLive do
              |> fetch_user(socket)
              |> assign_asserts("new-board")
 
-    {:ok, assign(socket, title: nil, color: nil)}
+    {:ok, assign(socket, title: nil, color: "default")}
   end
 
   def handle_event("validate", %{"new_board" => %{"title" => title}}, socket) do

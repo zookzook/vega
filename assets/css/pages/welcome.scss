@@ -1,0 +1,98 @@
+@import "css/common/start";
+
+$new-board-color: rgba(206, 206, 206, 0.15);
+
+.welcome {
+
+  display: flex;
+  justify-content: center;
+
+  .content {
+    margin-top: 5rem;
+    width: 60%;
+
+    h1 {
+      color: white;
+      font-weight: 200;
+      font-size: 2rem;
+    }
+
+  }
+
+  .nav {
+    margin-top: 1rem;
+  }
+
+  .groups {
+    display: flex;
+    flex-direction: column;
+    .group {
+      margin-top: 2rem;
+      h2 {
+        color: white;
+        font-weight: 200;
+        font-size: 1rem;
+      }
+    }
+  }
+
+  .boards {
+    margin-top: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+
+    .board {
+      background-color: $default-color;
+      border-radius: 3px;
+      border: 1px solid white;
+      cursor: pointer;
+      height: 80px;
+      margin-bottom: 6px;
+      margin-right: 6px;
+      padding: 6px;
+      text-decoration: none;
+      width: 180px;
+
+      h3 {
+        color: white;
+        font-weight: 200;
+        font-size: 0.875rem;
+      }
+
+      &:hover {
+        background-color: lighten($default-color, 10%);
+        text-decoration: none;
+      }
+
+      @each $name, $color in $colors-map {
+        &.#{$name} {
+          background-color: $color;
+          &:hover {
+            background-color: lighten($color, 10%);
+          }
+        }
+      }
+    }
+
+    .new {
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: transparent;
+
+      &:hover {
+        background-color: lighten($new-board-color, 10%);
+      }
+    }
+
+  }
+}
+
+
+
+
+
+
+
+

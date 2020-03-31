@@ -1,7 +1,4 @@
-// We need to import the CSS so that webpack will load it.
-// The MiniCssExtractPlugin is used to separate it out into
-// its own CSS file.
-import css from "../css/new-board.scss"
+import css from "../css/pages/new-board.scss"
 import "phoenix_html"
 import {Socket} from "phoenix"
 import LiveSocket from "phoenix_live_view"
@@ -14,6 +11,24 @@ Hooks.Focus = {
     },
     updated() {
         this.el.focus();
+    }
+};
+
+Hooks.Color = {
+    mounted() {
+        let body = document.querySelector("body");
+        body.className = '';
+        body.classList.add(this.el.getAttribute("data-color"));
+        this.el.getAttribute("data-color");
+        console.log("X");
+    },
+    updated() {
+        let body = document.querySelector("body");
+        body.className = '';
+
+        let current = this.el.querySelector(".is-active");
+        let color = current.getAttribute("phx-value-color");
+        body.classList.add(color);
     }
 };
 

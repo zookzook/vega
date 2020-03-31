@@ -1,0 +1,18 @@
+@import "colors";
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-size: 14px;
+  background-color: $default-color;
+  @each $name, $color in $colors-map {
+    &.#{$name} {
+      background-color: $color;
+      &:hover {
+        background-color: $color;
+      }
+    }
+  }
+}
+

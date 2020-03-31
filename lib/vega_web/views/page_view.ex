@@ -6,16 +6,13 @@ defmodule VegaWeb.PageView do
   alias Vega.Board
 
   def get_color(%{"color" => color}) when not is_nil(color) do
-    "background__" <> color
+    color
   end
   def get_color(%Board{options: nil}) do
     nil
   end
   def get_color(%Board{options: opts}) do
-    case Keyword.get(opts, :color) do
-      nil   -> nil
-      color -> "background__" <> color
-    end
+    Keyword.get(opts, :color)
   end
   def get_color(_other) do
     nil

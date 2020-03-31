@@ -1,0 +1,88 @@
+@import "css/common/start";
+@import "css/common/page";
+
+.layout {
+  display: flex;
+  justify-content: center;
+
+  .content {
+    margin-top: 5rem;
+    width: 386px;
+
+    h1 {
+      color: white;
+      font-weight: 200;
+      font-size: 2rem;
+    }
+
+    h2 {
+      margin-top: 12px;
+    }
+  }
+}
+
+.new-board-form {
+
+  margin-top: 6px;
+
+  .row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .composer-input {
+    width: 50%;
+  }
+
+  .controls {
+    margin-top: 6px;
+  }
+
+}
+
+.form__border {
+  background-color: rgba(255, 255, 255, 0.15);
+  border: 1px solid white;
+  border-radius: 3px;
+  padding: 6px;
+
+  h1, h2, h3, h4, h5, h6 {
+    color: white;
+  }
+}
+
+.board--colors {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.board--color {
+
+  border-radius: 3px;
+  border: 1px solid white;
+  cursor: pointer;
+  height: 20px;
+  margin-right: 6px;
+  width: 20px;
+
+  &:last-child {
+    margin-right: 0;
+  }
+
+  @each $name, $color in $colors-map {
+    &.#{$name} {
+      background-color: $color;
+      &:hover {
+        background-color: lighten($color, 10%);
+      }
+    }
+  }
+}
+
+.is-active {
+  box-shadow: inset 0 0 10px 0 rgb(255, 255, 255);
+}
+
+

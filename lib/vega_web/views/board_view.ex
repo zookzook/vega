@@ -3,11 +3,11 @@ defmodule VegaWeb.BoardView do
 
 
   def has_title(nil), do: false
-  def has_title(title), do: byte_size(title) > 3
+  def has_title(title), do: byte_size(title) > 2
 
-  def is_active(color, color2) do
-    case color == color2 do
-      true  -> "board__is-active"
+  def is_active(this, that) do
+    case this == that do
+      true  -> "is-active"
       false -> []
     end
   end
