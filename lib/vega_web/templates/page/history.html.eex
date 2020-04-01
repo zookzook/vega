@@ -1,4 +1,0 @@
-<div class="issues--issue">
-  <div><span class="issue--author"><%= author(@issue) %></span> <%= @issue.msg %></div>
-  <div class="issue--date"><%= relative_date(@issue.ts) %></div>
-</div>

@@ -1,51 +1,51 @@
-<div class="page-wrapper">
-    <div class="page-header">
-      <div class="page-header-left">
-      </div>
-      <div class="page-header-right">
-        <a class="submit primary submit-border" href="<%= Routes.page_path(@conn, :clear_db)%>"><%= gettext "Clear Database" %></a>
-        <a class="submit primary submit-border" href="<%= Routes.auth_path(@conn, :delete) %>"><%= gettext "Logout" %></a>
-        <a class="submit primary submit-border" href="<%= Routes.auth_path(@conn, :fake_form)%>"><%= gettext "Fake Login" %></a>
-      </div>
-    </div>
-  <div class="welcome">
-  <div class="content">
-      <%= if @current_user do %>
-      <h1>Welcome <%= @current_user.name %>!</h1>
-      <div class="groups">
-        <%= if non_empty(@starred) do %>
-        <div class="group">
-          <h2>Gekennzeichnete Boards</h2>
-          <div class="boards">
-            <%= render_many(@starred, VegaWeb.PageView, "board-item.html", as: :board) %>
-          </div>
-        </div>
-        <% end %>
-        <%= if non_empty(@visited) do %>
-        <div class="group">
-          <h2>Besuchte Boards</h2>
-          <div class="boards">
-            <%= render_many(@visited, VegaWeb.PageView, "board-item.html", as: :board) %>
-          </div>
-        </div>
-        <% end %>
-        <div class="group">
-          <h2>Persönliche Boards</h2>
-          <div class="boards">
-            <%= render_many(@personal, VegaWeb.PageView, "board-item.html", as: :board, conn: @conn) %>
-            <a href="<%= Routes.live_path(@conn, VegaWeb.NewBoardLive) %>" class="board new">
-              <h3>Neues Board erstellen</h3>
-            </a>
-          </div>
-        </div>
-      </div>
-      <% else %>
-      <h1>Welcome to Vega!</h1>
-      <div class="nav">
-          <a class="submit submit-primary submit-border" href="<%= Routes.auth_path(@conn, :index, "github") %>">Sign in with GitHub</a>
-      </div>
-      <% end %>
+<div class="page">
+	<div class="page-header">
+	  <div class="page-header-left">
+	  </div>
+	  <div class="page-header-right">
+		<a class="submit primary submit-border" href="<%= Routes.page_path(@conn, :clear_db)%>"><%= gettext "Clear Database" %></a>
+		<a class="submit primary submit-border" href="<%= Routes.auth_path(@conn, :delete) %>"><%= gettext "Logout" %></a>
+		<a class="submit primary submit-border" href="<%= Routes.auth_path(@conn, :fake_form)%>"><%= gettext "Fake Login" %></a>
+	  </div>
+	</div>
+  <div class="page-canvas">
+    <div class="welcome">
+	  <%= if @current_user do %>
+	  <h1>Welcome <%= @current_user.name %>!</h1>
+	  <div class="groups">
+		<%= if !Enum.empty?(@starred) do %>
+		<div class="group">
+		  <h2>Gekennzeichnete Boards</h2>
+		  <div class="boards">
+			<%= render_many(@starred, VegaWeb.PageView, "board-item.html", as: :board) %>
+		  </div>
+		</div>
+		<% end %>
+		<%= if !Enum.empty?(@visited) do %>
+		<div class="group">
+		  <h2>Besuchte Boards</h2>
+		  <div class="boards">
+			<%= render_many(@visited, VegaWeb.PageView, "board-item.html", as: :board) %>
+		  </div>
+		</div>
+		<% end %>
+		<div class="group">
+		  <h2>Persönliche Boards</h2>
+		  <div class="boards">
+			<%= render_many(@personal, VegaWeb.PageView, "board-item.html", as: :board, conn: @conn) %>
+			<a href="<%= Routes.live_path(@conn, VegaWeb.NewBoardLive) %>" class="board new">
+			  <h3>Neues Board erstellen</h3>
+			</a>
+		  </div>
+		</div>
+	  </div>
+	  <% else %>
+	  <h1>Welcome to Vega!</h1>
+	  <div class="sign-in">
+		  <a class="submit submit-primary submit-border" href="<%= Routes.auth_path(@conn, :index, "github") %>">Sign in with GitHub</a>
+	  </div>
+	  <% end %>
   </div>
-</div>
+  </div>
 </div>
 

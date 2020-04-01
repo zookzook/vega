@@ -38,8 +38,8 @@ Hooks.AutoSize = {
 Hooks.AutoClose = {
     mounted() {
 
-        let current = this.el.querySelector('.add-card-form--cancel');
-        let cancel = document.querySelectorAll(".add-card-form--cancel");
+        let current = this.el.querySelector('.add-card-form-cancel');
+        let cancel = document.querySelectorAll(".add-card-form-cancel");
         let n  = cancel.length;
         for (let i = 0; i < n; i++) {
             if(current !== cancel[i]) {
@@ -48,6 +48,20 @@ Hooks.AutoClose = {
         } // for
 
         this.el.querySelector('textarea').focus();
+    }
+};
+
+Hooks.BoardColor = {
+
+    mounted() {
+        this.updated();
+    },
+
+    updated() {
+        let color = this.el.getAttribute('data-color');
+        let body = document.querySelector("body");
+        body.className = '';
+        body.classList.add(color);
     }
 };
 
@@ -66,14 +80,14 @@ Hooks.Board = {
 
     init() {
         let self = this;
-        let board = document.querySelector(".board--lists");
+        let board = document.querySelector(".board-lists");
 
         this.sortables = [new Sortable(board, {
-            handle: ".list--drag-handle",
+            handle: ".list-drag-handle",
             draggable: ".list",
-            filter: ".list--composer",
-            chosenClass: "list__dragging",
-            ghostClass: "list--placeholder",
+            filter: ".list-composer",
+            chosenClass: "list-dragging",
+            ghostClass: "list-placeholder",
             forceFallback: true,
             onEnd: function (evt) {
                 if(evt.oldIndex !== evt.newIndex) {
@@ -90,7 +104,7 @@ Hooks.Board = {
             },
         })];
 
-        let lists = document.querySelectorAll(".list--cards");
+        let lists = document.querySelectorAll(".list-cards");
         let n  = lists.length;
         for (let i = 0; i < n; i++) {
 
@@ -99,8 +113,8 @@ Hooks.Board = {
                 draggable: ".card",
                 chosenClass: ".ignore",
                 forceFallback: true,
-                fallbackClass: "card__dragging",
-                ghostClass: "card--placeholder",
+                fallbackClass: "card-dragging",
+                ghostClass: "card-placeholder",
                 onEnd: function (evt) {
                     let to_id   = evt.to.getAttribute('data-id');
                     let from_id = evt.from.getAttribute('data-id');
@@ -118,7 +132,7 @@ Hooks.Board = {
                         } // else
                     } // if
 
-                    let cards = document.querySelectorAll(".list--cards");
+                    let cards = document.querySelectorAll(".list-cards");
                     let n = cards.length;
                     for(let i = 0; i < n; i++) {
                         cards[i].draggable = true;

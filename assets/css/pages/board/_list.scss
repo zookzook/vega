@@ -1,28 +1,28 @@
 $list-background-color: #ebecf0;
 
 .list {
-  border-radius: 3px;
-  box-shadow: 0 1px 0 rgba(9,30,66,.25);
+  border-radius: $px3;
+  box-shadow: 0 $px1 0 rgba(9,30,66,.25);
   flex: 0 0 270px;
   height: 100%;
-  margin: 0 4px;
+  margin: 0 $px4;
 
   &:first-child {
-    margin-left: 8px;
+    margin-left: $px8;
   }
 }
 
-.list--content {
+.list-content {
   background-color: $list-background-color;
-  border-radius: 3px;
+  border-radius: $px3;
   display: flex;
   flex-direction: column;
   max-height: 100%;
 
   .header {
     flex: 0 0 auto;
-    padding: 10px 8px;
-    min-height: 20px;
+    padding: $px10 $px8;
+    min-height: 1.25rem;
   }
 
   h2 {
@@ -33,18 +33,18 @@ $list-background-color: #ebecf0;
 
 }
 
-.list--footer {
-  padding: 10px 8px;
-  min-height: 20px;
+.list-footer {
+  padding: $px10 $px8;
+  min-height: 1.25rem;
 }
 
-.list--control {
+.list-control {
   text-decoration: none;
   color: #5e6c84;
-  border-radius: 3px;
+  border-radius: $px3;
   display: block;
   flex: 1 0 auto;
-  padding: 4px 8px;
+  padding: $px4 $px8;
   &:hover {
     text-decoration: none;
     background-color: rgba(9,30,66,.08);
@@ -53,82 +53,82 @@ $list-background-color: #ebecf0;
 }
 
 // placeholder in case of dragging
-.list--placeholder  {
+.list-placeholder  {
   background-color: darken($list-background-color, 10%);
 }
-.list--placeholder .list--content {
+.list-placeholder .list-content {
   opacity: 0;
 }
 
 // ghost list is dragging
-.list__dragging {
+.list-dragging {
   opacity: 1 !important;
   background-color: rgba(255, 255, 255, 0.47);
-  box-shadow: inset 0 0 2px 0 rgba(0, 0, 0, 0.75);
+  box-shadow: inset 0 0 $px2 0 rgba(0, 0, 0, 0.75);
 }
 
-.list--drag-handle {
+.list-drag-handle {
   cursor: pointer;
   -webkit-touch-callout: none;
   user-select: none;
 }
 
-.list--composer--form {
+.list-composer-form {
   display: flex;
   flex-direction: column;
 }
 
-.list--composer-input {
+.list-composer-input {
   display: block;
-  margin: 0 0 4px 0;
+  margin: 0 0 $px4 0;
 }
 
-.list--composer--new-list {
+.list-composer-new-list {
   text-decoration: none;
-  padding: 8px;
+  padding: $px8;
   color: white;
 }
 
-.list--composer {
+.list-composer {
 
   background-color: #ebecf0;
-  border-radius: 3px;
+  border-radius: $px3;
   border: 1px solid white;
   cursor: pointer;
   flex: 0 0 272px;
   height: 100%;
-  margin: 0 8px 0 4px;
-  min-height: 32px;
-  padding: 4px;
+  margin: 0 $px8 0 $px4;
+  min-height: 2rem;
+  padding: $px2;
   display: flex;
 
-  .list--composer--new-list {
+  .list-composer-new-list {
     display: none;
   }
 
-  .list--composer--form {
+  .list-composer-form {
     width: 100%;
   }
 
   &.is-idle {
 
-    max-height: 20px;
+    max-height: 1.25rem;
     background-color: hsla(0,0%,100%,.24);
 
-    .list--composer--form {
+    .list-composer-form {
       display: none;
     }
 
-    .list--composer--new-list {
+    .list-composer-new-list {
       display: flex;
       align-items: center;
     }
 
-    .list--composer-input {
+    .list-composer-input {
       display: none;
     }
 
-    .composer--controls {
+    .composer-controls {
       display: none;
     }
 

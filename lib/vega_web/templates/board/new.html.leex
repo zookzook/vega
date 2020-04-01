@@ -1,4 +1,4 @@
-<div class="page-wrapper">
+<div class="page">
     <div class="page-header">
       <div class="page-header-left">
       </div>
@@ -7,15 +7,15 @@
         <a class="submit primary submit-border" href="<%= Routes.auth_path(@socket, :delete) %>"><%= gettext "Logout" %></a>
       </div>
     </div>
-    <div class="layout">
-      <div class="content">
+    <div class="page-canvas">
+      <div class="new-board">
         <h1><%= gettext "Create a new board" %></h1>
         <%= f = form_for :new_board, "javascript:void(0);", [phx_change: :validate, phx_submit: :save, class: "form-border new-board-form"] %>
             <div class="row">
                 <%= text_input f, :title, value: @title, placeholder: gettext("Enter a title for the new board..."), class: "composer-input", phx_hook: "Focus" %>
-                <div class="board--colors" phx-hook="Color">
+                <div class="board-colors" phx-hook="Color">
                   <%= for color <- ["default", "orange", "red", "green", "blue", "purple", "pink"] do %>
-                   <a href="javascript:void(0);" title="<%= Gettext.gettext(VegaWeb.Gettext, "Select color " <> color)%>" class="board--color <%= color %> <%= is_active(@color, color)%>" phx-click="select" phx-value-color="<%= color %>"></a>
+                   <a href="javascript:void(0);" title="<%= Gettext.gettext(VegaWeb.Gettext, "Select color " <> color)%>" class="board-color <%= color %> <%= is_active(@color, color)%>" phx-click="select" phx-value-color="<%= color %>"></a>
                   <% end %>
                 </div>
             </div>

@@ -1,24 +1,18 @@
 @import "css/common/start";
 @import "css/common/page";
 
-.layout {
+.fake-login {
+  margin-top: 5rem;
+  width: 386px;
 
-  display: flex;
-  justify-content: center;
+  h1 {
+    color: white;
+    font-weight: 200;
+    font-size: 2rem;
+  }
 
-  .content {
-    margin-top: 5rem;
-    width: 386px;
-
-    h1 {
-      color: white;
-      font-weight: 200;
-      font-size: 2rem;
-    }
-
-    h2 {
-      margin-top: 12px;
-    }
+  h2 {
+    margin-top: 12px;
   }
 }
 

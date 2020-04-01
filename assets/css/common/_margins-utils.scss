@@ -1,0 +1,26 @@
+@each $name, $dist in $distance-map {
+  .mr-#{$name}  {
+    margin-right: $dist;
+  }
+  .ml-#{$name}  {
+    margin-left: $dist;
+  }
+  .mt-#{$name}  {
+    margin-top: $dist;
+  }
+  .mb-#{$name}  {
+    margin-bottom: $dist;
+  }
+  .pr-#{$name}  {
+    padding-right: $dist;
+  }
+  .pl-#{$name}  {
+    padding-left: $dist;
+  }
+  .pt-#{$name}  {
+    padding-top: $dist;
+  }
+  .pb-#{$name}  {
+    padding-bottom: $dist;
+  }
+}

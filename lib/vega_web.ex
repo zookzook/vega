@@ -74,6 +74,28 @@ defmodule VegaWeb do
     end
   end
 
+  def component do
+    quote do
+      use Phoenix.LiveComponent
+
+      alias Phoenix.LiveView.Socket
+      alias Vega.Board
+      alias Vega.User
+
+      ##
+      # fetch the user from socket assigns
+      #
+      defp fetch_user(%Socket{assigns: assigns}) do
+        assigns.current_user
+      end
+
+      defp fetch_board(%Socket{assigns: assigns}) do
+        assigns.board
+      end
+
+    end
+  end
+
   def view do
     quote do
       use Phoenix.View,
@@ -90,6 +112,7 @@ defmodule VegaWeb do
       import VegaWeb.Gettext
       alias VegaWeb.Router.Helpers, as: Routes
       import Phoenix.LiveView.Helpers
+      import VegaWeb.Views.Helpers
     end
   end
 

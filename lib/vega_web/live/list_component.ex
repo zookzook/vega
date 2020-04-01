@@ -11,7 +11,7 @@ defmodule Vega.ListComponent do
   end
 
   def render(assigns) do
-    Phoenix.View.render(VegaWeb.PageView, "list.html", assigns)
+    Phoenix.View.render(VegaWeb.BoardView, "list.html", assigns)
   end
 
   def handle_event("add-card", _params, socket) do

@@ -17,16 +17,11 @@ Hooks.Focus = {
 
 Hooks.Color = {
     mounted() {
-        let body = document.querySelector("body");
-        body.className = '';
-        body.classList.add(this.el.getAttribute("data-color"));
-        this.el.getAttribute("data-color");
-        console.log("X");
+        this.updated();
     },
     updated() {
         let body = document.querySelector("body");
         body.className = '';
-
         let current = this.el.querySelector(".is-active");
         let color = current.getAttribute("phx-value-color");
         body.classList.add(color);

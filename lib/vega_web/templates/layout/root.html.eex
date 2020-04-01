@@ -12,13 +12,7 @@
     <%= csrf_meta_tag() %>
   </head>
   <body class="<%= body_class(assigns[:body_class]) %>">
-    <header>
-    </header>
-    <main>
-      <%= @inner_content %>
-    </main>
-    <footer>
-    </footer>
+    <%= @inner_content %>
     <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/common.js") %>"></script>
     <%= for js <- assigns[:js] || [] do %>
     <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/" <> js <> ".js") %>"></script>

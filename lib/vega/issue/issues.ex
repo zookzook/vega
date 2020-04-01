@@ -10,6 +10,7 @@ defmodule Vega.Issues do
   @set_description IssueConsts.encode(:set_description)
   # todo: @add_comment     IssueConsts.encode(:add_comment)
   @set_title       IssueConsts.encode(:set_title)
+  @set_board_color IssueConsts.encode(:set_board_color)
   @add_list        IssueConsts.encode(:add_list)
   @delete_list     IssueConsts.encode(:delete_list)
   # todo: @sort_cards      IssueConsts.encode(:sort_cards)
@@ -33,16 +34,22 @@ defmodule Vega.Issues do
     %Issue{issue | msg: gettext("create a new board '%{title}'", map_to_keywords(issue.keys))}
   end
   ##
-  # Set the title of a board
+  # Set the color of a board
   #
-  defp add_msg(%Issue{t: @set_title} = issue) do
-    %Issue{issue | msg: gettext("changed title '%{title}' of board '%{board}'", map_to_keywords(issue.keys))}
+  defp add_msg(%Issue{t: @set_board_color} = issue) do
+    %Issue{issue | msg: gettext("changed the color of board '%{board}' to '%{color}'", map_to_keywords(issue.keys))}
   end
   ##
   # Set the description of a board
   #
   defp add_msg(%Issue{t: @set_description} = issue) do
     %Issue{issue | msg: gettext("changed the description '%{description}' of board '%{board}'", map_to_keywords(issue.keys))}
+  end
+  ##
+  # Set the title of a board
+  #
+  defp add_msg(%Issue{t: @set_title} = issue) do
+    %Issue{issue | msg: gettext("changed title '%{title}' of board '%{board}'", map_to_keywords(issue.keys))}
   end
   ##
   # Create a new list

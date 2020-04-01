@@ -39,6 +39,7 @@ defmodule Vega.Board do
   @set_description IssueConsts.encode(:set_description)
   # todo: @add_comment     IssueConsts.encode(:add_comment)
   @set_title       IssueConsts.encode(:set_title)
+  @set_board_color IssueConsts.encode(:set_board_color)
   @add_list        IssueConsts.encode(:add_list)
   @delete_list     IssueConsts.encode(:delete_list)
   @sort_cards      IssueConsts.encode(:sort_cards)
@@ -156,6 +157,29 @@ defmodule Vega.Board do
     with_transaction(board, fn trans ->
       with {:ok, _} <- Mongo.insert_one(:mongo, @issues_collection, issue, trans),
            {:ok, _} <- Mongo.update_one(:mongo, @collection, %{_id: id}, %{"$set" => %{"title" => title}}, trans) do
+        :ok
+      end
+    end)
+  end
+
+  @doc """
+  Set the color of the board and returns the new board.
+
+  ## Example
+
+    iex> Vega.Board.set_color(board, user, red")
+
+  """
+  def set_color(%Board{_id: id} = board, user, color) do
+
+    issue = @set_board_color
+            |> Issue.new(user, board)
+            |> Issue.add_message_keys(color: color, board: board.title)
+            |> to_map()
+
+    with_transaction(board, fn trans ->
+      with {:ok, _} <- Mongo.insert_one(:mongo, @issues_collection, issue, trans),
+           {:ok, _} <- Mongo.update_one(:mongo, @collection, %{_id: id}, %{"$set" => %{"options.color" => color}}, trans) do
         :ok
       end
     end)

@@ -1,0 +1,14 @@
+<div class="menu" id="menu" style="margin-left:auto;">
+    <div class="title"><h3><%= @board.title%></h3><a class="menu-control" phx-click="close-menu" href="#" phx-target="#board">Close</a></div>
+    <div class="menu-colors" phx-hook="BoardColor" data-color="<%= @color%>">
+      <label>Color:</label>
+      <%= for color <- ["default", "orange", "red", "green", "blue", "purple", "pink"] do %>
+       <a href="javascript:void(0);" title="<%= Gettext.gettext(VegaWeb.Gettext, "Select color " <> color)%>" class="menu-color <%= color %> <%= is_active(@color, color)%>" phx-click="select" phx-value-color="<%= color %>" phx-target="#menu"></a>
+      <% end %>
+      <%= if @color_changed do %>
+        <a phx-target="#menu" class="menu-control" phx-click="save-color" href="javascript:void(0);">Save</a>
+      <% else %>
+        <span class="menu-control invisible">Save</span>
+      <% end %>
+    </div>
+</div>

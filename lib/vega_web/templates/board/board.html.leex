@@ -1,0 +1,59 @@
+<div class="board-wrapper" phx-hook="BoardColor" data-color="<%= get_color(@board)%>">
+  <div class="board-content">
+    <div class="board-header">
+      <div class="board-header-left">
+        <%= if @edit do %>
+        <%= f = form_for :board, "javascript:void(0);", [phx_submit: :save, class: "board-form-composer"] %>
+        <%= text_input f, :title, value: @board.title, autofocus: true, class: "board-title-edit", phx_blur: "save", phx_hook: "AutoSize" %>
+        <h1 class="board-title-hidden" id="board_title_ref"><%= @board.title %></h1>
+        </form>
+        <% else %>
+        <h1 phx-click="edit" class="board-title"><%= @board.title %></h1>
+        <% end %>
+        <span class="board-admin"><%= @current_user.name %></span>
+      </div>
+      <div class="board-header-right">
+        <a class="submit primary submit-border mr-12" href="/"><%= gettext "Home" %></a>
+        <a class="submit primary submit-border mr-12" href="<%= Routes.auth_path(@socket, :delete) %>"><%= gettext "Logout" %></a>
+      </div>
+    </div>
+      <div class="board-canvas">
+        <div id="board" phx-hook="Board">
+            <div class="board-lists">
+            <%= for list <- @board.lists do %>
+              <%= live_component @socket, Vega.ListComponent, id: BSON.ObjectId.encode!(list._id), list: list, board: @board, current_user: @current_user %>
+            <% end %>
+            <%= if @list_composer do %>
+            <div class="list-composer">
+              <%= f = form_for :new_list, "javascript:void(0);", [phx_submit: :save, class: "list-composer-form"] %>
+                  <%= text_input f, :title, placeholder: gettext("Enter a title for the new list..."), class: "list-composer-input", phx_hook: "Focus"%>
+                  <input type="hidden" name="action" />
+                  <div class="composer-controls">
+                    <%= submit gettext("Add new list"), class: "submit submit-primary submit-shadow-box submit-next" %>
+                    <a class="add-list-form-cancel submit submit-cancel submit-shadow-box" phx-click="cancel-add-list" href="javascript:void(0);" ><%= gettext("Cancel") %></a>
+                  </div>
+              </form>
+            </div>
+            <% else %>
+            <div class="list-composer is-idle" phx-click="add-list">
+              <a class="list-composer-new-list" href="javascript:void(0);" ><%= gettext("Add a new list") %></a>
+            </div>
+            <%= if @menu do %>
+            <%= live_component @socket, Vega.MenuComponent, id: :menu, board: @board, current_user: @current_user %>
+            <% else %>
+            <a phx-click="open-menu" class="submit primary submit-border" style="margin-left:auto; height: 100%" href="#"><%= gettext "Open Menu" %></a>
+            <% end %>
+            <% end %>
+          </div>
+            <div class="issues">
+              <h2>History</h2>
+              <%= render_many @history, VegaWeb.BoardView, "history.html", as: :issue %>
+              <div class="issue-footer">
+                  <a class="issue-control" href="javascript:void(0);"><%= gettext("See full history") %></a>
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

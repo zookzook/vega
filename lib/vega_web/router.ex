@@ -32,7 +32,7 @@ defmodule VegaWeb.Router do
   scope "/", VegaWeb do
     pipe_through :browser
     get "/", PageController, :index
-    get "/", PageController, :clear_db
+    get "/clear-db", PageController, :clear_db
   end
 
   scope "/board", VegaWeb do

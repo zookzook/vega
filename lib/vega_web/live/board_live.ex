@@ -2,6 +2,8 @@ defmodule VegaWeb.BoardLive do
 
   use VegaWeb, :live
 
+  import VegaWeb.Views.Helpers
+
   alias Vega.Board
   alias Vega.BoardList
   alias Vega.Issue
@@ -27,11 +29,12 @@ defmodule VegaWeb.BoardLive do
     end
 
     {:ok, assign(socket,
-      body_class: VegaWeb.PageView.get_color(board),
+      body_class: get_color(board),  ## we set the body-class to avoid flickering
       board: board,
       current_user: fetch_user(socket),
       history: Issue.fetch_all(board),
       edit: false,
+      menu: false,
       list_composer: Enum.empty?(board.lists))}
   end
 
@@ -55,6 +58,12 @@ defmodule VegaWeb.BoardLive do
   * 'move-card' moves a card within the same list or to other lists
   * 'move-card-to-end' moves a card to the end of a list
   """
+  def handle_event("open-menu", _value, socket) do
+    {:noreply, assign(socket, menu: true)}
+  end
+  def handle_event("close-menu", _value, socket) do
+    {:noreply, assign(socket, menu: false)}
+  end
   def handle_event("add-list", _value, socket) do
     {:noreply, assign(socket, list_composer: true)}
   end
@@ -142,7 +151,7 @@ defmodule VegaWeb.BoardLive do
   Render the live board
   """
   def render(assigns) do
-    Phoenix.View.render(VegaWeb.PageView, "board.html", assigns)
+    Phoenix.View.render(VegaWeb.BoardView, "board.html", assigns)
   end
 
   ##
