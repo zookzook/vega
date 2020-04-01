@@ -93,7 +93,7 @@ defmodule Vega.Board do
       iex> Vega.Board.new(user, "My first Board")
 
   """
-  def new(%User{_id: id} = user, title, opts) do
+  def new(%User{_id: id} = user, title, opts \\ %{}) do
     members = %{"role" => "admin", "id" => id}
     board   = %Board{
       _id: Mongo.object_id(),

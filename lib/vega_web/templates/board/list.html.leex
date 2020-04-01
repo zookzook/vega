@@ -1,7 +1,7 @@
 <div class="list" id="list-<%= @id %>" data-id="<%= @id %>">
     <div class="list-content">
         <div class="header list-drag-handle">
-            <h2><%= @list.title%></h2>
+            <h2><%= @list.title%></h2><span>...</span>
         </div>
         <div class="list-cards" data-id="<%= @id %>">
           <%= for card <- @list.cards do %>

@@ -5,7 +5,7 @@ defmodule VegaWeb.CardsTest do
   alias Vega.User
 
   setup_all do
-    {:ok, [user: User.fetch()]}
+    {:ok, [user: User.fake("zookzok", "Mr. Zookzook", "zookzook@lvh.me")]}
   end
 
   describe "adding cards" do
@@ -37,7 +37,7 @@ defmodule VegaWeb.CardsTest do
       assert card_2.pos == 200.0
       assert card_3.pos == 300.0
 
-      assert {:ok, 4, 3} == Board.delete(board)
+      assert {:ok, 5, 3} == Board.delete(board)
 
     end
 
@@ -63,7 +63,7 @@ defmodule VegaWeb.CardsTest do
       assert card_3.pos == 300.0
       assert card_4.pos == 400.0
 
-      assert {:ok, 5, 4} == Board.delete(board)
+      assert {:ok, 6, 4} == Board.delete(board)
     end
 
   end
@@ -126,7 +126,7 @@ defmodule VegaWeb.CardsTest do
       assert card_4.title == "test"
 
       assert [37.5, 56.25, 75.0, 150.0] == Enum.map(a.cards, fn %{pos: pos} -> pos end)
-      assert {:ok, 10, 4} == Board.delete(board)
+      assert {:ok, 11, 4} == Board.delete(board)
 
     end
 
@@ -182,7 +182,7 @@ defmodule VegaWeb.CardsTest do
       assert card_4.title == "test"
 
       assert [500.0, 600.0, 700.0, 800.0] == Enum.map(a.cards, fn %{pos: pos} -> pos end)
-      assert {:ok, 9, 4} == Board.delete(board)
+      assert {:ok, 10, 4} == Board.delete(board)
 
     end
 
@@ -220,7 +220,7 @@ defmodule VegaWeb.CardsTest do
       assert ["this", "is", "a", "test"]  == Enum.map(a.cards, fn %{title: title} -> title end)
       assert [100.0, 200.0, 300.0, 400.0] == Enum.map(a.cards, fn %{pos: pos} -> pos end)
 
-      assert {:ok, 8 , 4} == Board.delete(board)
+      assert {:ok, 9 , 4} == Board.delete(board)
 
     end
   end

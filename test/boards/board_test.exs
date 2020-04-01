@@ -6,12 +6,7 @@ defmodule VegaWeb.BoardTest do
   alias Vega.Issue
 
   setup_all do
-    #Mongo.create(:mongo, "boards")
-    #Mongo.create(:mongo, "issues")
-    #Mongo.create(:mongo, "cards")
-    Mongo.create_indexes(:mongo, "cards", [[key: [list: 1, board: 1], name: "list_board"]])
-
-    {:ok, [user: User.fetch()]}
+    {:ok, [user: User.fake("zookzok", "Mr. Zookzook", "zookzook@lvh.me")]}
   end
 
   describe "basic board CRUD functions" do
@@ -22,8 +17,8 @@ defmodule VegaWeb.BoardTest do
       board = Board.new(user, title)
       assert board != nil
       assert board.title == title
-      assert %{"admin" => ^id} = board.members
-      assert {:ok, 0, 0} == Board.delete(board)
+      assert %{"id" => ^id, "role" => "admin"} = board.members
+      assert {:ok, 1, 0} == Board.delete(board)
     end
 
     test "set title", context do
@@ -38,7 +33,7 @@ defmodule VegaWeb.BoardTest do
       board = Board.set_title(board, user, title)
       assert board.title == title
 
-      assert {:ok, 1, 0} == Board.delete(board)
+      assert {:ok, 2, 0} == Board.delete(board)
     end
 
     test "set description", context do
@@ -57,7 +52,7 @@ defmodule VegaWeb.BoardTest do
       board = Board.set_description(board, user, description)
       assert board.description == description
 
-      assert {:ok, 3, 0} == Board.delete(board)
+      assert {:ok, 4, 0} == Board.delete(board)
     end
   end
 
@@ -79,10 +74,10 @@ defmodule VegaWeb.BoardTest do
 
       assert list.title == title
 
-      [issue] = Issue.fetch_all(board) |> Enum.to_list()
+      [issue,_] = Issue.fetch_all(board) |> Enum.to_list()
       assert issue.board == board._id
       assert issue.t == 4
-      assert {:ok, 1, 0} == Board.delete(board)
+      assert {:ok, 2, 0} == Board.delete(board)
 
     end
 
@@ -101,7 +96,7 @@ defmodule VegaWeb.BoardTest do
 
       assert (a.pos < b.pos && b.pos < c.pos) == true
 
-      assert {:ok, 3, 0} == Board.delete(board)
+      assert {:ok, 4, 0} == Board.delete(board)
 
     end
 
@@ -149,7 +144,7 @@ defmodule VegaWeb.BoardTest do
 
       assert [25.0, 50.0, 150.0] == [a, b, c] |> Enum.map(fn l -> l.pos end)
 
-      assert {:ok, 7, 0} == Board.delete(board)
+      assert {:ok, 8, 0} == Board.delete(board)
 
     end
 
@@ -180,7 +175,7 @@ defmodule VegaWeb.BoardTest do
       assert b.pos == 200.0
       assert c.pos == 300.0
 
-      assert {:ok, 4, 0} == Board.delete(board)
+      assert {:ok, 5, 0} == Board.delete(board)
 
     end
   end
@@ -207,7 +202,7 @@ defmodule VegaWeb.BoardTest do
     [card] = cards
     assert card.title == card_title
 
-    assert {:ok, 2, 1} == Board.delete(board)
+    assert {:ok, 3, 1} == Board.delete(board)
   end
 
   @max_cards 10
@@ -230,7 +225,7 @@ defmodule VegaWeb.BoardTest do
 
     board = Board.fetch(board)
 
-    n_issues = 3 * @max_cards + 3
+    n_issues = 3 * @max_cards + 4
     n_cards  = 3 * @max_cards
     assert {:ok, ^n_issues, ^n_cards} = Board.delete(board)
   end

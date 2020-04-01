@@ -1,7 +1,7 @@
 use Mix.Config
 
 config :vega, :mongodb,
-       url: "mongodb://localhost:27017,localhost:27018,localhost:27019/vega-test?replicaSet=kliniken"
+       url: "mongodb://localhost:27017,localhost:27018,localhost:27019/vega-test?replicaSet=vega_set"
 
 # We don't run a server during test. If one is required,
 # you can enable the server option below.

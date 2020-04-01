@@ -58,7 +58,17 @@ else
   mongo --host $repl_set_url --quiet --eval "db.createCollection('boards')" &>/dev/null
   mongo --host $repl_set_url --quiet --eval "db.createCollection('cards')" &>/dev/null
   mongo --host $repl_set_url --quiet --eval "db.createCollection('issues')" &>/dev/null
+
+  repl_set_url='mongodb://localhost:27017,localhost:27018,localhost:27019/vega-test?replicaSet=vega_set'
+
+  mongo --host $repl_set_url --quiet --eval "db.createCollection('users')" &>/dev/null
+  mongo --host $repl_set_url --quiet --eval "db.createCollection('boards')" &>/dev/null
+  mongo --host $repl_set_url --quiet --eval "db.createCollection('cards')" &>/dev/null
+  mongo --host $repl_set_url --quiet --eval "db.createCollection('issues')" &>/dev/null
+
   >&2 echo "done"
 fi
+
+
 
 exit 0

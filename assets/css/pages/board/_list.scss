@@ -71,6 +71,8 @@ $list-background-color: #ebecf0;
   cursor: pointer;
   -webkit-touch-callout: none;
   user-select: none;
+  display: flex;
+  justify-content: space-between;
 }
 
 .list-composer-form {
