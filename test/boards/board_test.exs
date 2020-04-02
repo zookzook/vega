@@ -54,6 +54,22 @@ defmodule VegaWeb.BoardTest do
 
       assert {:ok, 4, 0} == Board.delete(board)
     end
+
+    test "set color", context do
+      user = context.user
+      title = "A board"
+      board = Board.new(user, title)
+
+      color = "red"
+      board = Board.set_color(board, user, "red")
+      assert Keyword.get(board.options, :color) == color
+
+      color = "blue"
+      board = Board.set_color(board, user, "blue")
+      assert Keyword.get(board.options, :color) == color
+
+      assert {:ok, 3, 0} == Board.delete(board)
+    end
   end
 
   describe "basic list CRUD functions" do
