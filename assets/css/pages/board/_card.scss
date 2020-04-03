@@ -52,15 +52,19 @@ $list-background-color:  #ebecf0;
   word-wrap: break-word;
   resize: none;
   height: 3.75rem;
-  background: none;
-  border: none;
-  box-shadow: none;
-  margin-bottom: $px4;
+  margin-bottom: $px6;
   max-height: 10.125rem;
   min-height: 3.375rem;
   overflow-y: auto;
-  padding: 0;
+  padding: $px6;
   width: 100%;
+}
+
+// support for different border colors in input fields
+@each $name, $color in $colors-map {
+  &.#{$name} .card-composer-textarea {
+    border: 1px solid $color;
+  }
 }
 
 

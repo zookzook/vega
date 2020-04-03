@@ -1,0 +1,10 @@
+.pop-over {
+  background: rgba(235, 235, 235, 0.94);
+  border-radius: $px3;
+  box-shadow: 0 8px 16px -4px rgba(9,30,66,.25),0 0 0 1px rgba(9,30,66,.08);
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 304px;
+  z-index: 70;
+}

@@ -35,8 +35,8 @@
               </form>
             </div>
             <% else %>
-            <div class="list-composer is-idle" phx-click="add-list">
-              <a class="list-composer-new-list" href="javascript:void(0);" ><%= gettext("Add a new list") %></a>
+            <div class="list-composer-idle" phx-click="add-list">
+              <a href="javascript:void(0);" ><%= gettext("Add a new list") %></a>
             </div>
             <% end %>
           </div>
@@ -49,4 +49,7 @@
       </div>
     </div>
   </div>
+  <%= if @pop_over != nil do %>
+    <%= live_component @socket, Vega.ListMenu, @pop_over %>
+  <% end %>
 </div>

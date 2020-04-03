@@ -210,6 +210,29 @@ defmodule Vega.Board do
   end
 
   @doc """
+  Set the title of the list and returns the new board.
+
+  ## Example
+
+    iex> Vega.Board.set_list_title(board, list, user, "New title")
+
+  """
+  def set_list_title(%Board{_id: id} = board, %BoardList{_id: list_id} = list, user, title) do
+
+    issue = @set_title
+            |> Issue.new(user, board, list)
+            |> Issue.add_message_keys(title: title, list: list.title)
+            |> to_map()
+
+    with_transaction(board, fn trans ->
+      with {:ok, _} <- Mongo.insert_one(:mongo, @issues_collection, issue, trans),
+           {:ok, _} <- Mongo.update_one(:mongo, @collection, %{_id: id, "lists._id": list_id}, %{"$set" => %{"lists.$.title" => title}}) do
+        :ok
+      end
+    end)
+  end
+
+  @doc """
   Add a new list to the board. It creates an issue `Vega.Issue.AddList` for the history and returns the new board.
 
   ## Example

@@ -2,3 +2,21 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 200;
   margin: 0;
 }
+
+button,
+input,
+optgroup,
+select,
+textarea {
+  line-height: normal;
+}
+
+// fixing the placeholder line height
+::-webkit-input-placeholder { line-height: normal; }
+:-moz-placeholder { line-height: normal;  }
+:-ms-input-placeholder {line-height: normal; }
+
+// no text decoration at all
+a {
+  text-decoration: none;
+}

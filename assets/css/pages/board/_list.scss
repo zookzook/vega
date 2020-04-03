@@ -20,9 +20,10 @@ $list-background-color: #ebecf0;
   max-height: 100%;
 
   .header {
-    flex: 0 0 auto;
     padding: $px10 $px8;
     min-height: 1.25rem;
+    display: flex;
+    align-items: center;
   }
 
   h2 {
@@ -68,8 +69,16 @@ $list-background-color: #ebecf0;
 
 .list-composer-input {
   display: block;
-  margin: 0 0 $px4 0;
+  margin: 0 0 $px6 0;
 }
+
+// support for different border colors in input fields
+@each $name, $color in $colors-map {
+  &.#{$name} .list-composer-input {
+    border: 1px solid $color;
+  }
+}
+
 
 .list-composer-new-list {
   text-decoration: none;
@@ -77,8 +86,10 @@ $list-background-color: #ebecf0;
   color: white;
 }
 
+.list-composer-idle,
 .list-composer {
 
+  color: white;
   background-color: #ebecf0;
   border-radius: $px3;
   border: 1px solid white;
@@ -86,45 +97,24 @@ $list-background-color: #ebecf0;
   min-width: 270px;
   width: 270px;
   margin: 0 $px8 0 $px4;
-  min-height: 2rem;
-  padding: $px2;
+  padding: $px6;
   display: flex;
 
-  .list-composer-new-list {
-    display: none;
+  a {
+    color: white;
   }
 
   .list-composer-form {
     width: 100%;
   }
+}
 
-  &.is-idle {
+.list-composer-idle {
+  background-color: hsla(0,0%,100%,.24);
 
-    max-height: 1.25rem;
-    background-color: hsla(0,0%,100%,.24);
-
-    .list-composer-form {
-      display: none;
-    }
-
-    .list-composer-new-list {
-      display: flex;
-      align-items: center;
-    }
-
-    .list-composer-input {
-      display: none;
-    }
-
-    .composer-controls {
-      display: none;
-    }
-
-    &:hover {
-      background-color: hsla(0,0%,100%,.32);
-    }
+  &:hover {
+    background-color: hsla(0,0%,100%,.32);
   }
-
 }
 
 

@@ -5,22 +5,23 @@ input:focus{
 
 input,
 textarea {
-  -webkit-appearance: none;
   background-color: #fafbfc;
   border-radius: 3px;
   border: 1px solid #dfe1e6;
   color: #172b4d;
   display: block;
-  line-height: 20px;
-  padding: 8px 12px;
-  transition-duration: 85ms;
-  transition-property: background-color, border-color, box-shadow;
-  transition-timing-function: ease;
+  padding: $px6 $px12;
   font-size: 0.75rem;
 }
 
+// support for different border colors in input fields
+@each $name, $color in $colors-map {
+  &.#{$name} input[type="text"] {
+    border: 1px solid $color;
+  }
+}
+
 .submit {
-  -webkit-appearance: none;
   background-color: #fafbfc;
   background-color: rgba(9,30,66,.04);
   border-radius: 3px;
@@ -30,13 +31,10 @@ textarea {
   display: inline-block;
   font-weight: 400;
   line-height: 20px;
-  margin: 0 0 1px 0;
-  padding: 3px 8px;
+  margin: 0 0 $px1 0;
+  padding: $px4 $px8;
   text-align: center;
   text-decoration: none;
-  transition-duration: 85ms;
-  transition-property: background-color, border-color, box-shadow;
-  transition-timing-function: ease;
   font-size: 0.75rem;
   white-space: nowrap;
 

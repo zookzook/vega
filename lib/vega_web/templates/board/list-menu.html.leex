@@ -1,0 +1,25 @@
+<div class="pop-over" id="list_menu" style="left:<%= @x%>px; top:<%= @y%>px">
+  <div class="content">
+    <div class="title"><h3><%= @list.title%></h3><a class="control" phx-click="close-list-menu" href="javascript:void(0);">Close</a></div>
+    <div class="y-scrollbar menu-items">
+      <%= if @action == nil do %>
+      <a phx-click="change-name" phx-target="#list_menu" class="menu-item" href="javascript:void(0);">Change name</a>
+      <a class="menu-item" href="javascript:void(0);">Set color</a>
+      <a class="menu-item" href="javascript:void(0);">Move list</a>
+      <a class="menu-item" href="javascript:void(0);">Copy list</a>
+      <a class="menu-item" href="javascript:void(0);">Archive list</a>
+      <span class="menu-separator"></span>
+      <a class="menu-item" href="javascript:void(0);">Move all cards</a>
+      <% end %>
+      <%= if @action == :change_name do %>
+      <%= f = form_for :name, "javascript:void(0);", [phx_submit: :save, phx_change: :validate, phx_target: "#list_menu"] %>
+        <%= text_input f, :title, value: @value, placeholder: gettext("Enter a title..."), phx_hook: "Focus", phx_target: :list_menu %>
+        <%= submit gettext("Save"), disabled: (not VegaWeb.BoardView.validate_title(@value)), class: "submit submit-primary submit-shadow-box submit-next" %>
+        <a class="submit submit-cancel submit-shadow-box" phx-target="#list_menu" phx-click="cancel" href="javascript:void(0);" ><%= gettext("Cancel") %></a>
+      </form>
+      <% end %>
+    </div>
+
+  </div>
+
+</div>

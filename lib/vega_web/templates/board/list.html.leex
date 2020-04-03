@@ -1,7 +1,7 @@
 <div class="list" id="list-<%= @id %>" data-id="<%= @id %>">
     <div class="list-content">
         <div class="header list-drag-handle">
-            <h2><%= @list.title%></h2><span>...</span>
+            <h2><%= @list.title%></h2><span class="control" phx-click="open-list-menu" phx-value-id="<%= @id %>">...</span>
         </div>
         <div class="y-scrollbar">
           <div class="list-cards" data-id="<%= @id %>">
@@ -12,11 +12,7 @@
           <%= if @add_card do %>
           <%= f = form_for :card, "javascript:void(0);", [phx_submit: :save, phx_target: make_list_id(@list._id), phx_hook: "AutoClose"] %>
             <div class="card-composer">
-              <div class="card">
-                <div class="card-details">
-                <%= textarea f, :title, placeholder: gettext("Enter a title for this card..."), class: "card-composer-textarea", id: make_text_id(@list._id) , phx_target: make_list_id(@list._id) %>
-                </div>
-              </div>
+            <%= textarea f, :title, placeholder: gettext("Enter a title for this card..."), class: "card-composer-textarea", id: make_text_id(@list._id) , phx_target: make_list_id(@list._id) %>
               <input type="hidden" name="action" />
               <%= submit gettext("Add new card"), class: "submit submit-primary submit-shadow-box submit-next" %>
               <a class="add-card-form-cancel submit submit-cancel submit-shadow-box" phx-target="<%= make_list_id(@list._id)%>" phx-click="cancel-add-card" href="javascript:void(0);" ><%= gettext("Cancel") %></a>

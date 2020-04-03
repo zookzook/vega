@@ -84,4 +84,32 @@
 
 .menu-items {
   padding: $px6;
+
+  input {
+    width: 100%;
+    margin-bottom: $px6;
+  }
+}
+
+.menu-item {
+  border-radius: $px3;
+  text-decoration: none;
+  display: block;
+  margin-top: $px6;
+  padding: $px6;
+  color: #333;
+  &:hover {
+    background-color: rgba(9,30,66,.08);
+    color: #172b4d;
+  }
+
+  &:first-child {
+    margin-top: 0;
+  }
+}
+
+.menu-separator {
+  display: block;
+  margin-top: $px6;
+  border-bottom: $px1 solid #999;
 }

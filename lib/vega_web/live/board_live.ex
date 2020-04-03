@@ -35,6 +35,7 @@ defmodule VegaWeb.BoardLive do
       history: Issue.fetch_all(board),
       edit: false,
       menu: false,
+      pop_over: nil,
       list_composer: Enum.empty?(board.lists))}
   end
 
@@ -48,6 +49,9 @@ defmodule VegaWeb.BoardLive do
     {:noreply, assign(socket, board: board, history: history)}
   end
 
+  defp close_other(socket) do
+    assign(socket, pop_over: nil, menu: false, list_composer: false)
+  end
   @doc"""
   Handle all different events:
 
@@ -58,19 +62,33 @@ defmodule VegaWeb.BoardLive do
   * 'move-card' moves a card within the same list or to other lists
   * 'move-card-to-end' moves a card to the end of a list
   """
+  def handle_event("close-all", params, socket) do
+
+    IO.puts inspect params
+    {:noreply, close_other(socket)}
+  end
+  def handle_event("open-list-menu", %{"x" => x, "y" => y, "id" => id} = params, %Socket{assigns: %{current_user: user, board: board}} = socket) do
+    with list when list != nil <- Board.find_list(board, id) do
+      {:noreply, socket |> close_other() |> assign(pop_over: [id: :list_menu, current_user: user, board: board, list: list, x: x - 15, y: y + 15])}
+    else
+      _error -> {:noreply, socket}
+    end
+  end
+  def handle_event("close-list-menu", _params, socket) do
+    {:noreply, close_other(socket)}
+  end
   def handle_event("open-menu", _value, socket) do
-    {:noreply, assign(socket, menu: true)}
+    {:noreply, socket |> close_other() |> assign(menu: true)}
   end
   def handle_event("close-menu", _value, socket) do
     {:noreply, assign(socket, menu: false)}
   end
   def handle_event("add-list", _value, socket) do
-    {:noreply, assign(socket, list_composer: true)}
+    {:noreply, socket |> close_other() |> assign(list_composer: true)}
   end
   def handle_event("cancel-add-list", _params, socket) do
     {:noreply, assign(socket, list_composer: false)}
   end
-
   def handle_event("save", %{"new_list" => %{"title" => title}},  %Socket{assigns: %{current_user: user, board: board}} = socket) do
     case title do
       ""     -> {:noreply, socket}
@@ -81,7 +99,7 @@ defmodule VegaWeb.BoardLive do
   end
 
   def handle_event("edit", _value, socket) do
-    {:noreply, assign(socket, :edit, true)}
+    {:noreply, socket |> close_other() |> assign(:edit, true)}
   end
 
   def handle_event("save", %{"board" => %{"title" => new_title}}, %Socket{assigns: %{current_user: user, board: board}} = socket) do
