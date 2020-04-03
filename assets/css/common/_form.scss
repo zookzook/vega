@@ -38,6 +38,7 @@ textarea {
   transition-property: background-color, border-color, box-shadow;
   transition-timing-function: ease;
   font-size: 0.75rem;
+  white-space: nowrap;
 
   &:hover {
     text-decoration: none;
@@ -90,3 +91,15 @@ textarea {
   }
 }
 
+.control {
+  border-radius: $px3;
+  color: #5e6c84;
+  padding: $px4 $px8;
+  text-decoration: none;
+  white-space: nowrap;
+  &:hover {
+    text-decoration: none;
+    background-color: rgba(9,30,66,.08);
+    color: #172b4d;
+  }
+}

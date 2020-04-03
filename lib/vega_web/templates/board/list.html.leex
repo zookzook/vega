@@ -3,28 +3,30 @@
         <div class="header list-drag-handle">
             <h2><%= @list.title%></h2><span>...</span>
         </div>
-        <div class="list-cards" data-id="<%= @id %>">
-          <%= for card <- @list.cards do %>
-            <%= live_component @socket, Vega.CardComponent, card: card, list: @list, board: @board %>
+        <div class="y-scrollbar">
+          <div class="list-cards" data-id="<%= @id %>">
+            <%= for card <- @list.cards do %>
+              <%= live_component @socket, Vega.CardComponent, card: card, list: @list, board: @board %>
+            <% end %>
+          </div>
+          <%= if @add_card do %>
+          <%= f = form_for :card, "javascript:void(0);", [phx_submit: :save, phx_target: make_list_id(@list._id), phx_hook: "AutoClose"] %>
+            <div class="card-composer">
+              <div class="card">
+                <div class="card-details">
+                <%= textarea f, :title, placeholder: gettext("Enter a title for this card..."), class: "card-composer-textarea", id: make_text_id(@list._id) , phx_target: make_list_id(@list._id) %>
+                </div>
+              </div>
+              <input type="hidden" name="action" />
+              <%= submit gettext("Add new card"), class: "submit submit-primary submit-shadow-box submit-next" %>
+              <a class="add-card-form-cancel submit submit-cancel submit-shadow-box" phx-target="<%= make_list_id(@list._id)%>" phx-click="cancel-add-card" href="javascript:void(0);" ><%= gettext("Cancel") %></a>
+            </div>
+            </form>
+          <% else %>
+          <div class="list-footer">
+              <a phx-click="add-card" class="control d-block" phx-target="<%= make_list_id(@list._id)%>" href="javascript:void(0);"><%= gettext("Add another card") %></a>
+          </div>
           <% end %>
         </div>
-        <%= if @add_card do %>
-        <%= f = form_for :card, "javascript:void(0);", [phx_submit: :save, phx_target: make_list_id(@list._id), phx_hook: "AutoClose"] %>
-          <div class="card-composer">
-            <div class="card">
-              <div class="card-details">
-              <%= textarea f, :title, placeholder: gettext("Enter a title for this card..."), class: "card-composer-textarea", id: make_text_id(@list._id) , phx_target: make_list_id(@list._id) %>
-              </div>
-            </div>
-            <input type="hidden" name="action" />
-            <%= submit gettext("Add new card"), class: "submit submit-primary submit-shadow-box submit-next" %>
-            <a class="add-card-form-cancel submit submit-cancel submit-shadow-box" phx-target="<%= make_list_id(@list._id)%>" phx-click="cancel-add-card" href="javascript:void(0);" ><%= gettext("Cancel") %></a>
-          </div>
-          </form>
-        <% else %>
-        <div class="list-footer">
-            <a phx-click="add-card" class="list-control" phx-target="<%= make_list_id(@list._id)%>" href="javascript:void(0);"><%= gettext("Add another card") %></a>
-        </div>
-        <% end %>
     </div>
 </div>

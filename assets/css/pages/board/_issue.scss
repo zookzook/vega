@@ -1,13 +1,7 @@
 .issues {
-  background-color: rgba(248, 241, 251, 0.7);
-  border-radius: $px3;
-  box-shadow: -$px1 $px1 $px3 rgba(95, 95, 95, 0.5), inset -$px3 $px3 $px5 -$px5 rgba(0,0,0,1);
-
-  margin: 3rem 0.5rem 0.5rem 0.5rem;
-  width: 16.875rem;
-  padding: 0.5rem;
   white-space: normal;
 
+  margin-top: $px12;
   h2 {
     color: #172b4d;
     margin: 0.25rem 0.25rem 0.5rem 0.25rem;
@@ -38,18 +32,4 @@
 
 .issue-footer {
   margin-top: 0.5rem;
-}
-
-.issue-control {
-  text-decoration: none;
-  color: #5e6c84;
-  border-radius: $px3;
-  display: block;
-  flex: 1 0 auto;
-  padding: 4px 8px;
-  &:hover {
-    text-decoration: none;
-    background-color: rgba(9,30,66,.08);
-    color: #172b4d;
-  }
 }

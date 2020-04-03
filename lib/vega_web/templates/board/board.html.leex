@@ -1,5 +1,5 @@
-<div class="board-wrapper" phx-hook="BoardColor" data-color="<%= get_color(@board)%>">
-  <div class="board-content">
+<div class="board-container" phx-hook="BoardColor" data-color="<%= get_color(@board)%>">
+  <div class="board-page">
     <div class="board-header">
       <div class="board-header-left">
         <%= if @edit do %>
@@ -17,8 +17,8 @@
         <a class="submit primary submit-border mr-12" href="<%= Routes.auth_path(@socket, :delete) %>"><%= gettext "Logout" %></a>
       </div>
     </div>
-      <div class="board-canvas">
-        <div id="board" phx-hook="Board">
+      <div class="content-container">
+          <div id="board" class="board x-scrollbar" phx-hook="Board">
             <div class="board-lists">
             <%= for list <- @board.lists do %>
               <%= live_component @socket, Vega.ListComponent, id: BSON.ObjectId.encode!(list._id), list: list, board: @board, current_user: @current_user %>
@@ -38,20 +38,13 @@
             <div class="list-composer is-idle" phx-click="add-list">
               <a class="list-composer-new-list" href="javascript:void(0);" ><%= gettext("Add a new list") %></a>
             </div>
-            <%= if @menu do %>
-            <%= live_component @socket, Vega.MenuComponent, id: :menu, board: @board, current_user: @current_user %>
-            <% else %>
-            <a phx-click="open-menu" class="submit primary submit-border" style="margin-left:auto; height: 100%" href="#"><%= gettext "Open Menu" %></a>
-            <% end %>
             <% end %>
           </div>
-            <div class="issues">
-              <h2>History</h2>
-              <%= render_many @history, VegaWeb.BoardView, "history.html", as: :issue %>
-              <div class="issue-footer">
-                  <a class="issue-control" href="javascript:void(0);"><%= gettext("See full history") %></a>
-              </div>
-            </div>
+            <%= if @menu do %>
+            <%= live_component @socket, Vega.MenuComponent, id: :menu, board: @board, history: @history, current_user: @current_user %>
+            <% else %>
+              <a phx-click="open-menu" class="submit primary submit-border" style=" white-space: nowrap;" href="#"><%= gettext "Open Menu" %></a>
+            <% end %>
         </div>
       </div>
     </div>

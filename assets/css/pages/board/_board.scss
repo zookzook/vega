@@ -1,4 +1,4 @@
-.board-wrapper {
+.board-container {
   position: absolute;
   left: 0;
   right: 0;
@@ -6,35 +6,38 @@
   bottom: 0;
 }
 
-.board-content {
+.board-page {
   height: 100%;
   display: flex;
   flex-direction: column;
 }
 
-.board-canvas {
+.content-container {
   position: relative;
   flex-grow: 1;
 }
 
 .board-lists {
   display: flex;
-  padding-right: $px8;
+  align-items: start;
+  height: 100%;
 }
 
-#board {
+.board {
   user-select: none;
-  margin-bottom: $px6;
+  margin: $px6;
+
   overflow-x: auto;
   overflow-y: hidden;
-  padding-top: $px6;
-  padding-bottom: $px6;
   position: absolute;
   top: 0;
   right: 0;
   bottom: 0;
   left: 0;
   hyphens: auto;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
 }
 
 .board-header {
@@ -120,8 +123,4 @@
   z-index: -10;
   opacity: 0;
   position: absolute;
-}
-
-.board-history {
-  margin-top: 1rem;
 }

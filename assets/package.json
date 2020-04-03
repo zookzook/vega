@@ -7,9 +7,11 @@
   },
   "dependencies": {
     "normalize.css": "8.0.1",
+    "overlayscrollbars": "^1.11.0",
     "phoenix": "file:../deps/phoenix",
     "phoenix_html": "file:../deps/phoenix_html",
     "phoenix_live_view": "file:../deps/phoenix_live_view",
+    "simplebar": "^5.1.0",
     "sortablejs": "^1.10.2"
   },
   "devDependencies": {

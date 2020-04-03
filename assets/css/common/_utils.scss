@@ -1,3 +1,53 @@
 .invisible {
   opacity: 0;
 }
+
+.d-block {
+  display: block;
+}
+
+.y-scrollbar {
+  overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    width: 0.6875rem;
+  }
+
+  scrollbar-width: thin;
+  scrollbar-color: #90A4AE #CFD8DC;
+
+  &::-webkit-scrollbar-track {
+    background: #CFD8DC;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #90A4AE;
+    border-radius: 6px;
+    border: 3px solid #CFD8DC;
+  }
+}
+
+.x-scrollbar {
+  overflow-x: auto;
+
+  &::-webkit-scrollbar {
+    height: 0.6875rem;
+  }
+
+  scrollbar-width: thin;
+  scrollbar-color: #90A4AE #CFD8DC;
+
+  &::-webkit-scrollbar-track {
+    background: #CFD8DC;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #90A4AE;
+    border-radius: 6px;
+    border: 3px solid #CFD8DC;
+  }
+
+}
+
+.pos-relative {
+  position: relative;
+}
+
