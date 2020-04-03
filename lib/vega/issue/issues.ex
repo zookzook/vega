@@ -28,7 +28,7 @@ defmodule Vega.Issues do
   end
 
   ##
-  # Set the title of a board
+  # Create a new board
   #
   defp add_msg(%Issue{t: @new_board} = issue) do
     %Issue{issue | msg: gettext("create a new board '%{title}'", map_to_keywords(issue.keys))}
@@ -37,7 +37,9 @@ defmodule Vega.Issues do
   # Set the color of a board
   #
   defp add_msg(%Issue{t: @set_board_color} = issue) do
-    %Issue{issue | msg: gettext("changed the color of board '%{board}' to '%{color}'", map_to_keywords(issue.keys))}
+    color = Gettext.gettext(VegaWeb.Gettext, issue.keys["color"])
+    keys  = Map.put(issue.keys, "color", color)
+    %Issue{issue | msg: gettext("changed the color of board '%{board}' to '%{color}'", map_to_keywords(keys))}
   end
   ##
   # Set the description of a board
@@ -49,7 +51,10 @@ defmodule Vega.Issues do
   # Set the title of a board
   #
   defp add_msg(%Issue{t: @set_title} = issue) do
-    %Issue{issue | msg: gettext("changed title '%{title}' of board '%{board}'", map_to_keywords(issue.keys))}
+    case Map.has_key?(issue.keys, "list") do
+      true  -> %Issue{issue | msg: gettext("changed title '%{title}' of list '%{list}'", map_to_keywords(issue.keys))}
+      false -> %Issue{issue | msg: gettext("changed title '%{title}' of board '%{board}'", map_to_keywords(issue.keys))}
+    end
   end
   ##
   # Create a new list
@@ -100,4 +105,15 @@ defmodule Vega.Issues do
     Enum.map(keys, fn({key, value}) -> {String.to_existing_atom(key), value} end)
   end
 
+  ##
+  # unused function to get the translation directory mapped
+  defp _translate() do
+    gettext("default")
+    gettext("red")
+    gettext("green")
+    gettext("blue")
+    gettext("orange")
+    gettext("pink")
+    gettext("purple")
+  end
 end
