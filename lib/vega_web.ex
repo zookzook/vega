@@ -23,8 +23,9 @@ defmodule VegaWeb do
 
       import Plug.Conn
       import VegaWeb.Gettext
-      alias VegaWeb.Router.Helpers, as: Routes
       import Phoenix.LiveView.Controller
+
+      alias VegaWeb.Router.Helpers, as: Routes
       alias Plug.Conn
 
       defp fetch_user(%Conn{assigns: %{current_user: user}}) do
