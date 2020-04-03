@@ -116,6 +116,28 @@ defmodule VegaWeb.BoardTest do
 
     end
 
+
+    test "renaming a list", context do
+
+      user = context.user
+      title = "A board title"
+      board = Board.new(user, title)
+      assert board != nil
+
+      board = Board.add_list(board, user, "to do")
+      board = Board.add_list(board, user, "doing")
+      board = Board.add_list(board, user, "done")
+
+      [_a, b, _c] = board.lists
+
+      board = Board.set_list_title(board, b, user, "in progress")
+      [_a, b, _c] = board.lists
+
+      assert b.title == "in progress"
+
+      assert {:ok, 5, 0} == Board.delete(board)
+    end
+
     test "moving a list", context do
 
       user = context.user
