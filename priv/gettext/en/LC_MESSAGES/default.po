@@ -37,37 +37,37 @@ msgid "changed title '%{title}' of board '%{board}'"
 msgstr ""
 
 #, elixir-format
-#: lib/vega_web/views/board_view.ex:71
+#: lib/vega_web/views/board_view.ex:70
 msgid "yesterday"
 msgstr ""
 
 #, elixir-format
-#: lib/vega_web/views/board_view.ex:84
+#: lib/vega_web/views/board_view.ex:83
 msgid "%{t} hours ago"
 msgstr ""
 
 #, elixir-format
-#: lib/vega_web/views/board_view.ex:93
+#: lib/vega_web/views/board_view.ex:92
 msgid "%{t} minutes ago"
 msgstr ""
 
 #, elixir-format
-#: lib/vega_web/views/board_view.ex:83
+#: lib/vega_web/views/board_view.ex:82
 msgid "an hour ago"
 msgstr ""
 
 #, elixir-format
-#: lib/vega_web/views/board_view.ex:91
+#: lib/vega_web/views/board_view.ex:90
 msgid "few seconds ago"
 msgstr ""
 
 #, elixir-format
-#: lib/vega_web/views/board_view.ex:92
+#: lib/vega_web/views/board_view.ex:91
 msgid "one minute ago"
 msgstr ""
 
 #, elixir-format
-#: lib/vega_web/views/board_view.ex:72
+#: lib/vega_web/views/board_view.ex:71
 msgid "the day before yesterday"
 msgstr ""
 
@@ -350,17 +350,22 @@ msgstr ""
 msgid "personal boards"
 msgstr ""
 
-#, elixir-format, fuzzy
+#, elixir-format
 #: menu.html.leex:31
 msgid "Move"
 msgstr ""
 
-#, elixir-format, fuzzy
+#, elixir-format
 #: lib/vega/issue/issues.ex:94
 msgid "moved list '%{a}' from board '%{from}'"
 msgstr ""
 
-#, elixir-format, fuzzy
+#, elixir-format
 #: lib/vega/issue/issues.ex:95
 msgid "moved list '%{a}' to board '%{to}'"
+msgstr ""
+
+#, elixir-format
+#: lib/vega_web/live/list_menu.ex:99 lib/vega_web/live/list_menu.ex:114
+msgid " (current)"
 msgstr ""

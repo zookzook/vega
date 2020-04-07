@@ -7,6 +7,8 @@ defmodule Vega.ListMenu do
 
   use Phoenix.LiveComponent
 
+  import VegaWeb.Gettext
+
   alias Vega.Board
   alias Phoenix.LiveView.Socket
   alias Vega.BoardOverview
@@ -94,7 +96,7 @@ defmodule Vega.ListMenu do
     board_options = boards
       |> Enum.map(fn b ->
       title = case current_board.id == b.id do
-        true  -> b["title"] <> " (current)"
+        true  -> b["title"] <> gettext(" (current)")
         false -> b["title"]
       end
       [key: title, value: b.id]
@@ -109,7 +111,7 @@ defmodule Vega.ListMenu do
     positions = board.lists
                 |> Enum.with_index(1)
                 |> Enum.map(fn {l,i} -> case l.id == current_list.id do
-                      true  -> [key: "#{i} (current)", value: to_string(i)]
+                      true  -> [key: to_string(i) <> gettext(" (current)"), value: to_string(i)]
                       false -> [key: to_string(i), value: to_string(i)]
                     end
                    end)
