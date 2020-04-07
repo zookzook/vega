@@ -1,7 +1,10 @@
 defmodule Vega.ListMenu do
   @moduledoc """
 
-  This module represents the pop-over menu for the selected list. It is responsible to modify attributes of the list
+  This module represents the pop-over menu for the selected list. It is responsible to modify attributes of the list:
+
+  * move a list
+  * copy a list
 
   """
 
@@ -31,6 +34,30 @@ defmodule Vega.ListMenu do
   end
   def handle_event("change-name", _params, %Socket{assigns: %{list: list}} = socket) do
     {:noreply, assign(socket, action: :change_name, value: list.title)}
+  end
+  ##
+  # Copy a list
+  #
+  def handle_event("copy", _params, %Socket{assigns: %{list: list}} = socket) do
+    {:noreply, assign(socket, action: :copy, value: list.title)} ## todo gettext("Copy of #{title}", [title: list.title])
+  end
+  ##
+  # Update/validate the change of selection in case of 'copy list'
+  #
+  def handle_event("validate", %{"copy" => %{"title" => new_title}}, socket) do
+    {:noreply, assign(socket, value: new_title)}
+  end
+  def handle_event("save", %{"copy" => %{"title" => new_title}},
+        %Socket{assigns: %{current_user: user, board: board, list: list}} = socket) do
+
+    case VegaWeb.BoardView.validate_title(new_title) do
+      true ->
+        board = Board.copy_list(board, user, list, new_title)
+        send(self(), {:close_menu_list, board})
+        {:noreply, assign(socket, action: nil)}
+      false ->
+        {:noreply, socket}
+    end
   end
 
   ##

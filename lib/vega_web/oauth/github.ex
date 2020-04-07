@@ -22,7 +22,7 @@ defmodule GitHub do
     |> OAuth2.Client.put_serializer("application/json", Jason)
   end
 
-  def authorize_url!(params \\ []) do
+  def authorize_url!(_params \\ []) do
     OAuth2.Client.authorize_url!(client(), scope: "user,public_repo")
   end
 

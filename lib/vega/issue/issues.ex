@@ -16,6 +16,7 @@ defmodule Vega.Issues do
   # todo: @sort_cards      IssueConsts.encode(:sort_cards)
   @move_card       IssueConsts.encode(:move_card)
   @move_list       IssueConsts.encode(:move_list)
+  @copy_list       IssueConsts.encode(:copy_list)
 
   def to_struct(issue) do
     issue
@@ -95,6 +96,12 @@ defmodule Vega.Issues do
       {_, _, true}  -> %Issue{issue | msg: gettext("moved list '%{a}' to board '%{to}'", map_to_keywords(issue.keys))}
       _             -> %Issue{issue | msg: gettext("moved list '%{a}' to the end", map_to_keywords(issue.keys))}
     end
+  end
+  ##
+  # Copy a list
+  #
+  defp add_msg(%Issue{t: @copy_list} = issue) do
+    %Issue{issue | msg: gettext("copied the list '%{title}'", map_to_keywords(issue.keys))}
   end
   ##
   # Catch-All function
