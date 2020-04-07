@@ -88,7 +88,7 @@ msgstr ""
 
 #, elixir-format
 #: lib/vega_web/templates/board/board.html.leex:33 menu.html.leex:18
-#: lib/vega_web/templates/board/list.html.leex:18
+#: menu.html.leex:32 lib/vega_web/templates/board/list.html.leex:18
 msgid "Cancel"
 msgstr ""
 
@@ -103,7 +103,7 @@ msgid "moved list '%{a}' in front of '%{b}'"
 msgstr ""
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:94
+#: lib/vega/issue/issues.ex:96
 msgid "moved list '%{a}' to the end"
 msgstr ""
 
@@ -231,7 +231,7 @@ msgid "changed the color of board '%{board}' to '%{color}'"
 msgstr ""
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:114
+#: lib/vega/issue/issues.ex:116
 msgid "blue"
 msgstr ""
 
@@ -241,22 +241,22 @@ msgid "changed title '%{title}' of list '%{list}'"
 msgstr ""
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:113
+#: lib/vega/issue/issues.ex:115
 msgid "green"
 msgstr ""
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:115
+#: lib/vega/issue/issues.ex:117
 msgid "orange"
 msgstr ""
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:117
+#: lib/vega/issue/issues.ex:119
 msgid "purple"
 msgstr ""
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:112
+#: lib/vega/issue/issues.ex:114
 msgid "red"
 msgstr ""
 
@@ -276,7 +276,7 @@ msgid "History"
 msgstr ""
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:116
+#: lib/vega/issue/issues.ex:118
 msgid "pink"
 msgstr ""
 
@@ -310,7 +310,7 @@ msgstr ""
 msgid "Set color"
 msgstr ""
 
-#, elixir-format, fuzzy
+#, elixir-format
 #: lib/vega_web/templates/page/index.html.leex:37
 msgid "Add new board..."
 msgstr ""
@@ -340,12 +340,27 @@ msgstr ""
 msgid "Welcome to Vega!"
 msgstr ""
 
-#, elixir-format, fuzzy
-#: lib/vega/issue/issues.ex:111
+#, elixir-format
+#: lib/vega/issue/issues.ex:113
 msgid "default"
 msgstr ""
 
 #, elixir-format
 #: lib/vega_web/templates/page/index.html.leex:33
 msgid "personal boards"
+msgstr ""
+
+#, elixir-format, fuzzy
+#: menu.html.leex:31
+msgid "Move"
+msgstr ""
+
+#, elixir-format, fuzzy
+#: lib/vega/issue/issues.ex:94
+msgid "moved list '%{a}' from board '%{from}'"
+msgstr ""
+
+#, elixir-format, fuzzy
+#: lib/vega/issue/issues.ex:95
+msgid "moved list '%{a}' to board '%{to}'"
 msgstr ""

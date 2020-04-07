@@ -88,7 +88,7 @@ msgstr "Neue Karte hinzufügen"
 
 #, elixir-format
 #: lib/vega_web/templates/board/board.html.leex:33 menu.html.leex:18
-#: lib/vega_web/templates/board/list.html.leex:18
+#: menu.html.leex:32 lib/vega_web/templates/board/list.html.leex:18
 msgid "Cancel"
 msgstr "Abbruch"
 
@@ -103,7 +103,7 @@ msgid "moved list '%{a}' in front of '%{b}'"
 msgstr "bewegte die Liste '%{a}' vor Liste '%{b}'"
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:94
+#: lib/vega/issue/issues.ex:96
 msgid "moved list '%{a}' to the end"
 msgstr "bewegte die Liste '%{a}' ans Ende"
 
@@ -231,7 +231,7 @@ msgid "changed the color of board '%{board}' to '%{color}'"
 msgstr "setzte die Farbe vom Board '%{board}' auf '%{color}'"
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:114
+#: lib/vega/issue/issues.ex:116
 msgid "blue"
 msgstr "Blue"
 
@@ -241,22 +241,22 @@ msgid "changed title '%{title}' of list '%{list}'"
 msgstr "setzte den Titel der Liste '%{list}' auf '%{title}'"
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:113
+#: lib/vega/issue/issues.ex:115
 msgid "green"
 msgstr "Grün"
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:115
+#: lib/vega/issue/issues.ex:117
 msgid "orange"
 msgstr "Orange"
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:117
+#: lib/vega/issue/issues.ex:119
 msgid "purple"
 msgstr "Lila"
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:112
+#: lib/vega/issue/issues.ex:114
 msgid "red"
 msgstr "Rot"
 
@@ -276,7 +276,7 @@ msgid "History"
 msgstr "Aktivität"
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:116
+#: lib/vega/issue/issues.ex:118
 msgid "pink"
 msgstr "Pink"
 
@@ -310,7 +310,7 @@ msgstr "Liste verschieben"
 msgid "Set color"
 msgstr "Farbe ändern"
 
-#, elixir-format, fuzzy
+#, elixir-format
 #: lib/vega_web/templates/page/index.html.leex:37
 msgid "Add new board..."
 msgstr "Neues Board hinzufügen"
@@ -341,7 +341,7 @@ msgid "Welcome to Vega!"
 msgstr "Willkommen zu Vega!"
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:111
+#: lib/vega/issue/issues.ex:113
 msgid "default"
 msgstr "Standard"
 
@@ -349,3 +349,18 @@ msgstr "Standard"
 #: lib/vega_web/templates/page/index.html.leex:33
 msgid "personal boards"
 msgstr "Persönliche Boards"
+
+#, elixir-format, fuzzy
+#: menu.html.leex:31
+msgid "Move"
+msgstr "Liste verschieben"
+
+#, elixir-format, fuzzy
+#: lib/vega/issue/issues.ex:94
+msgid "moved list '%{a}' from board '%{from}'"
+msgstr "verschob die Liste '%{a}' aus dem Board '%{from}'"
+
+#, elixir-format, fuzzy
+#: lib/vega/issue/issues.ex:95
+msgid "moved list '%{a}' to board '%{to}'"
+msgstr "verschob die Liste '%{a}' zum Board '%{to}'"

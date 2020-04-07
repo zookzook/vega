@@ -6,6 +6,7 @@ defmodule Vega.BoardList do
 
   defstruct [
     :_id,
+    :id,
     :pos,
     :title,
     :cards]
@@ -15,14 +16,14 @@ defmodule Vega.BoardList do
   end
 
   def to_struct(%{"_id" => id, "title" => title, "pos" => pos}) do
-    %BoardList{_id: id, pos: pos, title: title, cards: Card.fetch_all_in_list(id) |> Enum.sort({:asc, Card})}
+    %BoardList{_id: id, id: BSON.ObjectId.encode!(id) ,pos: pos, title: title, cards: Card.fetch_all_in_list(id) |> Enum.sort({:asc, Card})}
   end
 
   def find_card(board, card_id) when is_binary(card_id) do
     find_card(board, BSON.ObjectId.decode!(card_id))
   end
   def find_card(%BoardList{cards: cards}, card_id) do
-    Enum.find(cards, fn %Card{_id: id} ->  id == card_id end)
+    Enum.find(cards, fn %Card{_id: id} -> id == card_id end)
   end
 
   @doc """

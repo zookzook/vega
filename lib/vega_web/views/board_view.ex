@@ -2,7 +2,6 @@ defmodule VegaWeb.BoardView do
 
   use VegaWeb, :view
 
-  alias Vega.Board
   alias Vega.Issue
   alias Vega.Dates
 

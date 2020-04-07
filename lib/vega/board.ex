@@ -240,14 +240,14 @@ defmodule Vega.Board do
     iex> Vega.Board.add_list(board, user, "To do")
 
   """
-  def add_list(%Board{_id: id, title: board_title} = board, user, title) do
+  def add_list(%Board{_id: id, title: board_title, lists: lists} = board, user, title) do
 
     issue = @add_list
             |> Issue.new(user, board)
             |> Issue.add_message_keys(title: title, board: board_title)
             |> to_map()
 
-    pos     = calc_pos(board)
+    pos     = calc_pos(lists)
     column  = title |> BoardList.new(pos) |> to_map()
 
     with_transaction(board, fn trans ->
@@ -290,49 +290,69 @@ defmodule Vega.Board do
 
   As the result the new board is returned.
   """
-  def move_list_before(%Board{_id: id, lists: lists} = board, user, list, before_list) do
+  def move_list(user, %BoardList{} = list, %Board{_id: id, lists: lists} = to, before_list) do
 
-    with pos <- calc_new_pos_before(lists, before_list._id) do
+    pos   = calc_pos(lists, before_list)
 
-      issue = @move_list
-              |> Issue.new(user, board)
-              |> Issue.add_message_keys(a: list.title, b: before_list.title)
-              |> to_map()
-
-      with_transaction(board, fn trans ->
-        with {:ok, _} <- Mongo.insert_one(:mongo, @issues_collection, issue, trans),
-             {:ok, _} <- Mongo.update_one(:mongo, @collection, %{_id: id, "lists._id": list._id}, %{"$set" => %{"lists.$.pos" => pos}}) do
-          :ok
-        end
-      end)
+    msg = case before_list do
+            nil    -> [a: list.title]
+            _other -> [a: list.title, b: before_list.title]
     end
-  end
-
-  @doc """
-  Move a list after to the end of all lists and preserve the order of the cards. It create a `MoveList` issue.
-  If 'lists' of the board is empty, then the position is `@pos_start` otherwise the position is `last.pos + @pos_gap`
-
-  * `user` current user
-  * `board` current board
-  * `list` the list to be moved to the end of the lists
-
-  It returns the new board.
-
-  """
-  def move_list_to_end(%Board{_id: id} = board, user, list) do
-
-    pos   = calc_pos(board)
     issue = @move_list
-            |> Issue.new(user, board)
-            |> Issue.add_message_keys(a: list.title)
+            |> Issue.new(user, to)
+            |> Issue.add_message_keys(msg)
             |> to_map()
 
-    with_transaction(board, fn trans ->
+    with_transaction(to, fn trans ->
       with {:ok, _} <- Mongo.insert_one(:mongo, @issues_collection, issue, trans),
            {:ok, _} <- Mongo.update_one(:mongo, @collection, %{_id: id, "lists._id": list._id}, %{"$set" => %{"lists.$.pos" => pos}}) do
         :ok
       end
     end)
+
+  end
+
+  @doc """
+  Move a list after to the end of all lists of another board and preserve the order of the cards.
+  If 'lists' of the board is empty, then the position is `@pos_start` otherwise the position is `last.pos + @pos_gap`
+
+  * `from` move the list from the board
+  * `user` current user
+  * `list` the list to be moved to the end of the lists
+  * `to` move the list to the board
+
+  It returns the `from` board.
+
+  """
+  #def xmove_list_before(%Board{} = from, user, list, before_list, %Board{} = to) do
+  #
+  #end
+  def move_list(user, %Board{_id: from_id} = from, list, %Board{_id: to_id, lists: lists} = to, list_before \\ nil) do
+
+    pos = calc_pos(lists, list_before)
+
+    issue_from = @move_list
+            |> Issue.new(user, from)
+            |> Issue.add_message_keys(a: list.title, to: to.title)
+            |> to_map()
+
+    issue_to = @move_list
+            |> Issue.new(user, to)
+            |> Issue.add_message_keys(a: list.title, from: from.title)
+            |> to_map()
+
+    list = to_map(%BoardList{list | pos: pos})
+
+    with_transaction(from, fn trans ->
+      with {:ok, _} <- Mongo.insert_one(:mongo, @issues_collection, issue_from, trans),
+           {:ok, _} <- Mongo.insert_one(:mongo, @issues_collection, issue_to, trans),
+           {:ok, _} <- Mongo.update_many(:mongo, @cards_collection, %{list: list._id, board: from_id}, %{"$set" => %{"board" => to_id}}, trans),
+           {:ok, _} <- Mongo.update_one(:mongo, @collection, %{_id: from_id}, %{"$pull" => %{"lists" => %{"_id" => list._id}}}, trans),
+           {:ok, _} <- Mongo.update_one(:mongo, @collection, %{_id: to_id}, %{"$push" => %{"lists" => list}}, trans)  do
+        :ok
+      end
+    end)
+
   end
 
   @doc """
@@ -465,7 +485,7 @@ defmodule Vega.Board do
   """
   def move_card_before(board, user, card, %BoardList{_id: from_id}, %BoardList{_id: id, cards: cards} = to_list, before_card) do
 
-    with pos <- calc_new_pos_before(cards, before_card._id) do
+    with pos <- calc_pos(cards, before_card._id) do
 
       issue = case from_id == id do
         true -> ## card was moved within the same list
@@ -490,39 +510,8 @@ defmodule Vega.Board do
     end
   end
 
-  defp calc_new_pos_before([], _id) do
-    @pos_start
-  end
-  defp calc_new_pos_before([item], id) do
-    case item._id == id do
-      true  -> item.pos / 2
-      false -> 0.0
-    end
-  end
-  defp calc_new_pos_before([pre, next | xs], id) do
-    case pre._id == id do
-      true  -> pre.pos / 2
-      false ->
-        case next._id == id do
-          true -> pre.pos + (next.pos - pre.pos) / 2
-          false -> calc_new_pos_before([next | xs], id)
-        end
-    end
-  end
 
-  defp calc_pos(%BoardList{cards: cards}) do
-    case List.last(cards) do
-      %Card{pos: pos} -> pos + @pos_gap
-      nil             -> @pos_start
-    end
-  end
 
-  defp calc_pos(%Board{lists: lists}) do
-    case List.last(lists) do
-      %BoardList{pos: pos} -> pos + @pos_gap
-      nil                  -> @pos_start
-    end
-  end
 
   @doc """
   Move a card after to the end of all cards and preserve the order of the cards. It create a `MoveCard` issue.
@@ -594,12 +583,26 @@ defmodule Vega.Board do
     |> to_struct()
   end
 
+  def fetch(%Board{_id: id}, %User{_id: user_id}) do
+    :mongo
+    |> Mongo.find_one(@collection, %{_id: id, "members.id": user_id})
+    |> to_struct()
+  end
+  def fetch(id, %User{_id: user_id}) when is_binary(id) do
+    with {:ok, id} <-  BSON.ObjectId.decode(id) do
+      :mongo
+      |> Mongo.find_one(@collection, %{_id: id, "members.id": user_id})
+      |> to_struct()
+    else
+      _error -> nil
+    end
+  end
   def fetch(%Board{_id: id}) do
     :mongo
     |> Mongo.find_one(@collection, %{_id: id})
     |> to_struct()
   end
-  def fetch(id) do
+  def fetch(id) when is_binary(id) do
     with {:ok, id} <-  BSON.ObjectId.decode(id) do
       :mongo
       |> Mongo.find_one(@collection, %{_id: id})
@@ -632,5 +635,44 @@ defmodule Vega.Board do
       lists: lists,
       options: [color: options["color"]] |> filter_nils()
     }
+  end
+
+  ##
+  # calculates the new position before another element (optional)
+  #
+  defp calc_pos(xs, before \\ nil)
+  defp calc_pos(%BoardList{cards: cards}, nil) do
+    case List.last(cards) do
+      %Card{pos: pos} -> pos + @pos_gap
+      nil             -> @pos_start
+    end
+  end
+  defp calc_pos(xs, %BoardList{_id: id}) do
+    calc_pos(xs, id)
+  end
+  defp calc_pos(lists, nil) do
+    case List.last(lists) do
+      %BoardList{pos: pos} -> pos + @pos_gap
+      nil                  -> @pos_start
+    end
+  end
+  defp calc_pos([], _id) do
+    @pos_start
+  end
+  defp calc_pos([item], id) do
+    case item._id == id do
+      true  -> item.pos / 2
+      false -> 0.0
+    end
+  end
+  defp calc_pos([pre, next | xs], id) do
+    case pre._id == id do
+      true  -> pre.pos / 2
+      false ->
+        case next._id == id do
+          true -> pre.pos + (next.pos - pre.pos) / 2
+          false -> calc_pos([next | xs], id)
+        end
+    end
   end
 end

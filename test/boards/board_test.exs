@@ -153,21 +153,21 @@ defmodule VegaWeb.BoardTest do
 
       assert (a.pos < b.pos && b.pos < c.pos) == true
 
-      board = Board.move_list_before(board, user, c, a)
+      board = Board.move_list(user, c, board, a)
       [a, b, c] = board.lists
       assert (a.pos < b.pos && b.pos < c.pos) == true
       assert a.title == "done"
       assert b.title == "to do"
       assert c.title == "doing"
 
-      board = Board.move_list_before(board, user, c, a)
+      board = Board.move_list(user, c, board, a)
       [a, b, c] = board.lists
       assert (a.pos < b.pos && b.pos < c.pos) == true
       assert a.title == "doing"
       assert b.title == "done"
       assert c.title == "to do"
 
-      board = Board.move_list_before(board, user, c, a)
+      board = Board.move_list(user, c, board, a)
       [a, b, c] = board.lists
       assert (a.pos < b.pos && b.pos < c.pos) == true
       assert a.title == "to do"
@@ -176,12 +176,11 @@ defmodule VegaWeb.BoardTest do
 
       assert [12.5, 25.0, 50.0] == [a, b, c] |> Enum.map(fn l -> l.pos end)
 
-      board = Board.move_list_to_end(board, user, a)
+      board = Board.move_list(user, a, board, nil)
       [a, b, c] = board.lists
       assert (a.pos < b.pos && b.pos < c.pos) == true
 
       assert [25.0, 50.0, 150.0] == [a, b, c] |> Enum.map(fn l -> l.pos end)
-
       assert {:ok, 8, 0} == Board.delete(board)
 
     end
@@ -268,6 +267,84 @@ defmodule VegaWeb.BoardTest do
     assert {:ok, ^n_issues, ^n_cards} = Board.delete(board)
   end
 
+  describe "moving list from board to board" do
+
+    test "move a list to end of an empty board", context do
+      user = context.user
+      title = "From board"
+      from = Board.new(user, title)
+
+      from = Board.add_list(from, user, "to do")
+      from = Board.add_list(from, user, "doing")
+      from = Board.add_list(from, user, "done")
+
+      for list <- from.lists do
+        cards = Enum.map(1..5, fn i -> "My card title " <> to_string(i) end)
+        Board.add_cards(from, user, list, cards)
+      end
+
+      title = "To board"
+      to = Board.new(user, title)
+
+      from = Board.fetch(from)
+      [_a,_b,c] = from.lists
+
+      to = Board.fetch(to)
+
+      from = Board.move_list(user, from, c, to)
+      to = Board.fetch(to)
+
+      assert [_a,_b] = from.lists
+      assert [c] = to.lists
+
+      assert c.title == "done"
+      assert length(c.cards) == 5
+
+      assert {:ok, 20, 10} == Board.delete(from)
+      assert {:ok, 2, 5} == Board.delete(to)
+    end
+
+    test "move a list to end non empty board", context do
+      user = context.user
+      title = "From board"
+      from = Board.new(user, title)
+
+      from = Board.add_list(from, user, "to do")
+      from = Board.add_list(from, user, "doing")
+      from = Board.add_list(from, user, "done")
+
+      for list <- from.lists do
+        cards = Enum.map(1..5, fn i -> "My card title " <> to_string(i) end)
+        Board.add_cards(from, user, list, cards)
+      end
+
+      title = "To board"
+      to = Board.new(user, title)
+      to = Board.add_list(to, user, "to do")
+      to = Board.add_list(to, user, "doing")
+
+      for list <- to.lists do
+        cards = Enum.map(1..5, fn i -> "My card title " <> to_string(i) end)
+        Board.add_cards(to, user, list, cards)
+      end
+
+      from = Board.fetch(from)
+      [_a,_b,c] = from.lists
+
+      to = Board.fetch(to)
+
+      from = Board.move_list(user, from, c, to)
+      to = Board.fetch(to)
+
+      assert [_a,_b] = from.lists
+      assert [_a,_b,c] = to.lists
+
+      assert c.title == "done"
+
+      assert {:ok, 20, 10} == Board.delete(from)
+      assert {:ok, 14, 15} == Board.delete(to)
+    end
+  end
 
 
 

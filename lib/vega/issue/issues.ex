@@ -89,9 +89,11 @@ defmodule Vega.Issues do
   # Move a card
   #
   defp add_msg(%Issue{t: @move_list} = issue) do
-    case Map.has_key?(issue.keys, "b") do
-      true  -> %Issue{issue | msg: gettext("moved list '%{a}' in front of '%{b}'", map_to_keywords(issue.keys))}
-      false -> %Issue{issue | msg: gettext("moved list '%{a}' to the end", map_to_keywords(issue.keys))}
+    case {Map.has_key?(issue.keys, "b"), Map.has_key?(issue.keys, "from"), Map.has_key?(issue.keys, "to")} do
+      {true, _, _}  -> %Issue{issue | msg: gettext("moved list '%{a}' in front of '%{b}'", map_to_keywords(issue.keys))}
+      {_, true, _}  -> %Issue{issue | msg: gettext("moved list '%{a}' from board '%{from}'", map_to_keywords(issue.keys))}
+      {_, _, true}  -> %Issue{issue | msg: gettext("moved list '%{a}' to board '%{to}'", map_to_keywords(issue.keys))}
+      _             -> %Issue{issue | msg: gettext("moved list '%{a}' to the end", map_to_keywords(issue.keys))}
     end
   end
   ##

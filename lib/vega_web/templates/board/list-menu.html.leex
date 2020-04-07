@@ -5,7 +5,7 @@
       <%= if @action == nil do %>
       <a phx-click="change-name" phx-target="#list_menu" class="menu-item" href="javascript:void(0);"><%= gettext("Change name") %></a>
       <a class="menu-item" href="javascript:void(0);"><%= gettext("Set color")%></a>
-      <a class="menu-item" href="javascript:void(0);"><%= gettext("Move list")%></a>
+      <a phx-click="move" phx-target="#list_menu" class="menu-item" href="javascript:void(0);"><%= gettext("Move list")%></a>
       <a class="menu-item" href="javascript:void(0);"><%= gettext("Copy list")%></a>
       <a class="menu-item" href="javascript:void(0);"><%= gettext("Archive list")%></a>
       <span class="menu-separator"></span>
@@ -15,6 +15,20 @@
       <%= f = form_for :name, "javascript:void(0);", [phx_submit: :save, phx_change: :validate, phx_target: "#list_menu"] %>
         <%= text_input f, :title, value: @value, placeholder: gettext("Enter a title..."), phx_hook: "Focus", phx_target: :list_menu %>
         <%= submit gettext("Save"), disabled: (not VegaWeb.BoardView.validate_title(@value)), class: "submit submit-primary submit-shadow-box submit-next" %>
+        <a class="submit submit-cancel submit-shadow-box" phx-target="#list_menu" phx-click="cancel" href="javascript:void(0);" ><%= gettext("Cancel") %></a>
+      </form>
+      <% end %>
+      <%= if @action == :move do %>
+      <%= f = form_for :move, "javascript:void(0);", [phx_submit: :save, phx_change: :validate, phx_target: "#list_menu"] %>
+        <label class="mb-6 d-block">
+          Board:
+          <%= select(f, :new_board, @board_options, selected: @new_board, class: "select-css mt-3") %>
+        </label>
+        <label class="mb-6 d-block">
+          Position:
+          <%= select(f, :new_position, @position_options, selected: @new_position, class: "select-css mt-3") %>
+        </label>
+        <%= submit gettext("Move"), class: "submit submit-primary submit-shadow-box submit-next" %>
         <a class="submit submit-cancel submit-shadow-box" phx-target="#list_menu" phx-click="cancel" href="javascript:void(0);" ><%= gettext("Cancel") %></a>
       </form>
       <% end %>

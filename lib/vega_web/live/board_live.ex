@@ -48,7 +48,12 @@ defmodule VegaWeb.BoardLive do
   def handle_info(%{event: "update-board", payload: %{board: board, history: history}}, socket) do
     {:noreply, assign(socket, board: board, history: history)}
   end
-
+  def handle_info({:close_menu_list, board}, socket) do
+    socket = socket
+             |> broadcast_update(board)
+             |> close_other()
+    {:noreply, socket}
+  end
   defp close_other(socket) do
     assign(socket, pop_over: nil, menu: false, list_composer: false)
   end
@@ -62,12 +67,10 @@ defmodule VegaWeb.BoardLive do
   * 'move-card' moves a card within the same list or to other lists
   * 'move-card-to-end' moves a card to the end of a list
   """
-  def handle_event("close-all", params, socket) do
-
-    IO.puts inspect params
+  def handle_event("close-all", _params, socket) do
     {:noreply, close_other(socket)}
   end
-  def handle_event("open-list-menu", %{"x" => x, "y" => y, "id" => id} = params, %Socket{assigns: %{current_user: user, board: board}} = socket) do
+  def handle_event("open-list-menu", %{"x" => x, "y" => y, "id" => id}, %Socket{assigns: %{current_user: user, board: board}} = socket) do
     with list when list != nil <- Board.find_list(board, id) do
       {:noreply, socket |> close_other() |> assign(pop_over: [id: :list_menu, current_user: user, board: board, list: list, x: x - 15, y: y + 15])}
     else
@@ -115,7 +118,7 @@ defmodule VegaWeb.BoardLive do
     with list when list != nil               <- Board.find_list(board, id),
          before_list when before_list != nil <- Board.find_list(board, before_id) do
 
-      board = Board.move_list_before(board, current_user, list, before_list)
+      board = Board.move_list(current_user, list, board, before_list)
       {:noreply, broadcast_update(socket, board)}
     else
       _error -> {:noreply, socket}
@@ -125,7 +128,7 @@ defmodule VegaWeb.BoardLive do
   def handle_event("move-list-to-end", id, %Socket{assigns: %{board: board, current_user: current_user}} = socket) do
     with list when list != nil <- Board.find_list(board, id) do
 
-      board = Board.move_list_to_end(board, current_user, list)
+      board = Board.move_list(current_user, list, board, nil)
       {:noreply, broadcast_update(socket, board)}
 
     else

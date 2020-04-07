@@ -26,6 +26,13 @@ defmodule Vega.BoardOverview do
     {personal, [], []}
   end
 
+  def fetch_personal_boards(%User{_id: id}, projection \\ %{title: 1}) do
+    :mongo
+    |> Mongo.find(@collection, %{"members.id" => id}, projection: projection)
+    |> Enum.to_list()
+    |> transform()
+  end
+
   defp transform(boards) when is_list(boards) do
     Enum.map(boards, fn board -> transform(board) end)
   end

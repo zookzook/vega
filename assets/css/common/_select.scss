@@ -1,0 +1,42 @@
+.select-css {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  border: 1px solid #aaa;
+  box-shadow: 0 1px 0 1px rgba(0,0,0,.04);
+  border-radius: $px3;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  appearance: none;
+  background-color: #fff;
+  font-weight: 400;
+  line-height: 20px;
+  padding: $px4 $px8;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  &:hover {
+    border-color: #888;
+  }
+
+  &:focus {
+    outline: none;
+  }
+
+  option {
+    font-weight: normal;
+  }
+
+  &::-ms-expand {
+    display: none;
+  }
+
+  &:disabled {
+    color: graytext;
+    &:hover {
+      border-color: #aaa;
+    }
+  }
+}
+
+
