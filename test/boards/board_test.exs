@@ -116,7 +116,6 @@ defmodule VegaWeb.BoardTest do
 
     end
 
-
     test "renaming a list", context do
 
       user = context.user
@@ -185,6 +184,36 @@ defmodule VegaWeb.BoardTest do
 
     end
 
+    test "copy a list", context do
+
+      user = context.user
+      title = "A board title"
+      board = Board.new(user, title)
+      assert board != nil
+
+      board = Board.add_list(board, user, "to do")
+      for list <- board.lists do
+        cards = Enum.map(1..10, fn i -> "My card title " <> to_string(i) end)
+        Board.add_cards(board, user, list, cards)
+      end
+
+      board = Board.fetch(board)
+      [a]   = board.lists
+
+      board  = Board.copy_list(board, user, a, "done")
+      [a, b] = board.lists
+
+      assert a.title == "to do"
+      assert b.title == "done"
+
+      template_names = Enum.map(1..10, fn i -> "My card title " <> to_string(i) end) |> MapSet.new()
+      names = b.cards |> Enum.map(fn card -> card.title end) |> MapSet.new()
+
+      assert template_names == names
+      assert {:ok, 13, 20} == Board.delete(board)
+
+    end
+
     test "delete a list", context do
 
       user = context.user
@@ -215,6 +244,7 @@ defmodule VegaWeb.BoardTest do
       assert {:ok, 5, 0} == Board.delete(board)
 
     end
+
   end
 
   test "add new card to board", context do
@@ -345,7 +375,5 @@ defmodule VegaWeb.BoardTest do
       assert {:ok, 14, 15} == Board.delete(to)
     end
   end
-
-
 
 end

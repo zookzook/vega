@@ -10,11 +10,12 @@ defmodule Vega.Card do
 
   @collection "cards"
 
-  defstruct [:_id,    ## the ObjectId of the card
-    :created,         ## creation date
-    :pos,             ## current position for ordering
-    :modified,        ## last modification date
-    :title,           ## the title of the card
+  defstruct [
+    :_id,         ## the ObjectId of the card
+    :created,     ## creation date
+    :pos,         ## current position for ordering
+    :modified,    ## last modification date
+    :title,       ## the title of the card
     :description,     ## optional: a description as Markdown
     :board,           ## the id of the board
     :list             ## the id of the list

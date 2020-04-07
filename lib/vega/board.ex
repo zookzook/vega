@@ -34,6 +34,7 @@ defmodule Vega.Board do
   alias Vega.IssueConsts
   alias Vega.User
 
+  @copy_list       IssueConsts.encode(:copy_list)
   @new_board       IssueConsts.encode(:new_board)
   @new_card        IssueConsts.encode(:new_card)
   @set_description IssueConsts.encode(:set_description)
@@ -256,6 +257,37 @@ defmodule Vega.Board do
         :ok
       end
     end)
+  end
+
+  @doc"""
+  Copy a list of the board and duplicates all cards.
+
+  ## Example
+
+    iex> Vega.Board.copy_list(board, user, list, "new title")
+  """
+  def copy_list(%Board{_id: id, lists: lists} = board, user, %BoardList{title: title, cards: cards}, new_title) do
+
+    issue = @copy_list
+            |> Issue.new(user, board)
+            |> Issue.add_message_keys(list: title, board: board.title, title: title)
+            |> to_map()
+
+    pos      = calc_pos(lists)
+    new_list = BoardList.new(new_title, pos)
+    list_id  = new_list._id
+
+    bulk = UnorderedBulk.new(@cards_collection)
+    bulk = Enum.reduce(cards, bulk, fn card, bulk -> UnorderedBulk.insert_one(bulk, %Card{card | _id: Mongo.object_id(), list: list_id} |> to_map()) end)
+
+    with_transaction(board, fn trans ->
+      with {:ok, _} <- Mongo.insert_one(:mongo, @issues_collection, issue, trans),
+           %Mongo.BulkWriteResult{} <- BulkWrite.write(:mongo, bulk, trans),
+           {:ok, _} <- Mongo.update_one(:mongo, @collection, %{_id: id}, %{"$push" => %{"lists" => new_list |> to_map()}}, trans) do
+        :ok
+      end
+    end)
+
   end
 
   @doc"""
