@@ -1,4 +1,4 @@
-<div class="list" id="list-<%= @id %>" data-id="<%= @id %>">
+<div class="list" data-id="<%= @id %>">
     <div class="list-content">
         <div class="header list-drag-handle">
             <h2><%= @list.title%></h2><span class="control" phx-click="open-list-menu" phx-value-id="<%= @id %>">...</span>
@@ -10,17 +10,17 @@
             <% end %>
           </div>
           <%= if @add_card do %>
-          <%= f = form_for :card, "javascript:void(0);", [phx_submit: :save, phx_target: make_list_id(@list._id), phx_hook: "AutoClose"] %>
+          <%= f = form_for :card, "javascript:void(0);", [phx_submit: :save, phx_target: @myself, phx_hook: "AutoClose"] %>
             <div class="card-composer">
-            <%= textarea f, :title, placeholder: gettext("Enter a title for this card..."), class: "card-composer-textarea", id: make_text_id(@list._id) , phx_target: make_list_id(@list._id) %>
+            <%= textarea f, :title, placeholder: gettext("Enter a title for this card..."), class: "card-composer-textarea", id: make_text_id(@list._id) , phx_target: @myself %>
               <input type="hidden" name="action" />
               <%= submit gettext("Add new card"), class: "submit submit-primary submit-shadow-box submit-next" %>
-              <a class="add-card-form-cancel submit submit-cancel submit-shadow-box" phx-target="<%= make_list_id(@list._id)%>" phx-click="cancel-add-card" href="javascript:void(0);" ><%= gettext("Cancel") %></a>
+              <a class="add-card-form-cancel submit submit-cancel submit-shadow-box" phx-target="<%= @myself %>" phx-click="cancel-add-card" href="javascript:void(0);" ><%= gettext("Cancel") %></a>
             </div>
             </form>
           <% else %>
           <div class="list-footer">
-              <a phx-click="add-card" class="control d-block" phx-target="<%= make_list_id(@list._id)%>" href="javascript:void(0);"><%= gettext("Add another card") %></a>
+              <a phx-click="add-card" class="control d-block" phx-target="<%= @myself %>" href="javascript:void(0);"><%= gettext("Add another card") %></a>
           </div>
           <% end %>
         </div>

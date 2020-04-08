@@ -1,14 +1,14 @@
-<div class="menu" id="menu">
+<div class="menu">
   <div class="content">
     <div class="title"><h3><%= @board.title%></h3><a class="control" phx-click="close-menu" href="#" phx-target="#board"><%= gettext("Close") %></a></div>
     <div class="y-scrollbar menu-items">
         <div class="menu-colors" phx-hook="BoardColor" data-color="<%= @color%>">
           <label><%= gettext("Color")%>:</label>
           <%= for color <- ["default", "orange", "red", "green", "blue", "purple", "pink"] do %>
-           <a href="javascript:void(0);" title="<%= Gettext.gettext(VegaWeb.Gettext, "Select color " <> color)%>" class="menu-color <%= color %> <%= is_active(@color, color)%>" phx-click="select" phx-value-color="<%= color %>" phx-target="#menu"></a>
+           <a href="javascript:void(0);" title="<%= Gettext.gettext(VegaWeb.Gettext, "Select color " <> color)%>" class="menu-color <%= color %> <%= is_active(@color, color)%>" phx-click="select" phx-value-color="<%= color %>" phx-target="<%= @myself %>"></a>
           <% end %>
           <%= if @color_changed do %>
-            <a phx-target="#menu" class="menu-control" phx-click="save-color" href="javascript:void(0);"><%= gettext("Save")%></a>
+            <a phx-target="<%= @myself %>" class="menu-control" phx-click="save-color" href="javascript:void(0);"><%= gettext("Save")%></a>
           <% else %>
             <span class="menu-control invisible"><%= gettext("Save")%></span>
           <% end %>

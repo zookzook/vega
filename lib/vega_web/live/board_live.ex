@@ -70,6 +70,7 @@ defmodule VegaWeb.BoardLive do
   def handle_event("close-all", _params, socket) do
     {:noreply, close_other(socket)}
   end
+
   def handle_event("open-list-menu", %{"x" => x, "y" => y, "id" => id}, %Socket{assigns: %{current_user: user, board: board}} = socket) do
     with list when list != nil <- Board.find_list(board, id) do
       {:noreply, socket |> close_other() |> assign(pop_over: [id: :list_menu, current_user: user, board: board, list: list, x: x - 15, y: y + 15])}

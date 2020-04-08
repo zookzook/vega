@@ -70,7 +70,13 @@ Hooks.Board = {
     sortable: [],
 
     mounted() {
+        let self = this;
         this.init();
+        document.onkeyup = function(e) {
+            if(e.key === "Escape") {
+                self.pushEvent("close-all", {});
+            } // if
+        };
     },
 
     updated() {
