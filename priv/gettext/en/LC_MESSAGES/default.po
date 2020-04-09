@@ -37,37 +37,37 @@ msgid "changed title '%{title}' of board '%{board}'"
 msgstr ""
 
 #, elixir-format
-#: lib/vega_web/views/board_view.ex:70
+#: lib/vega_web/views/board_view.ex:100
 msgid "yesterday"
 msgstr ""
 
 #, elixir-format
-#: lib/vega_web/views/board_view.ex:83
+#: lib/vega_web/views/board_view.ex:113
 msgid "%{t} hours ago"
 msgstr ""
 
 #, elixir-format
-#: lib/vega_web/views/board_view.ex:92
+#: lib/vega_web/views/board_view.ex:122
 msgid "%{t} minutes ago"
 msgstr ""
 
 #, elixir-format
-#: lib/vega_web/views/board_view.ex:82
+#: lib/vega_web/views/board_view.ex:112
 msgid "an hour ago"
 msgstr ""
 
 #, elixir-format
-#: lib/vega_web/views/board_view.ex:90
+#: lib/vega_web/views/board_view.ex:120
 msgid "few seconds ago"
 msgstr ""
 
 #, elixir-format
-#: lib/vega_web/views/board_view.ex:91
+#: lib/vega_web/views/board_view.ex:121
 msgid "one minute ago"
 msgstr ""
 
 #, elixir-format
-#: lib/vega_web/views/board_view.ex:71
+#: lib/vega_web/views/board_view.ex:101
 msgid "the day before yesterday"
 msgstr ""
 
@@ -77,23 +77,23 @@ msgid "Add a new list"
 msgstr ""
 
 #, elixir-format
-#: lib/vega_web/templates/board/list.html.leex:23
+#: lib/vega_web/templates/board/list.html.leex:26
 msgid "Add another card"
 msgstr ""
 
 #, elixir-format
-#: lib/vega_web/templates/board/list.html.leex:17
+#: lib/vega_web/templates/board/list.html.leex:20
 msgid "Add new card"
 msgstr ""
 
 #, elixir-format
 #: lib/vega_web/templates/board/board.html.leex:33 menu.html.leex:18
-#: menu.html.leex:32 menu.html.leex:39 lib/vega_web/templates/board/list.html.leex:18
+#: menu.html.leex:32 menu.html.leex:39 lib/vega_web/templates/board/list.html.leex:21
 msgid "Cancel"
 msgstr ""
 
 #, elixir-format
-#: lib/vega_web/templates/board/list.html.leex:15
+#: lib/vega_web/templates/board/list.html.leex:18
 msgid "Enter a title for this card..."
 msgstr ""
 
@@ -370,12 +370,12 @@ msgstr ""
 msgid " (current)"
 msgstr ""
 
-#, elixir-format, fuzzy
+#, elixir-format
 #: menu.html.leex:38
 msgid "Copy"
 msgstr ""
 
-#, elixir-format, fuzzy
+#, elixir-format
 #: menu.html.leex:37
 msgid "Enter a title for the list..."
 msgstr ""
@@ -383,4 +383,24 @@ msgstr ""
 #, elixir-format
 #: lib/vega/issue/issues.ex:104
 msgid "copied the list '%{title}'"
+msgstr ""
+
+#, elixir-format
+#: lib/vega_web/views/board_view.ex:51
+msgid "%{n} cards"
+msgstr ""
+
+#, elixir-format
+#: lib/vega_web/views/board_view.ex:45
+msgid "0 cards"
+msgstr ""
+
+#, elixir-format
+#: lib/vega_web/views/board_view.ex:48
+msgid "one card"
+msgstr ""
+
+#, elixir-format
+#: lib/vega_web/views/board_view.ex:60
+msgid ", more than %{n} cards"
 msgstr ""

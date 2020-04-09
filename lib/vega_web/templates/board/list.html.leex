@@ -1,7 +1,10 @@
-<div class="list" data-id="<%= @id %>">
+<div class="list <%= fetch_color(@list)%>" data-id="<%= @id %>">
     <div class="list-content">
         <div class="header list-drag-handle">
             <h2><%= @list.title%></h2><span class="control" phx-click="open-list-menu" phx-value-id="<%= @id %>">...</span>
+        </div>
+        <div class="subheader">
+          <span><%= count_cards(@list)%><%= warning_message(@list) %></span>
         </div>
         <div class="y-scrollbar">
           <div class="list-cards" data-id="<%= @id %>">

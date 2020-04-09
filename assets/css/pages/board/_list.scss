@@ -9,6 +9,13 @@ $list-background-color: #ebecf0;
   &:first-child {
     margin-left: 0;
   }
+
+  // support for different border colors in input fields
+  @each $name, $color in $colors-map {
+    &.#{$name} .list-content {
+      background-color: lighten($color, 50%);
+    }
+  }
 }
 
 .list-content {
@@ -20,10 +27,16 @@ $list-background-color: #ebecf0;
   max-height: 100%;
 
   .header {
-    padding: $px10 $px8;
+    padding: $px10 $px8 0 $px8;
     min-height: 1.25rem;
     display: flex;
     align-items: center;
+  }
+
+  .subheader {
+    padding: 0 $px8 $px10 $px8;
+    font-size: 0.75rem;
+    color: #666;
   }
 
   h2 {

@@ -48,6 +48,9 @@ defmodule VegaWeb.BoardLive do
   def handle_info(%{event: "update-board", payload: %{board: board, history: history}}, socket) do
     {:noreply, assign(socket, board: board, history: history)}
   end
+  def handle_info(:close_all, socket) do
+    {:noreply, close_other(socket)}
+  end
   def handle_info({:close_menu_list, board}, socket) do
     socket = socket
              |> broadcast_update(board)

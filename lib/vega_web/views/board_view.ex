@@ -4,6 +4,8 @@ defmodule VegaWeb.BoardView do
 
   alias Vega.Issue
   alias Vega.Dates
+  alias Vega.BoardList
+  alias Vega.WarningColorRule
 
   def has_title(nil), do: false
   def has_title(title), do: byte_size(title) > 2
@@ -19,6 +21,7 @@ defmodule VegaWeb.BoardView do
     end
   end
 
+  ## todo: not necessary any more
   def make_id(prefix,id) do
     ["#", prefix, BSON.ObjectId.encode!(id)]
   end
@@ -33,6 +36,33 @@ defmodule VegaWeb.BoardView do
 
   def make_text_id(id) do
     ["#text-", BSON.ObjectId.encode!(id)]
+  end
+
+  @doc """
+  Display the number of cards
+  """
+  def count_cards(%BoardList{n_cards: 0}) do
+    gettext("0 cards")
+  end
+  def count_cards(%BoardList{n_cards: 1}) do
+    gettext("one card")
+  end
+  def count_cards(%BoardList{n_cards: n}) do
+    gettext("%{n} cards", n: n)
+  end
+
+  def fetch_color(%BoardList{n_cards: n, color: color}) do
+    WarningColorRule.calc_color(color, n)
+  end
+
+  def warning_message(%BoardList{n_cards: n, color: %WarningColorRule{n: max}}) do
+    case n > max do
+      true  -> gettext(", more than %{n} cards", n: max)
+      false -> []
+    end
+  end
+  def warning_message(_other) do
+    []
   end
 
   def id(id) do

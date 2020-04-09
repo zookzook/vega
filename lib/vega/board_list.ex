@@ -3,21 +3,26 @@ defmodule Vega.BoardList do
 
   alias Vega.BoardList
   alias Vega.Card
+  alias Vega.WarningColorRule
 
   defstruct [
-    :_id,
-    :id,
-    :pos,
-    :title,
-    :cards]
+    :_id,       ## the ObjectId of the list
+    :id,        ## the ObjectId as a string
+    :pos,       ## current pos
+    :title,     ## the title
+    :cards,     ## the cards (fetched)
+    :n_cards,   ## the number of cards (buffered)
+    :color      ## the color rule of the list
+  ]
 
   def new(title, pos) do
-    %BoardList{_id: Mongo.object_id(), title: title, pos: pos}
+    %BoardList{_id: Mongo.object_id(), title: title, pos: pos, color: WarningColorRule.new("default", 3, "red")}
   end
 
-
-  def to_struct(%{"_id" => id, "title" => title, "pos" => pos}) do
-    %BoardList{_id: id, id: BSON.ObjectId.encode!(id) ,pos: pos, title: title, cards: Card.fetch_all_in_list(id) |> Enum.sort({:asc, Card})}
+  def to_struct(%{"_id" => id, "title" => title, "pos" => pos} = doc) do
+    cards        = Card.fetch_all_in_list(id) |> Enum.sort({:asc, Card})
+    warningColor = WarningColorRule.to_struct(doc["color"])
+    %BoardList{_id: id, id: BSON.ObjectId.encode!(id) ,pos: pos, title: title, cards: cards, n_cards: length(cards), color: warningColor}
   end
 
   def find_card(board, card_id) when is_binary(card_id) do

@@ -10,11 +10,8 @@ defmodule Vega.ListComponent do
     {:ok, assign(socket, add_card: false)}
   end
 
-  def render(assigns) do
-    Phoenix.View.render(VegaWeb.BoardView, "list.html", assigns)
-  end
-
   def handle_event("add-card", _params, socket) do
+    send(self(), :close_all)
     {:noreply, assign(socket, add_card: true)}
   end
 
@@ -35,6 +32,10 @@ defmodule Vega.ListComponent do
   end
   def handle_event("cancel-add-card", _params, socket) do
     {:noreply, assign(socket, add_card: false)}
+  end
+
+  def render(assigns) do
+    Phoenix.View.render(VegaWeb.BoardView, "list.html", assigns)
   end
 
 end
