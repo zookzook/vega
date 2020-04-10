@@ -16,17 +16,20 @@ defmodule Vega.WarningColorRule do
   def calc_color(nil, _n) do
     []
   end
-  def calc_color(%WarningColorRule{color: "default", n: max, warning: warning}, n) do
+  def calc_color(%WarningColorRule{color: "default", n: max, warning: warning}, n) when max > 0 do
     case n > max do
       true  -> warning
       false -> []
     end
   end
-  def calc_color(%WarningColorRule{color: color, n: max, warning: warning}, n) do
+  def calc_color(%WarningColorRule{color: color, n: max, warning: warning}, n) when max > 0 do
     case n > max do
       true  -> warning
       false -> color
     end
+  end
+  def calc_color(%WarningColorRule{color: color}, _n) do
+    color
   end
 
   @doc """

@@ -67,7 +67,7 @@ defmodule VegaWeb.BoardView do
     WarningColorRule.calc_color(color, n)
   end
 
-  def warning_message(%BoardList{n_cards: n, color: %WarningColorRule{n: max}}) do
+  def warning_message(%BoardList{n_cards: n, color: %WarningColorRule{n: max}}) when max > 0 do
     case n > max do
       true  -> gettext(", more than %{n} cards", n: max)
       false -> []

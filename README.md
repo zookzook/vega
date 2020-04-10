@@ -12,7 +12,11 @@ Vega is the brightest star in the northern constellation of Lyra.
 * oauth2, 2.x
       
 ## Create new cards ## 
-![Vega](gifs/vega.gif)
+![New cards](gifs/vega.gif)
 
 ## Change the color of lists ##
-![Vega](gifs/colored-lists.gif)
+![Colored Lists](gifs/colored-lists.gif)
+
+## Broadcasting changes in real time with clusters of Erlang nodes ##
+![Real Time](gifs/libcluster.gif)
+
