@@ -26,6 +26,28 @@
   }
 }
 
+// support for different list-placeholder background colors:
+@each $name, $color in $colors-map {
+  .list.#{$name} {
+
+    .y-scrollbar {
+
+      scrollbar-color: lighten($color, 35%) lighten($color, 80%);
+
+      &::-webkit-scrollbar-track {
+        background: lighten($color, 80%);
+      }
+      &::-webkit-scrollbar-thumb {
+        background-color: lighten($color, 35%) ;
+        border: 3px solid lighten($color, 80%);
+      }
+    }
+
+  }
+}
+
+
+
 .x-scrollbar {
   overflow-x: auto;
 
@@ -46,6 +68,27 @@
   }
 
 }
+
+// support for different list-placeholder background colors:
+@each $name, $color in $colors-map {
+  .#{$name} {
+
+    .x-scrollbar {
+
+      scrollbar-color: lighten($color, 35%) lighten($color, 80%);
+
+      &::-webkit-scrollbar-track {
+        background: lighten($color, 80%);
+      }
+      &::-webkit-scrollbar-thumb {
+        background-color: lighten($color, 35%) ;
+        border: 3px solid lighten($color, 80%);
+      }
+    }
+
+  }
+}
+
 
 .pos-relative {
   position: relative;
