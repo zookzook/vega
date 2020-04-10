@@ -301,6 +301,32 @@ defmodule VegaWeb.BoardTest do
 
   @max_cards 10
 
+  test "move all cards of a list", context do
+
+    user = context.user
+    title = "A board title"
+    board = Board.new(user, title)
+    assert board != nil
+
+    board = Board.add_list(board, user, "to do")
+    board = Board.add_list(board, user, "doing")
+
+    [a,_] = board.lists
+    cards = Enum.map(1..@max_cards, fn i -> "My card title " <> to_string(i) end)
+    Board.add_cards(board, user, a, cards)
+
+    board = Board.fetch(board)
+    [a,b] = board.lists
+
+    board = Board.move_cards_of_list(board, a, b, user)
+    [a,b] = board.lists
+
+    assert 0 == length(a.cards)
+    assert @max_cards == length(b.cards)
+
+    assert {:ok, 14, 10} == Board.delete(board)
+  end
+
   test "add many cards to board", context do
 
     user = context.user

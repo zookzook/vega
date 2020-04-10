@@ -33,6 +33,26 @@ defmodule Vega.ListMenu do
   def handle_event("cancel", _params, socket) do
     {:noreply, assign(socket, action: nil)}
   end
+  def handle_event("move-cards", _params, %Socket{assigns: %{list: list}} = socket) do
+    {:noreply, assign(socket, action: :move_cards, value: list.id)}
+  end
+  def handle_event("select-list", %{"id" => list_id},  %Socket{assigns: %{board: board}} = socket) do
+    with list when list != nil <- Board.find_list(board, list_id) do
+      {:noreply, assign(socket, value: list.id)}
+    else
+      _ -> {:noreply, assign(socket, action: nil)}
+    end
+  end
+  #.handle_event("save", %{"_csrf_token" => "GX8DVWAuFl1vfCoFXVwxOAQeVBsTJmxCo6If6gr4VInd3maPVR-Hqq-8", "move-cards" => ""}
+  def handle_event("save", %{"move_cards" => %{"move_cards" => "true"}},
+        %Socket{assigns: %{current_user: user, board: board, list: list, value: to_id}} = socket) do
+    with to when to != nil <- Board.find_list(board, to_id) do
+      board = Board.move_cards_of_list(board, list, to, user)
+      broadcast({:close_menu_list, board})
+    end
+    {:noreply, assign(socket, action: nil)}
+  end
+  #  def move_cards_of_list(board, %BoardList{cards: cards} = from, %BoardList{_id: to_id} = to, user) do
   def handle_event("color", _params, %Socket{assigns: %{list: list}} = socket) do
     case list.color do
       nil  -> {:noreply, assign(socket, action: :color, n_value: 0, color_value: "none", warning_value: "none")}
@@ -56,7 +76,7 @@ defmodule Vega.ListMenu do
     n     = parse_integer(new_n, old)
     rule  = WarningColorRule.new(color, n, warning)
     board = Board.set_list_color(board, list, user, rule)
-    send(self(), {:close_menu_list, board})
+    broadcast({:close_menu_list, board})
 
     {:noreply, assign(socket, action: nil)}
   end
@@ -82,7 +102,7 @@ defmodule Vega.ListMenu do
     case VegaWeb.BoardView.validate_title(new_title) do
       true ->
         board = Board.copy_list(board, user, list, new_title)
-        send(self(), {:close_menu_list, board})
+        broadcast({:close_menu_list, board})
         {:noreply, assign(socket, action: nil)}
       false ->
         {:noreply, socket}
@@ -120,10 +140,10 @@ defmodule Vega.ListMenu do
     with to when to != nil <- Board.fetch(to_id, user) do
       before_list = list_in_pos(to.lists, new_position)
       board       = move_list(user, from, list, to, before_list)
-      send(self(), {:close_menu_list, board})
+      broadcast({:close_menu_list, board})
     else
       _error ->
-        send(self(), {:close_menu_list, from})
+        broadcast({:close_menu_list, from})
     end
 
     {:noreply, assign(socket, action: nil)}
@@ -138,7 +158,7 @@ defmodule Vega.ListMenu do
     case VegaWeb.BoardView.validate_title(title) do
       true ->
         board = Board.set_list_title(board, list, user, title)
-        send(self(), {:updated_board, board})
+        broadcast({:updated_board, board})
         {:noreply, assign(socket, action: nil, board: board, list: Board.find_list(board, list))}
       false ->
           {:noreply, assign(socket, value: new_title)}
@@ -250,6 +270,10 @@ defmodule Vega.ListMenu do
           false -> Board.move_list(user, from, list, to, before_list)
         end
     end
+  end
+
+  defp broadcast(msg) do
+    send(self(), msg)
   end
 
 end

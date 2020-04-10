@@ -8,8 +8,10 @@
       <a phx-click="move" phx-target="<%= @myself %>" class="menu-item" href="javascript:void(0);"><%= gettext("Move list")%></a>
       <a phx-click="copy" phx-target="<%= @myself %>" class="menu-item" href="javascript:void(0);"><%= gettext("Copy list")%></a>
       <a class="menu-item" href="javascript:void(0);"><%= gettext("Archive list")%></a>
+      <%= if not Enum.empty?(@list.cards) do %>
       <span class="menu-separator"></span>
-      <a class="menu-item" href="javascript:void(0);"><%= gettext("Move all cards")%></a>
+      <a phx-click="move-cards" phx-target="<%= @myself %>" class="menu-item" href="javascript:void(0);"><%= gettext("Move all cards")%></a>
+      <% end %>
       <% end %>
       <%= if @action == :change_name do %>
       <%= f = form_for :name, "javascript:void(0);", [phx_submit: :save, phx_change: :validate, phx_target: @myself] %>
@@ -47,20 +49,28 @@
            <a href="javascript:void(0);" title="<%= Gettext.gettext(VegaWeb.Gettext, "Select color " <> color)%>" class="menu-color <%= color %> <%= is_active(@color_value, color)%>" phx-click="select-color" phx-value-color="<%= color %>" phx-target="<%= @myself %>"></a>
           <% end %>
         </div>
-
-
         <label class="d-block mt-9"><%= gettext("Threshold")%>:</label>
         <%= text_input f, :n, value: @n_value, class: "mt-6", style: "width: 72px; display: inline-block"%>
         <span class="ml-6 small text-muted"><%= gettext("if number of cards > %{n}", n: @n_value)%></span>
-
         <label class="d-block"><%= gettext("Warning")%>:</label>
         <div class="menu-colors mt-6 mb-6">
         <%= for color <- ["none", "orange", "red", "green", "blue", "purple", "pink"] do %>
          <a href="javascript:void(0);" title="<%= Gettext.gettext(VegaWeb.Gettext, "Select color " <> color)%>" class="menu-color <%= color %> <%= is_active(@warning_value, color)%>" phx-click="select-warning" phx-value-color="<%= color %>" phx-target="<%= @myself %>"></a>
         <% end %>
         </div>
-
         <%= submit gettext("Save"), class: "submit submit-primary submit-shadow-box submit-next" %>
+        <a class="submit submit-cancel submit-shadow-box" phx-target="<%= @myself %>" phx-click="cancel" href="javascript:void(0);" ><%= gettext("Cancel") %></a>
+      </form>
+      <% end %>
+      <%= if @action == :move_cards do %>
+      <%= f = form_for :move_cards, "javascript:void(0);", [phx_submit: :save, phx_change: :validate, phx_target: @myself] %>
+        <%= hidden_input f, :move_cards, value: true %>
+        <div class="list-preview">
+          <%= for list <- @board.lists do %>
+           <a href="javascript:void(0);" title="<%= gettext( "Move to %{list}", list: list.title)%>" class="mb-6 control <%= is_selected(@value, list.id)%>" phx-click="select-list" phx-value-id="<%= list.id %>" phx-target="<%= @myself %>"><%= list.title %></a>
+          <% end %>
+        </div>
+        <%= submit gettext("Move cards"), disabled: (not VegaWeb.BoardView.validate_selected_list(@list, @value)), class: "submit submit-primary submit-shadow-box submit-next" %>
         <a class="submit submit-cancel submit-shadow-box" phx-target="<%= @myself %>" phx-click="cancel" href="javascript:void(0);" ><%= gettext("Cancel") %></a>
       </form>
       <% end %>

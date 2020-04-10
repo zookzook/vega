@@ -34,19 +34,20 @@ defmodule Vega.Board do
   alias Vega.IssueConsts
   alias Vega.User
 
-  @copy_list       IssueConsts.encode(:copy_list)
-  @new_board       IssueConsts.encode(:new_board)
-  @new_card        IssueConsts.encode(:new_card)
-  @set_description IssueConsts.encode(:set_description)
+  @copy_list          IssueConsts.encode(:copy_list)
+  @new_board          IssueConsts.encode(:new_board)
+  @new_card           IssueConsts.encode(:new_card)
+  @set_description    IssueConsts.encode(:set_description)
   # todo: @add_comment     IssueConsts.encode(:add_comment)
-  @set_title       IssueConsts.encode(:set_title)
-  @set_board_color IssueConsts.encode(:set_board_color)
-  @add_list        IssueConsts.encode(:add_list)
-  @delete_list     IssueConsts.encode(:delete_list)
-  @sort_cards      IssueConsts.encode(:sort_cards)
-  @move_card       IssueConsts.encode(:move_card)
-  @move_list       IssueConsts.encode(:move_list)
-  @set_list_color  IssueConsts.encode(:set_list_color)
+  @set_title          IssueConsts.encode(:set_title)
+  @set_board_color    IssueConsts.encode(:set_board_color)
+  @add_list           IssueConsts.encode(:add_list)
+  @delete_list        IssueConsts.encode(:delete_list)
+  @sort_cards         IssueConsts.encode(:sort_cards)
+  @move_card          IssueConsts.encode(:move_card)
+  @move_list          IssueConsts.encode(:move_list)
+  @set_list_color     IssueConsts.encode(:set_list_color)
+  @move_cards_of_list IssueConsts.encode(:move_cards_of_list)
 
   @collection         "boards"
   @issues_collection  "issues"
@@ -571,9 +572,6 @@ defmodule Vega.Board do
     end
   end
 
-
-
-
   @doc """
   Move a card after to the end of all cards and preserve the order of the cards. It create a `MoveCard` issue.
   If cards is empty, then the position is `@pos_start` otherwise the position is `last.pos + @pos_gap`
@@ -611,6 +609,29 @@ defmodule Vega.Board do
     end)
   end
 
+  @doc """
+  Move the cards to the end of another list
+  """
+  def move_cards_of_list(board, %BoardList{cards: cards} = from, %BoardList{_id: to_id} = to, user) do
+
+    pos   = calc_pos(to)
+
+    issue = @move_cards_of_list
+            |> Issue.new(user, board, from)
+            |> Issue.add_message_keys(from: from.title, to: to.title, count: length(cards))
+            |> to_map()
+
+    bulk = UnorderedBulk.new(@cards_collection)
+   {bulk, _pos} = Enum.reduce(cards, {bulk, pos}, fn card, {bulk, pos} -> {UnorderedBulk.update_one(bulk, %{_id: card._id}, %{"$set" => %{"pos" => pos, "list" => to_id}}), pos + @pos_gap} end)
+
+    with_transaction(board, fn trans ->
+      with {:ok, _} <- Mongo.insert_one(:mongo, @issues_collection, issue, trans),
+           %Mongo.BulkWriteResult{} <- BulkWrite.write(:mongo, bulk, trans) do
+        :ok
+      end
+    end)
+
+  end
 
   @doc """
   Get the list from the board. The usual case is that the board was

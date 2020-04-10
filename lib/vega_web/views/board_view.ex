@@ -14,13 +14,25 @@ defmodule VegaWeb.BoardView do
   def validate_title(nil), do: false
   def validate_title(title), do: byte_size(title) > 2
 
+  @doc """
+  Validate the selected list in case of moving cards to another list. The target list should be different.
+  """
+  def validate_selected_list(%BoardList{id: id}, other_id) do
+    id != other_id
+  end
+
   def is_active(this, that) do
     case this == that do
       true  -> "is-active"
       false -> []
     end
   end
-
+  def is_selected(this, that) do
+    case this == that do
+      true  -> "selected"
+      false -> []
+    end
+  end
   ## todo: not necessary any more
   def make_id(prefix,id) do
     ["#", prefix, BSON.ObjectId.encode!(id)]

@@ -5,19 +5,20 @@ defmodule Vega.Issues do
   alias Vega.IssueConsts
   alias Vega.Issue
 
-  @new_board       IssueConsts.encode(:new_board)
-  @new_card        IssueConsts.encode(:new_card)
-  @set_description IssueConsts.encode(:set_description)
+  @new_board          IssueConsts.encode(:new_board)
+  @new_card           IssueConsts.encode(:new_card)
+  @set_description    IssueConsts.encode(:set_description)
   # todo: @add_comment     IssueConsts.encode(:add_comment)
-  @set_title       IssueConsts.encode(:set_title)
-  @set_board_color IssueConsts.encode(:set_board_color)
-  @add_list        IssueConsts.encode(:add_list)
-  @delete_list     IssueConsts.encode(:delete_list)
+  @set_title          IssueConsts.encode(:set_title)
+  @set_board_color    IssueConsts.encode(:set_board_color)
+  @add_list           IssueConsts.encode(:add_list)
+  @delete_list        IssueConsts.encode(:delete_list)
   # todo: @sort_cards      IssueConsts.encode(:sort_cards)
-  @move_card       IssueConsts.encode(:move_card)
-  @move_list       IssueConsts.encode(:move_list)
-  @copy_list       IssueConsts.encode(:copy_list)
-  @set_list_color  IssueConsts.encode(:set_list_color)
+  @move_card          IssueConsts.encode(:move_card)
+  @move_list          IssueConsts.encode(:move_list)
+  @copy_list          IssueConsts.encode(:copy_list)
+  @set_list_color     IssueConsts.encode(:set_list_color)
+  @move_cards_of_list IssueConsts.encode(:move_cards_of_list)
 
   def to_struct(issue) do
     issue
@@ -113,6 +114,22 @@ defmodule Vega.Issues do
       false -> %Issue{issue | msg: gettext("removed the color from list '%{list}'", map_to_keywords(issue.keys))}
     end
   end
+  ##
+  # Move cards to end of list
+  #
+  defp add_msg(%Issue{t: @move_cards_of_list} = issue) do
+
+    cards = case issue.keys["count"] do
+      0 -> gettext("0 cards:lowercase")
+      1 -> gettext("one card:lowercase")
+      n -> gettext("%{n} cards:lowercase", n: n)
+    end
+
+    keys = Map.put(issue.keys, "cards", cards)
+    %Issue{issue | msg: gettext("moved %{cards} from '%{from}' to '%{to}'", map_to_keywords(keys))}
+  end
+
+
   ##
   # Catch-All function
   #

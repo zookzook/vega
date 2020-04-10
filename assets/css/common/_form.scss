@@ -101,3 +101,8 @@ textarea {
     color: #172b4d;
   }
 }
+
+
+.control.selected {
+  background-color: darken(rgba(9,30,66,.08),10%)
+}
