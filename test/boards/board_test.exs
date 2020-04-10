@@ -4,6 +4,7 @@ defmodule VegaWeb.BoardTest do
   alias Vega.Board
   alias Vega.User
   alias Vega.Issue
+  alias Vega.WarningColorRule
 
   setup_all do
     {:ok, [user: User.fake("zookzok", "Mr. Zookzook", "zookzook@lvh.me")]}
@@ -135,6 +136,32 @@ defmodule VegaWeb.BoardTest do
       assert b.title == "in progress"
 
       assert {:ok, 5, 0} == Board.delete(board)
+    end
+
+    test "set and remove color of list", context do
+
+      user = context.user
+      title = "A board title"
+      board = Board.new(user, title)
+      assert board != nil
+
+      board = Board.add_list(board, user, "to do")
+      [a] = board.lists
+
+      assert nil == WarningColorRule.new("none", 10, "none")
+
+      rule = WarningColorRule.new("green", 10, "red")
+      board = Board.set_list_color(board, a, user, rule)
+      [a] = board.lists
+
+      assert rule == a.color
+
+      board = Board.set_list_color(board, a, user, nil)
+      [a] = board.lists
+
+      assert a.color == nil
+
+      assert {:ok, 4, 0} == Board.delete(board)
     end
 
     test "moving a list", context do
