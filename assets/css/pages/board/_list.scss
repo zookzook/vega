@@ -58,8 +58,16 @@ $list-background-color: #ebecf0;
 }
 .list-placeholder .list-footer,
 .list-placeholder .list-cards,
-.list-placeholder .header {
+.list-placeholder .header,
+.list-placeholder .subheader {
   opacity: 0;
+}
+
+// support for different list-placeholder background colors:
+@each $name, $color in $colors-map {
+  .#{$name}.list-placeholder .list-content {
+    background-color: rgba(lighten($color, 50%), .7 );
+  }
 }
 
 // ghost list is dragging
