@@ -16,6 +16,7 @@ defmodule Vega.ListMenu do
   alias Phoenix.LiveView.Socket
   alias Vega.BoardOverview
   alias Vega.BoardList
+  alias Vega.WarningColorRule
 
   def mount(socket) do
     {:ok, assign(socket, action: nil)}
@@ -32,6 +33,34 @@ defmodule Vega.ListMenu do
   def handle_event("cancel", _params, socket) do
     {:noreply, assign(socket, action: nil)}
   end
+  def handle_event("color", _params, %Socket{assigns: %{list: list}} = socket) do
+    case list.color do
+      nil  -> {:noreply, assign(socket, action: :color, n_value: 0, color_value: "none", warning_value: "none")}
+      rule -> {:noreply, assign(socket, action: :color, n_value: rule.n, color_value: rule.color, warning_value: rule.warning)}
+    end
+  end
+  def handle_event("validate", %{"color" => %{"n" => new_n}}, %Socket{assigns: %{n_value: old}} = socket) do
+    n = parse_integer(new_n, old)
+    {:noreply, assign(socket, n_value: n)}
+  end
+  def handle_event("select-color", %{"color" => color}, socket) do
+    {:noreply, assign(socket, color_value: color)}
+  end
+  def handle_event("select-warning", %{"color" => color}, socket) do
+    {:noreply, assign(socket, warning_value: color)}
+  end
+  def handle_event("save", %{"color" => %{"n" => new_n}},
+                   %Socket{assigns: %{current_user: user, board: board, list: list, n_value: old,
+                           color_value: color, warning_value: warning}} = socket) do
+
+    n     = parse_integer(new_n, old)
+    rule  = WarningColorRule.new(color, n, warning)
+    board = Board.set_list_color(board, list, user, rule)
+    send(self(), {:close_menu_list, board})
+
+    {:noreply, assign(socket, action: nil)}
+  end
+
   def handle_event("change-name", _params, %Socket{assigns: %{list: list}} = socket) do
     {:noreply, assign(socket, action: :change_name, value: list.title)}
   end
@@ -184,6 +213,19 @@ defmodule Vega.ListMenu do
       i when i >= n -> nil
       i when i >= 0 -> Enum.at(lists, i)
       _             -> List.first(lists)
+    end
+  end
+
+  ##
+  # parse an integer and returns the value or in case of wrong input the old value
+  #
+  defp parse_integer("", old) do
+    old
+  end
+  defp parse_integer(str, old) do
+    case Integer.parse(str) do
+      {n, _} -> n
+      _      -> old
     end
   end
 

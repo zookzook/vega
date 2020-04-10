@@ -17,6 +17,7 @@ defmodule Vega.Issues do
   @move_card       IssueConsts.encode(:move_card)
   @move_list       IssueConsts.encode(:move_list)
   @copy_list       IssueConsts.encode(:copy_list)
+  @set_list_color  IssueConsts.encode(:set_list_color)
 
   def to_struct(issue) do
     issue
@@ -102,6 +103,15 @@ defmodule Vega.Issues do
   #
   defp add_msg(%Issue{t: @copy_list} = issue) do
     %Issue{issue | msg: gettext("copied the list '%{title}'", map_to_keywords(issue.keys))}
+  end
+  ##
+  # Set list color
+  #
+  defp add_msg(%Issue{t: @set_list_color} = issue) do
+    case issue.keys["color"] do
+      true  -> %Issue{issue | msg: gettext("set the color of list '%{list}'", map_to_keywords(issue.keys))}
+      false -> %Issue{issue | msg: gettext("removed the color from list '%{list}'", map_to_keywords(issue.keys))}
+    end
   end
   ##
   # Catch-All function

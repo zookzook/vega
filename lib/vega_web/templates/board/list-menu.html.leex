@@ -4,7 +4,7 @@
     <div class="y-scrollbar menu-items">
       <%= if @action == nil do %>
       <a phx-click="change-name" phx-target="<%= @myself %>" class="menu-item" href="javascript:void(0);"><%= gettext("Change name") %></a>
-      <a class="menu-item" href="javascript:void(0);"><%= gettext("Set color")%></a>
+      <a phx-click="color" phx-target="<%= @myself %>" class="menu-item" href="javascript:void(0);"><%= gettext("Set color")%></a>
       <a phx-click="move" phx-target="<%= @myself %>" class="menu-item" href="javascript:void(0);"><%= gettext("Move list")%></a>
       <a phx-click="copy" phx-target="<%= @myself %>" class="menu-item" href="javascript:void(0);"><%= gettext("Copy list")%></a>
       <a class="menu-item" href="javascript:void(0);"><%= gettext("Archive list")%></a>
@@ -36,6 +36,31 @@
       <%= f = form_for :copy, "javascript:void(0);", [phx_submit: :save, phx_change: :validate, phx_target: @myself] %>
         <%= text_input f, :title, value: @value, placeholder: gettext("Enter a title for the list..."), class: "list-composer-input", phx_hook: "Focus"%>
         <%= submit gettext("Copy"), disabled: (not VegaWeb.BoardView.validate_title(@value)), class: "submit submit-primary submit-shadow-box submit-next" %>
+        <a class="submit submit-cancel submit-shadow-box" phx-target="<%= @myself %>" phx-click="cancel" href="javascript:void(0);" ><%= gettext("Cancel") %></a>
+      </form>
+      <% end %>
+      <%= if @action == :color do %>
+      <%= f = form_for :color, "javascript:void(0);", [phx_submit: :save, phx_change: :validate, phx_target: @myself] %>
+        <label class="d-block"><%= gettext("Color")%>:</label>
+        <div class="menu-colors mt-6" phx-hook="ListColor" data-list-id="<%= @list.id%>">
+          <%= for color <- ["none", "orange", "red", "green", "blue", "purple", "pink"] do %>
+           <a href="javascript:void(0);" title="<%= Gettext.gettext(VegaWeb.Gettext, "Select color " <> color)%>" class="menu-color <%= color %> <%= is_active(@color_value, color)%>" phx-click="select-color" phx-value-color="<%= color %>" phx-target="<%= @myself %>"></a>
+          <% end %>
+        </div>
+
+
+        <label class="d-block mt-9"><%= gettext("Threshold")%>:</label>
+        <%= text_input f, :n, value: @n_value, class: "mt-6", style: "width: 72px; display: inline-block"%>
+        <span class="ml-6 small text-muted"><%= gettext("if number of cards > %{n}", n: @n_value)%></span>
+
+        <label class="d-block"><%= gettext("Warning")%>:</label>
+        <div class="menu-colors mt-6 mb-6">
+        <%= for color <- ["none", "orange", "red", "green", "blue", "purple", "pink"] do %>
+         <a href="javascript:void(0);" title="<%= Gettext.gettext(VegaWeb.Gettext, "Select color " <> color)%>" class="menu-color <%= color %> <%= is_active(@warning_value, color)%>" phx-click="select-warning" phx-value-color="<%= color %>" phx-target="<%= @myself %>"></a>
+        <% end %>
+        </div>
+
+        <%= submit gettext("Save"), class: "submit submit-primary submit-shadow-box submit-next" %>
         <a class="submit submit-cancel submit-shadow-box" phx-target="<%= @myself %>" phx-click="cancel" href="javascript:void(0);" ><%= gettext("Cancel") %></a>
       </form>
       <% end %>

@@ -10,7 +10,7 @@ defmodule Vega.WarningColorRule do
   ]
 
   def new(color, n, warning) do
-    %WarningColorRule{color: color, n: n, warning: warning}
+    %WarningColorRule{color: color, n: n, warning: warning} |> filter_default()
   end
 
   def calc_color(nil, _n) do
@@ -27,6 +27,17 @@ defmodule Vega.WarningColorRule do
       true  -> warning
       false -> color
     end
+  end
+
+  @doc """
+  Filter default color rule. If the color and the warning color is "none", then
+  the color rule has no effect, so it can be removed from the list.
+  """
+  def filter_default(%WarningColorRule{color: "none", n: _n, warning: "none"}) do
+    nil
+  end
+  def filter_default(other) do
+    other
   end
 
   def to_struct(nil) do

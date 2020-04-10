@@ -6,18 +6,6 @@ import Sortable from 'sortablejs'
 import {autoSize} from './autosize'
 import * as bs from "./bert-serializer"
 
-/*
-        // todo: refactor this kind of solution
-        const trackingInput = document.querySelector('input[name="action"]');
-        let buttons = this.el.querySelectorAll('button');
-        n = buttons.length;
-        for (let i = 0; i < n; i++) {
-            buttons[i].addEventListener('click', function(evt) {
-                trackingInput.value = evt.target.getAttribute('value');
-            });
-        }
- */
-
 let Hooks = {};
 
 Hooks.Focus = {
@@ -48,6 +36,16 @@ Hooks.AutoClose = {
         } // for
 
         this.el.querySelector('textarea').focus();
+    }
+};
+
+Hooks.ListColor = {
+    updated() {
+        let selected   = this.el.querySelector('.is-active');
+        let color      = selected.getAttribute('phx-value-color');
+        let id         = this.el.getAttribute('data-list-id');
+        let list       = document.querySelector('[data-id="' + id + '"]');
+        list.className = 'list ' + color;
     }
 };
 

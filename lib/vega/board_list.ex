@@ -16,7 +16,7 @@ defmodule Vega.BoardList do
   ]
 
   def new(title, pos) do
-    %BoardList{_id: Mongo.object_id(), title: title, pos: pos, color: WarningColorRule.new("default", 3, "red")}
+    %BoardList{_id: Mongo.object_id(), title: title, pos: pos}
   end
 
   def to_struct(%{"_id" => id, "title" => title, "pos" => pos} = doc) do

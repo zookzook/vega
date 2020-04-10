@@ -46,6 +46,7 @@ defmodule Vega.Board do
   @sort_cards      IssueConsts.encode(:sort_cards)
   @move_card       IssueConsts.encode(:move_card)
   @move_list       IssueConsts.encode(:move_list)
+  @set_list_color  IssueConsts.encode(:set_list_color)
 
   @collection         "boards"
   @issues_collection  "issues"
@@ -234,6 +235,34 @@ defmodule Vega.Board do
   end
 
   @doc """
+  Set the color rule of the list. If color is nil, then the color rule is removed.
+
+  ## Example
+
+    iex> color = WarningColorRule.new("green", 3, "red")
+    iex> Vega.Board.set_list_color(board, list, user, color)
+
+  """
+  def set_list_color(%Board{_id: id} = board, %BoardList{_id: list_id} = list, user, color) do
+    issue = @set_list_color
+            |> Issue.new(user, board, list)
+            |> Issue.add_message_keys(list: list.title, color: color != nil)
+            |> to_map()
+
+    modifier = case color do
+      nil    -> %{"$unset" => %{"lists.$.color" => 1}}
+      _other -> %{"$set" => %{"lists.$.color" => color |> to_map()}}
+    end
+
+    with_transaction(board, fn trans ->
+      with {:ok, _} <- Mongo.insert_one(:mongo, @issues_collection, issue, trans),
+           {:ok, _} <- Mongo.update_one(:mongo, @collection, %{_id: id, "lists._id": list_id}, modifier) do
+        :ok
+      end
+    end)
+  end
+
+  @doc """
   Add a new list to the board. It creates an issue `Vega.Issue.AddList` for the history and returns the new board.
 
   ## Example
@@ -266,7 +295,7 @@ defmodule Vega.Board do
 
     iex> Vega.Board.copy_list(board, user, list, "new title")
   """
-  def copy_list(%Board{_id: id, lists: lists} = board, user, %BoardList{title: title, cards: cards}, new_title) do
+  def copy_list(%Board{_id: id, lists: lists} = board, user, %BoardList{title: title, cards: cards, color: color}, new_title) do
 
     issue = @copy_list
             |> Issue.new(user, board)
@@ -274,7 +303,7 @@ defmodule Vega.Board do
             |> to_map()
 
     pos      = calc_pos(lists)
-    new_list = BoardList.new(new_title, pos)
+    new_list = new_title |> BoardList.new(pos) |> Map.put(:color, color)
     list_id  = new_list._id
 
     bulk = UnorderedBulk.new(@cards_collection)

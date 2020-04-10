@@ -12,27 +12,27 @@ msgstr ""
 "Plural-Forms: nplurals=2\n"
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:76
+#: lib/vega/issue/issues.ex:77
 msgid "added a new card with title '%{title}' to list '%{list}'"
 msgstr "fügte eine neue Karte '%{title}' zur Liste '%{list}' hinzu"
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:64
+#: lib/vega/issue/issues.ex:65
 msgid "added a new list '%{title}' to board '%{board}'"
 msgstr "fügte eine neue Liste '%{title}' zum Board '%{board}' hinzu"
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:85
+#: lib/vega/issue/issues.ex:86
 msgid "moved card '%{a}' in front of '%{b}'"
 msgstr "bewegte die Karte '%{a}' vor Karte '%{b}'"
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:86
+#: lib/vega/issue/issues.ex:87
 msgid "moved card '%{a}' to the end"
 msgstr "bewegte die Karte '%{a}' ans Ende"
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:57
+#: lib/vega/issue/issues.ex:58
 msgid "changed title '%{title}' of board '%{board}'"
 msgstr "änderte den Titel '%{title}' vom Board '%{board}'"
 
@@ -88,7 +88,8 @@ msgstr "Neue Karte hinzufügen"
 
 #, elixir-format
 #: lib/vega_web/templates/board/board.html.leex:33 menu.html.leex:18
-#: menu.html.leex:32 menu.html.leex:39 lib/vega_web/templates/board/list.html.leex:21
+#: menu.html.leex:32 menu.html.leex:39 menu.html.leex:64
+#: lib/vega_web/templates/board/list.html.leex:21
 msgid "Cancel"
 msgstr "Abbruch"
 
@@ -98,32 +99,32 @@ msgid "Enter a title for this card..."
 msgstr "Geben Sie einen Titel für diese Karte ein..."
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:94
+#: lib/vega/issue/issues.ex:95
 msgid "moved list '%{a}' in front of '%{b}'"
 msgstr "bewegte die Liste '%{a}' vor Liste '%{b}'"
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:97
+#: lib/vega/issue/issues.ex:98
 msgid "moved list '%{a}' to the end"
 msgstr "bewegte die Liste '%{a}' ans Ende"
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:83
+#: lib/vega/issue/issues.ex:84
 msgid "moved card '%{a}' in front of '%{b}' of list '%{list}"
 msgstr "bewegte die Karte '%{a}' vor Karte '%{b}' der Liste '%{list}'"
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:84
+#: lib/vega/issue/issues.ex:85
 msgid "moved card '%{a}' to the end of list '%{list}'"
 msgstr "bewegte die Karte '%{a}' ans Ende der Liste '%{list}'"
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:49
+#: lib/vega/issue/issues.ex:50
 msgid "changed the description '%{description}' of board '%{board}'"
 msgstr "änderte die Beschreibung '%{description}' vom Board '%{board}'"
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:70
+#: lib/vega/issue/issues.ex:71
 msgid "deleted the list '%{title}' from board '%{board}'"
 msgstr "löschte die Liste '%{title}' vom Board '%{board}'"
 
@@ -150,7 +151,7 @@ msgid "Logout"
 msgstr "Abmelden"
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:35
+#: lib/vega/issue/issues.ex:36
 msgid "create a new board '%{title}'"
 msgstr "erstellte ein neues Board '%{title}'"
 
@@ -220,43 +221,43 @@ msgid "Open Menu"
 msgstr "Öffne Menü"
 
 #, elixir-format
-#: menu.html.leex:17 lib/vega_web/templates/board/menu.html.leex:11
-#: lib/vega_web/templates/board/menu.html.leex:13
+#: menu.html.leex:17 menu.html.leex:63
+#: lib/vega_web/templates/board/menu.html.leex:11 lib/vega_web/templates/board/menu.html.leex:13
 msgid "Save"
 msgstr "Speichern"
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:43
+#: lib/vega/issue/issues.ex:44
 msgid "changed the color of board '%{board}' to '%{color}'"
 msgstr "setzte die Farbe vom Board '%{board}' auf '%{color}'"
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:123
+#: lib/vega/issue/issues.ex:133
 msgid "blue"
-msgstr "Blue"
+msgstr "Blau"
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:56
+#: lib/vega/issue/issues.ex:57
 msgid "changed title '%{title}' of list '%{list}'"
 msgstr "setzte den Titel der Liste '%{list}' auf '%{title}'"
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:122
+#: lib/vega/issue/issues.ex:132
 msgid "green"
 msgstr "Grün"
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:124
+#: lib/vega/issue/issues.ex:134
 msgid "orange"
 msgstr "Orange"
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:126
+#: lib/vega/issue/issues.ex:136
 msgid "purple"
 msgstr "Lila"
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:121
+#: lib/vega/issue/issues.ex:131
 msgid "red"
 msgstr "Rot"
 
@@ -266,7 +267,7 @@ msgid "Close"
 msgstr "Schließen"
 
 #, elixir-format
-#: lib/vega_web/templates/board/menu.html.leex:6
+#: menu.html.leex:44 lib/vega_web/templates/board/menu.html.leex:6
 msgid "Color"
 msgstr "Farbe"
 
@@ -276,7 +277,7 @@ msgid "History"
 msgstr "Aktivität"
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:125
+#: lib/vega/issue/issues.ex:135
 msgid "pink"
 msgstr "Pink"
 
@@ -341,7 +342,7 @@ msgid "Welcome to Vega!"
 msgstr "Willkommen zu Vega!"
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:120
+#: lib/vega/issue/issues.ex:130
 msgid "default"
 msgstr "Standard"
 
@@ -356,17 +357,17 @@ msgid "Move"
 msgstr "Liste verschieben"
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:95
+#: lib/vega/issue/issues.ex:96
 msgid "moved list '%{a}' from board '%{from}'"
 msgstr "verschob die Liste '%{a}' aus dem Board '%{from}'"
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:96
+#: lib/vega/issue/issues.ex:97
 msgid "moved list '%{a}' to board '%{to}'"
 msgstr "verschob die Liste '%{a}' zum Board '%{to}'"
 
 #, elixir-format
-#: lib/vega_web/live/list_menu.ex:126 lib/vega_web/live/list_menu.ex:141
+#: lib/vega_web/live/list_menu.ex:155 lib/vega_web/live/list_menu.ex:170
 msgid " (current)"
 msgstr " (aktuell)"
 
@@ -381,7 +382,7 @@ msgid "Enter a title for the list..."
 msgstr "Geben Sie einen Titel ein..."
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:104
+#: lib/vega/issue/issues.ex:105
 msgid "copied the list '%{title}'"
 msgstr "kopierte die Liste '%{title}'"
 
@@ -404,3 +405,28 @@ msgstr "Eine Karte"
 #: lib/vega_web/views/board_view.ex:60
 msgid ", more than %{n} cards"
 msgstr ", mehr als %{n} Karten"
+
+#, elixir-format
+#: menu.html.leex:52
+msgid "Threshold"
+msgstr "Grenzwert"
+
+#, elixir-format
+#: menu.html.leex:56
+msgid "Warning"
+msgstr "Warnung"
+
+#, elixir-format
+#: menu.html.leex:54
+msgid "if number of cards > %{n}"
+msgstr "wenn Kartenanzahl > %{n}"
+
+#, elixir-format
+#: lib/vega/issue/issues.ex:113
+msgid "removed the color from list '%{list}'"
+msgstr "entferne die Farbe von der Liste '%{list}'"
+
+#, elixir-format
+#: lib/vega/issue/issues.ex:112
+msgid "set the color of list '%{list}'"
+msgstr "änderte die Farbe der Liste '%{list}'"

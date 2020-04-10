@@ -18,7 +18,8 @@ defmodule Vega.IssueConsts do
     sort_cards: 8,
     move_card: 9,
     move_list: 10,
-    copy_list: 11
+    copy_list: 11,
+    set_list_color: 12
   ]
 
   for {key, value} <- values do
