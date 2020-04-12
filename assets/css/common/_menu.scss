@@ -89,6 +89,19 @@
     width: 100%;
     margin-bottom: $px6;
   }
+
+  .radio {
+    input[type="radio"] {
+      width: auto;
+      display: inline;
+      margin-right: $px6;
+    }
+  }
+
+  label.radio {
+    display: block;
+    margin-top: $px6;
+  }
 }
 
 .menu-item {

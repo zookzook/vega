@@ -42,6 +42,15 @@ defmodule VegaWeb.BoardLive do
   @doc """
   Handle different messages from live components and broadcast messages from other nodes
   """
+  def handle_info(:preview_off, %Socket{assigns: %{original: original, preview: true}} = socket) do
+    {:noreply, assign(socket, board: original, original: nil, preview: false)}
+  end
+  def handle_info(:preview_off, socket) do
+    {:noreply, assign(socket, original: nil, preview: false)}
+  end
+  def handle_info({:preview, board}, %Socket{assigns: %{board: original}} = socket) do
+    {:noreply, assign(socket, board: board, original: original, preview: true)}
+  end
   def handle_info({:updated_board, board}, socket) do
     {:noreply, broadcast_update(socket, board)}
   end
@@ -56,6 +65,9 @@ defmodule VegaWeb.BoardLive do
              |> broadcast_update(board)
              |> close_other()
     {:noreply, socket}
+  end
+  defp close_other(%Socket{assigns: %{original: original, preview: true}} = socket) do
+    assign(socket, board: original, original: nil, preview: false, pop_over: nil, menu: false, list_composer: false)
   end
   defp close_other(socket) do
     assign(socket, pop_over: nil, menu: false, list_composer: false)
@@ -208,13 +220,13 @@ defmodule VegaWeb.BoardLive do
   defp broadcast_update(socket, board, []) do
     history = Issue.fetch_all(board)
     VegaWeb.Endpoint.broadcast_from(self(), topic(board), "update-board", %{board: board, history: history})
-    assign(socket, board: board, history: history)
+    assign(socket, board: board, history: history, preview: false, original: nil)
   end
   defp broadcast_update(socket, board, assigns) do
     history = Issue.fetch_all(board)
     VegaWeb.Endpoint.broadcast_from(self(), topic(board), "update-board", %{board: board, history: history})
     socket
-    |> assign(board: board, history: history)
+    |> assign(board: board, history: history, preview: false, original: nil)
     |> assign(assigns)
   end
 

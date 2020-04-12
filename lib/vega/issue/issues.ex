@@ -13,7 +13,7 @@ defmodule Vega.Issues do
   @set_board_color    IssueConsts.encode(:set_board_color)
   @add_list           IssueConsts.encode(:add_list)
   @delete_list        IssueConsts.encode(:delete_list)
-  # todo: @sort_cards      IssueConsts.encode(:sort_cards)
+  @sort_cards         IssueConsts.encode(:sort_cards)
   @move_card          IssueConsts.encode(:move_card)
   @move_list          IssueConsts.encode(:move_list)
   @copy_list          IssueConsts.encode(:copy_list)
@@ -128,7 +128,12 @@ defmodule Vega.Issues do
     keys = Map.put(issue.keys, "cards", cards)
     %Issue{issue | msg: gettext("moved %{cards} from '%{from}' to '%{to}'", map_to_keywords(keys))}
   end
-
+  ##
+  # Sort cards
+  #
+  defp add_msg(%Issue{t: @sort_cards} = issue) do
+    %Issue{issue | msg: gettext("sorted the cards of list '%{list}'", map_to_keywords(issue.keys))}
+  end
 
   ##
   # Catch-All function

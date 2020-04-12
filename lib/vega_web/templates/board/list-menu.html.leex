@@ -11,6 +11,7 @@
       <%= if not Enum.empty?(@list.cards) do %>
       <span class="menu-separator"></span>
       <a phx-click="move-cards" phx-target="<%= @myself %>" class="menu-item" href="javascript:void(0);"><%= gettext("Move all cards")%></a>
+      <a phx-click="sort-cards" phx-target="<%= @myself %>" class="menu-item" href="javascript:void(0);"><%= gettext("Sort cards")%></a>
       <% end %>
       <% end %>
       <%= if @action == :change_name do %>
@@ -71,6 +72,23 @@
           <% end %>
         </div>
         <%= submit gettext("Move cards"), disabled: (not VegaWeb.BoardView.validate_selected_list(@list, @value)), class: "submit submit-primary submit-shadow-box submit-next" %>
+        <a class="submit submit-cancel submit-shadow-box" phx-target="<%= @myself %>" phx-click="cancel" href="javascript:void(0);" ><%= gettext("Cancel") %></a>
+      </form>
+      <% end %>
+      <%= if @action == :sort_cards do %>
+      <%= f = form_for :sort_cards, "javascript:void(0);", [phx_submit: :save, phx_change: :validate, phx_target: @myself] %>
+        <a href="javascript:void(0);" class="d-block mb-6 control <%= is_selected(@value, "sort-by-creation")%>" phx-click="sort-by-creation" phx-target="<%= @myself %>"><%= gettext("Sort by creation date") %></a>
+        <a href="javascript:void(0);" class="d-block mb-6 control <%= is_selected(@value, "sort-by-modification")%>" phx-click="sort-by-modification" phx-target="<%= @myself %>"><%= gettext("Sort by modification date") %></a>
+        <a href="javascript:void(0);" class="d-block mb-6 control <%= is_selected(@value, "sort-by-card-name")%>" phx-click="sort-by-card-name" phx-target="<%= @myself %>"><%= gettext("Sort by card name") %></a>
+        <div class="mb-12 mt-12">
+          <label class="radio">
+            <%= radio_button( f, :order, "asc", checked: @order == "asc" ) %> <%= gettext("Ascending") %>
+          </label>
+          <label class="radio">
+            <%= radio_button( f, :order, "desc", checked: @order == "desc") %> <%= gettext("Descing") %>
+          </label>
+        </div>
+        <%= submit gettext("Sort cards"), disabled: @value == "none", class: "submit submit-primary submit-shadow-box submit-next" %>
         <a class="submit submit-cancel submit-shadow-box" phx-target="<%= @myself %>" phx-click="cancel" href="javascript:void(0);" ><%= gettext("Cancel") %></a>
       </form>
       <% end %>

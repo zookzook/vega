@@ -31,8 +31,48 @@ defmodule Vega.ListMenu do
   * `save` : save the current form (moving, edit title, etc)
   """
   def handle_event("cancel", _params, socket) do
+    send_me(:preview_off) ## switch off preview mode
     {:noreply, assign(socket, action: nil)}
   end
+  ##
+  # Sort cards
+  ##
+  def handle_event("sort-cards", _params, socket) do
+    {:noreply, assign(socket, action: :sort_cards, value: "none", order: "asc")}
+  end
+  def handle_event("sort-by-card-name", _params, %Socket{assigns: %{board: board, order: order, list: list}} = socket) do
+    value = "sort-by-card-name"
+    list  = update_board(board, list, order, value)
+    {:noreply, assign(socket, list: list, value: value)}
+  end
+  def handle_event("sort-by-modification", _params, %Socket{assigns: %{board: board, order: order, list: list}} = socket) do
+    value = "sort-by-modification"
+    list  = update_board(board, list, order, value)
+    {:noreply, assign(socket, list: list, value: value)}
+  end
+  def handle_event("sort-by-creation", _params, %Socket{assigns: %{board: board, order: order, list: list}} = socket) do
+    value = "sort-by-creation"
+    list  = update_board(board, list, order, value)
+    {:noreply, assign(socket, list: list, value: value)}
+  end
+  ##
+  # We are updating the list in the preview mode, so the user can see the sorting in action
+  ##
+  def handle_event("validate", %{"sort_cards" => %{"order" => order}}, %Socket{assigns: %{value: "none"}} = socket) do
+    {:noreply, assign(socket, order: order)}
+  end
+  def handle_event("validate", %{"sort_cards" => %{"order" => order}}, %Socket{assigns: %{board: board, value: value, list: list}} = socket) do
+    list = update_board(board, list, order, value)
+    {:noreply, assign(socket, order: order, list: list)}
+  end
+  def handle_event("save", %{"sort_cards" => _params}, %Socket{assigns: %{board: board, list: list, current_user: user}} = socket) do
+    board = Vega.Board.sort_cards(board, list, list.cards, user)
+    send_me({:close_menu_list, board}) ## update board, switch off preview mode
+    {:noreply, assign(socket, action: nil)}
+  end
+  ##
+  # Move cards
+  ##
   def handle_event("move-cards", _params, %Socket{assigns: %{list: list}} = socket) do
     {:noreply, assign(socket, action: :move_cards, value: list.id)}
   end
@@ -43,12 +83,11 @@ defmodule Vega.ListMenu do
       _ -> {:noreply, assign(socket, action: nil)}
     end
   end
-  #.handle_event("save", %{"_csrf_token" => "GX8DVWAuFl1vfCoFXVwxOAQeVBsTJmxCo6If6gr4VInd3maPVR-Hqq-8", "move-cards" => ""}
   def handle_event("save", %{"move_cards" => %{"move_cards" => "true"}},
         %Socket{assigns: %{current_user: user, board: board, list: list, value: to_id}} = socket) do
     with to when to != nil <- Board.find_list(board, to_id) do
       board = Board.move_cards_of_list(board, list, to, user)
-      broadcast({:close_menu_list, board})
+      send_me({:close_menu_list, board})
     end
     {:noreply, assign(socket, action: nil)}
   end
@@ -76,7 +115,7 @@ defmodule Vega.ListMenu do
     n     = parse_integer(new_n, old)
     rule  = WarningColorRule.new(color, n, warning)
     board = Board.set_list_color(board, list, user, rule)
-    broadcast({:close_menu_list, board})
+    send_me({:close_menu_list, board})
 
     {:noreply, assign(socket, action: nil)}
   end
@@ -102,7 +141,7 @@ defmodule Vega.ListMenu do
     case VegaWeb.BoardView.validate_title(new_title) do
       true ->
         board = Board.copy_list(board, user, list, new_title)
-        broadcast({:close_menu_list, board})
+        send_me({:close_menu_list, board})
         {:noreply, assign(socket, action: nil)}
       false ->
         {:noreply, socket}
@@ -140,10 +179,10 @@ defmodule Vega.ListMenu do
     with to when to != nil <- Board.fetch(to_id, user) do
       before_list = list_in_pos(to.lists, new_position)
       board       = move_list(user, from, list, to, before_list)
-      broadcast({:close_menu_list, board})
+      send_me({:close_menu_list, board})
     else
       _error ->
-        broadcast({:close_menu_list, from})
+        send_me({:close_menu_list, from})
     end
 
     {:noreply, assign(socket, action: nil)}
@@ -158,7 +197,7 @@ defmodule Vega.ListMenu do
     case VegaWeb.BoardView.validate_title(title) do
       true ->
         board = Board.set_list_title(board, list, user, title)
-        broadcast({:updated_board, board})
+        send_me({:updated_board, board})
         {:noreply, assign(socket, action: nil, board: board, list: Board.find_list(board, list))}
       false ->
           {:noreply, assign(socket, value: new_title)}
@@ -272,8 +311,50 @@ defmodule Vega.ListMenu do
     end
   end
 
-  defp broadcast(msg) do
+  defp send_me(msg) do
     send(self(), msg)
+  end
+
+  defp update_board(board, list, order, value) do
+    ## we validate the order value
+    ## todo: maybe put this into a function
+    order = case order do
+      "asc"  -> order
+      "desc" -> order
+      _      -> "asc"
+    end
+    cards = sort_cards(list, order, value)    ## sort the cards
+    list  = %BoardList{list | cards: cards}   ## update the list
+    lists = Enum.map(board.lists, fn          ## update the lists
+      that -> case that.id == list.id do
+                true -> list
+                false -> that
+              end end)
+    send_me({:preview, %Board{board | lists: lists}}) ## update the board and switch on the preview mode
+    list
+  end
+
+  defp sort_cards(list, _order, "none")  do
+    list
+  end
+  defp sort_cards(list, order, value) do
+    case {value, order} do
+      {"sort-by-card-name", "asc"}    -> Enum.sort(list.cards, fn left, right -> compare_asc(left.title, right.title) end)
+      {"sort-by-card-name", "desc"}   -> Enum.sort(list.cards, fn left, right -> compare_desc(left.title, right.title) end)
+      {"sort-by-creation", "asc"}     -> Enum.sort(list.cards, fn left, right -> left.created <= right.created end)
+      {"sort-by-creation", "desc"}    -> Enum.sort(list.cards, fn left, right -> left.created >= right.created end)
+      {"sort-by-modification", "asc"} -> Enum.sort(list.cards, fn left, right -> left.modified <= right.modified end)
+      _other                          -> Enum.sort(list.cards, fn left, right -> left.modified >= right.modified end)
+    end
+  end
+
+  defp compare_asc(left, right) do
+    result = Cldr.Collation.Insensitive.compare(left, right)
+    result == :eq || result == :lt
+  end
+  defp compare_desc(left, right) do
+    result = Cldr.Collation.Insensitive.compare(left, right)
+    result == :eq || result == :gt
   end
 
 end

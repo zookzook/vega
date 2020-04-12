@@ -44,6 +44,7 @@ defmodule Vega.MixProject do
       {:timex, "~> 3.6.1"},
       {:ex_cldr, "~> 2.13"},
       {:ex_cldr_dates_times, "~> 2.3"},
+      {:ex_cldr_collation, "~> 0.2.0"},
       {:oauth2, "~> 2.0"},
       {:libcluster, "~> 3.2"},
       {:floki, ">= 0.0.0", only: :test}

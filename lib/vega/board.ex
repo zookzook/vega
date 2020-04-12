@@ -427,14 +427,14 @@ defmodule Vega.Board do
 
     iex> [a] = board.lists
     iex> cards = Enum.sort(a.cards, fn left, right -> left.title >= right.title end)
-    iex> board = Vega.Board.sort_cards(board, user, cards, "asc")
+    iex> board = Vega.Board.sort_cards(board, a, cards, user)
 
   """
-  def sort_cards(board, user, cards, type) do
+  def sort_cards(board, list, cards, user) do
 
     issue = @sort_cards
             |> Issue.new(user, board)
-            |> Issue.add_message_keys(type: type)
+            |> Issue.add_message_keys(list: list.title)
             |> to_map()
 
     bulk = UnorderedBulk.new(@cards_collection)

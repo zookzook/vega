@@ -87,8 +87,8 @@ msgid "Add new card"
 msgstr ""
 
 #, elixir-format
-#: lib/vega_web/templates/board/board.html.leex:33 menu.html.leex:20
-#: menu.html.leex:34 menu.html.leex:41 menu.html.leex:62 menu.html.leex:74
+#: lib/vega_web/templates/board/board.html.leex:33 menu.html.leex:21
+#: menu.html.leex:35 menu.html.leex:42 menu.html.leex:63 menu.html.leex:75 menu.html.leex:92
 #: lib/vega_web/templates/board/list.html.leex:23
 msgid "Cancel"
 msgstr ""
@@ -196,7 +196,7 @@ msgid "Enter a name..."
 msgstr ""
 
 #, elixir-format
-#: menu.html.leex:18
+#: menu.html.leex:19
 msgid "Enter a title..."
 msgstr ""
 
@@ -221,7 +221,7 @@ msgid "Open Menu"
 msgstr ""
 
 #, elixir-format
-#: menu.html.leex:19 menu.html.leex:61
+#: menu.html.leex:20 menu.html.leex:62
 #: lib/vega_web/templates/board/menu.html.leex:11 lib/vega_web/templates/board/menu.html.leex:13
 msgid "Save"
 msgstr ""
@@ -232,7 +232,7 @@ msgid "changed the color of board '%{board}' to '%{color}'"
 msgstr ""
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:150
+#: lib/vega/issue/issues.ex:155
 msgid "blue"
 msgstr ""
 
@@ -242,22 +242,22 @@ msgid "changed title '%{title}' of list '%{list}'"
 msgstr ""
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:149
+#: lib/vega/issue/issues.ex:154
 msgid "green"
 msgstr ""
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:151
+#: lib/vega/issue/issues.ex:156
 msgid "orange"
 msgstr ""
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:153
+#: lib/vega/issue/issues.ex:158
 msgid "purple"
 msgstr ""
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:148
+#: lib/vega/issue/issues.ex:153
 msgid "red"
 msgstr ""
 
@@ -267,7 +267,7 @@ msgid "Close"
 msgstr ""
 
 #, elixir-format
-#: menu.html.leex:46 lib/vega_web/templates/board/menu.html.leex:6
+#: menu.html.leex:47 lib/vega_web/templates/board/menu.html.leex:6
 msgid "Color"
 msgstr ""
 
@@ -277,7 +277,7 @@ msgid "History"
 msgstr ""
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:152
+#: lib/vega/issue/issues.ex:157
 msgid "pink"
 msgstr ""
 
@@ -342,7 +342,7 @@ msgid "Welcome to Vega!"
 msgstr ""
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:147
+#: lib/vega/issue/issues.ex:152
 msgid "default"
 msgstr ""
 
@@ -352,7 +352,7 @@ msgid "personal boards"
 msgstr ""
 
 #, elixir-format
-#: menu.html.leex:33
+#: menu.html.leex:34
 msgid "Move"
 msgstr ""
 
@@ -367,17 +367,17 @@ msgid "moved list '%{a}' to board '%{to}'"
 msgstr ""
 
 #, elixir-format
-#: lib/vega_web/live/list_menu.ex:175 lib/vega_web/live/list_menu.ex:190
+#: lib/vega_web/live/list_menu.ex:214 lib/vega_web/live/list_menu.ex:229
 msgid " (current)"
 msgstr ""
 
 #, elixir-format
-#: menu.html.leex:40
+#: menu.html.leex:41
 msgid "Copy"
 msgstr ""
 
 #, elixir-format
-#: menu.html.leex:39
+#: menu.html.leex:40
 msgid "Enter a title for the list..."
 msgstr ""
 
@@ -407,17 +407,17 @@ msgid ", more than %{n} cards"
 msgstr ""
 
 #, elixir-format
-#: menu.html.leex:52
+#: menu.html.leex:53
 msgid "Threshold"
 msgstr ""
 
 #, elixir-format
-#: menu.html.leex:55
+#: menu.html.leex:56
 msgid "Warning"
 msgstr ""
 
 #, elixir-format
-#: menu.html.leex:54
+#: menu.html.leex:55
 msgid "if number of cards > %{n}"
 msgstr ""
 
@@ -432,12 +432,12 @@ msgid "set the color of list '%{list}'"
 msgstr ""
 
 #, elixir-format
-#: menu.html.leex:73
+#: menu.html.leex:74
 msgid "Move cards"
 msgstr ""
 
 #, elixir-format
-#: menu.html.leex:70
+#: menu.html.leex:71
 msgid "Move to %{list}"
 msgstr ""
 
@@ -446,17 +446,52 @@ msgstr ""
 msgid "moved %{cards} from '%{from}' to '%{to}'"
 msgstr ""
 
-#, elixir-format, fuzzy
+#, elixir-format
 #: lib/vega/issue/issues.ex:125
 msgid "%{n} cards:lowercase"
 msgstr "%{n} cards"
 
-#, elixir-format, fuzzy
+#, elixir-format
 #: lib/vega/issue/issues.ex:123
 msgid "0 cards:lowercase"
 msgstr "0 cards"
 
-#, elixir-format, fuzzy
+#, elixir-format
 #: lib/vega/issue/issues.ex:124
 msgid "one card:lowercase"
 msgstr "one card"
+
+#, elixir-format
+#: menu.html.leex:85
+msgid "Ascending"
+msgstr ""
+
+#, elixir-format
+#: menu.html.leex:88
+msgid "Descing"
+msgstr ""
+
+#, elixir-format
+#: menu.html.leex:82
+msgid "Sort by card name"
+msgstr ""
+
+#, elixir-format
+#: menu.html.leex:80
+msgid "Sort by creation date"
+msgstr ""
+
+#, elixir-format
+#: menu.html.leex:81
+msgid "Sort by modification date"
+msgstr ""
+
+#, elixir-format
+#: menu.html.leex:14 menu.html.leex:91
+msgid "Sort cards"
+msgstr ""
+
+#, elixir-format, fuzzy
+#: lib/vega/issue/issues.ex:135
+msgid "sorted the cards of list '%{list}'"
+msgstr ""

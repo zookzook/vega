@@ -200,21 +200,21 @@ defmodule VegaWeb.CardsTest do
       [a]        = board.lists
 
       cards = Enum.sort(a.cards, fn left, right -> left.title <= right.title end)
-      board      = Board.sort_cards(board, user, cards, "asc title")
+      board      = Board.sort_cards(board, a, cards, user)
       [a]        = board.lists
 
       assert ["a", "is", "test", "this"]  == Enum.map(a.cards, fn %{title: title} -> title end)
       assert [100.0, 200.0, 300.0, 400.0] == Enum.map(a.cards, fn %{pos: pos} -> pos end)
 
       cards = Enum.sort(a.cards, fn left, right -> left.title >= right.title end)
-      board = Board.sort_cards(board, user, cards, "desc title")
+      board = Board.sort_cards(board, a, cards, user)
       [a]   = board.lists
 
       assert ["this", "test", "is", "a"]  == Enum.map(a.cards, fn %{title: title} -> title end)
       assert [100.0, 200.0, 300.0, 400.0] == Enum.map(a.cards, fn %{pos: pos} -> pos end)
 
       cards = Enum.sort(a.cards, fn left, right -> left.created <= right.created end)
-      board = Board.sort_cards(board, user, cards, "asc created")
+      board = Board.sort_cards(board, a, cards, user)
       [a]   = board.lists
 
       assert ["this", "is", "a", "test"]  == Enum.map(a.cards, fn %{title: title} -> title end)

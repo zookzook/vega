@@ -106,3 +106,9 @@ textarea {
 .control.selected {
   background-color: darken(rgba(9,30,66,.08),10%)
 }
+
+.radio {
+  input[type="radio"] {
+    margin-right: $px6;
+  }
+}
