@@ -130,11 +130,11 @@ defmodule Vega.Board do
   def delete(%Board{_id: id}) do
 
     ## todo: cleanup the archived-collections as well
-    with {:ok, n_issues, n_cards} <- Session.with_transaction(:mongo, fn trans ->
+    with {:ok, {n_issues, n_cards}} <- Session.with_transaction(:mongo, fn trans ->
       with {:ok, %Mongo.DeleteResult{deleted_count: n_issues}} <- Mongo.delete_many(:mongo, @issues_collection, %{board: id}, trans),
            {:ok, %Mongo.DeleteResult{deleted_count: n_cards}} <- Mongo.delete_many(:mongo, @cards_collection, %{board: id}, trans),
            {:ok, _} <- Mongo.delete_one(:mongo, @collection, %{_id: id}, trans) do
-        {:ok, n_issues, n_cards}
+        {:ok, {n_issues, n_cards}}
       end
     end) do
       {:ok, n_issues, n_cards}
