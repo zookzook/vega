@@ -48,6 +48,10 @@ defmodule Vega.Board do
   @move_list          IssueConsts.encode(:move_list)
   @set_list_color     IssueConsts.encode(:set_list_color)
   @move_cards_of_list IssueConsts.encode(:move_cards_of_list)
+  @archive_card       IssueConsts.encode(:archive_card)
+  @archive_list       IssueConsts.encode(:archive_list)
+  @unarchive_card     IssueConsts.encode(:unarchive_card)
+  @unarchive_list     IssueConsts.encode(:unarchive_list)
 
   @collection         "boards"
   @issues_collection  "issues"
@@ -634,6 +638,96 @@ defmodule Vega.Board do
   end
 
   @doc """
+  Archive the list. The `:archived` attribute of the list is set to the current time and after that, it is archived
+  and hidden.
+  """
+  def archive_list(%Board{_id: id} = board, %BoardList{_id: list_id, cards: cards} = list, user) do
+
+    issue = @archive_list
+            |> Issue.new(user, board)
+            |> Issue.add_message_keys(list: list.title, count: length(cards))
+            |> to_map()
+
+    with_transaction(board, fn trans ->
+      with {:ok, _} <- Mongo.insert_one(:mongo, @issues_collection, issue, trans),
+           {:ok, _} <- Mongo.update_one(:mongo, @collection, %{_id: id, "lists._id": list_id}, %{"$set" => %{"lists.$.archived" => DateTime.utc_now()}}) do
+        :ok
+      end
+    end)
+
+  end
+
+  @doc """
+  Archive the list. The `:archived` attribute of the list is set to the current time and after that, it is archived
+  and hidden.
+  """
+  def unarchive_list(%Board{_id: id} = board, %BoardList{_id: list_id, cards: cards} = list, user) do
+
+    issue = @unarchive_list
+            |> Issue.new(user, board)
+            |> Issue.add_message_keys(list: list.title, count: length(cards))
+            |> to_map()
+
+    with_transaction(board, fn trans ->
+      with {:ok, _} <- Mongo.insert_one(:mongo, @issues_collection, issue, trans),
+           {:ok, _} <- Mongo.update_one(:mongo, @collection, %{_id: id, "lists._id": list_id}, %{"$unset" => %{"lists.$.archived" => 1}}) do
+        :ok
+      end
+    end)
+
+  end
+
+  @doc """
+  Archive the card. The `:archived` attribute of the card is set to the current time and after that, it is archived
+  and hidden.
+  """
+  def archive_card(board, card, user) do
+
+    issue = @archive_card
+            |> Issue.new(user, board)
+            |> Issue.add_message_keys(card: card.title)
+            |> to_map()
+
+    with_transaction(board, fn trans ->
+      with {:ok, _} <- Mongo.insert_one(:mongo, @issues_collection, issue, trans),
+           {:ok, _} <- Mongo.update_one(:mongo, @cards_collection, %{_id: card._id}, %{"$set" => %{"archived" => DateTime.utc_now()}}) do
+        :ok
+      end
+    end)
+
+  end
+
+  @doc """
+  Unarchive the card. Removes the `:archived` attribute of the card so the card is visible again.
+  """
+  def unarchive_card(board, card, user) do
+
+    issue = @unarchive_card
+            |> Issue.new(user, board)
+            |> Issue.add_message_keys(card: card.title)
+            |> to_map()
+
+    with_transaction(board, fn trans ->
+      with {:ok, _} <- Mongo.insert_one(:mongo, @issues_collection, issue, trans),
+           {:ok, _} <- Mongo.update_one(:mongo, @cards_collection, %{_id: card._id}, %{"$unset" => %{"archived" => 1}}) do
+        :ok
+      end
+    end)
+
+  end
+
+  @doc """
+  Returns all archived cards of the list
+
+  ## Example
+
+    iex> Board.fetch_archived_cards(board, list)
+  """
+  def fetch_archived_cards(%Board{_id: id}, %BoardList{_id: list_id}) do
+    Mongo.find(:mongo, @cards_collection, %{board: id, list: list_id, archived: %{"$exists": true}})
+  end
+
+  @doc """
   Get the list from the board. The usual case is that the board was
   modified and a new version was fetched from the database. Now we
   need the updated version of the list.
@@ -703,7 +797,10 @@ defmodule Vega.Board do
   end
   def to_struct(board) do
 
-    lists = (board["lists"] || [])  |> Enum.map(fn list-> BoardList.to_struct(list) end) |> Enum.sort({:asc, BoardList})
+    lists = (board["lists"] || [])
+            |> Enum.reject(fn list -> BoardList.is_archived(list) end)
+            |> Enum.map(fn list-> BoardList.to_struct(list) end)
+            |> Enum.sort({:asc, BoardList})
 
     options = board["options"]
     %Board{

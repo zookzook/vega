@@ -11,27 +11,27 @@ msgid ""
 msgstr ""
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:78
+#: lib/vega/issue/issues.ex:79
 msgid "added a new card with title '%{title}' to list '%{list}'"
 msgstr ""
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:66
+#: lib/vega/issue/issues.ex:67
 msgid "added a new list '%{title}' to board '%{board}'"
 msgstr ""
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:87
+#: lib/vega/issue/issues.ex:88
 msgid "moved card '%{a}' in front of '%{b}'"
 msgstr ""
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:88
+#: lib/vega/issue/issues.ex:89
 msgid "moved card '%{a}' to the end"
 msgstr ""
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:59
+#: lib/vega/issue/issues.ex:60
 msgid "changed title '%{title}' of board '%{board}'"
 msgstr ""
 
@@ -100,32 +100,32 @@ msgid "Enter a title for this card..."
 msgstr ""
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:96
+#: lib/vega/issue/issues.ex:97
 msgid "moved list '%{a}' in front of '%{b}'"
 msgstr ""
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:99
+#: lib/vega/issue/issues.ex:100
 msgid "moved list '%{a}' to the end"
 msgstr ""
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:85
+#: lib/vega/issue/issues.ex:86
 msgid "moved card '%{a}' in front of '%{b}' of list '%{list}"
 msgstr ""
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:86
+#: lib/vega/issue/issues.ex:87
 msgid "moved card '%{a}' to the end of list '%{list}'"
 msgstr ""
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:51
+#: lib/vega/issue/issues.ex:52
 msgid "changed the description '%{description}' of board '%{board}'"
 msgstr ""
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:72
+#: lib/vega/issue/issues.ex:73
 msgid "deleted the list '%{title}' from board '%{board}'"
 msgstr ""
 
@@ -152,7 +152,7 @@ msgid "Logout"
 msgstr ""
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:37
+#: lib/vega/issue/issues.ex:38
 msgid "create a new board '%{title}'"
 msgstr ""
 
@@ -229,37 +229,37 @@ msgid "Save"
 msgstr ""
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:45
+#: lib/vega/issue/issues.ex:46
 msgid "changed the color of board '%{board}' to '%{color}'"
 msgstr ""
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:155
+#: lib/vega/issue/issues.ex:161
 msgid "blue"
 msgstr ""
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:58
+#: lib/vega/issue/issues.ex:59
 msgid "changed title '%{title}' of list '%{list}'"
 msgstr ""
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:154
+#: lib/vega/issue/issues.ex:160
 msgid "green"
 msgstr ""
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:156
+#: lib/vega/issue/issues.ex:162
 msgid "orange"
 msgstr ""
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:158
+#: lib/vega/issue/issues.ex:164
 msgid "purple"
 msgstr ""
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:153
+#: lib/vega/issue/issues.ex:159
 msgid "red"
 msgstr ""
 
@@ -281,7 +281,7 @@ msgid "History"
 msgstr ""
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:157
+#: lib/vega/issue/issues.ex:163
 msgid "pink"
 msgstr ""
 
@@ -346,7 +346,7 @@ msgid "Welcome to Vega!"
 msgstr ""
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:152
+#: lib/vega/issue/issues.ex:158
 msgid "default"
 msgstr ""
 
@@ -361,17 +361,17 @@ msgid "Move"
 msgstr ""
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:97
+#: lib/vega/issue/issues.ex:98
 msgid "moved list '%{a}' from board '%{from}'"
 msgstr ""
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:98
+#: lib/vega/issue/issues.ex:99
 msgid "moved list '%{a}' to board '%{to}'"
 msgstr ""
 
 #, elixir-format
-#: lib/vega_web/live/list_menu.ex:214 lib/vega_web/live/list_menu.ex:229
+#: lib/vega_web/live/list_menu.ex:223 lib/vega_web/live/list_menu.ex:238
 msgid " (current)"
 msgstr ""
 
@@ -386,7 +386,7 @@ msgid "Enter a title for the list..."
 msgstr ""
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:106
+#: lib/vega/issue/issues.ex:107
 msgid "copied the list '%{title}'"
 msgstr ""
 
@@ -426,12 +426,12 @@ msgid "if number of cards > %{n}"
 msgstr ""
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:114
+#: lib/vega/issue/issues.ex:115
 msgid "removed the color from list '%{list}'"
 msgstr ""
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:113
+#: lib/vega/issue/issues.ex:114
 msgid "set the color of list '%{list}'"
 msgstr ""
 
@@ -446,22 +446,22 @@ msgid "Move to %{list}"
 msgstr ""
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:129
+#: lib/vega/issue/issues.ex:130
 msgid "moved %{cards} from '%{from}' to '%{to}'"
 msgstr ""
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:125
+#: lib/vega/issue/issues.ex:126
 msgid "%{n} cards:lowercase"
 msgstr ""
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:123
+#: lib/vega/issue/issues.ex:124
 msgid "0 cards:lowercase"
 msgstr ""
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:124
+#: lib/vega/issue/issues.ex:125
 msgid "one card:lowercase"
 msgstr ""
 
@@ -497,6 +497,11 @@ msgid "Sort cards"
 msgstr ""
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:135
+#: lib/vega/issue/issues.ex:136
 msgid "sorted the cards of list '%{list}'"
+msgstr ""
+
+#, elixir-format
+#: lib/vega/issue/issues.ex:142
+msgid "archived the list '%{list}'"
 msgstr ""

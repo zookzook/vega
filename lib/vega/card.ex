@@ -18,7 +18,8 @@ defmodule Vega.Card do
     :title,       ## the title of the card
     :description,     ## optional: a description as Markdown
     :board,           ## the id of the board
-    :list             ## the id of the list
+    :list,            ## the id of the list
+    :archived         ## date of the archiving
   ]
 
   @doc """
@@ -51,7 +52,7 @@ defmodule Vega.Card do
   Fetch all cards of the list with id `id`.
   """
   def fetch_all_in_list(id) do
-    Mongo.find(:mongo, @collection, %{list: id}) |> Enum.map(fn card -> to_struct(card) end)
+    Mongo.find(:mongo, @collection, %{list: id, archived: %{"$exists": false}}) |> Enum.map(fn card -> to_struct(card) end)
   end
 
   @doc """
@@ -64,7 +65,13 @@ defmodule Vega.Card do
       list: card["list"],
       created: card["created"],
       modified: card["modified"],
-      pos: card["pos"]}
+      pos: card["pos"],
+      archived: card["archived"],
+    }
+  end
+
+  def is_archived(%Card{archived: date}) do
+    date != nil
   end
 
   #@spec compare(Calendar.date(), Calendar.date()) :: :lt | :eq | :gt

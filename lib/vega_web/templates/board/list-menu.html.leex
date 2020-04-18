@@ -7,7 +7,7 @@
       <a phx-click="color" phx-target="<%= @myself %>" class="menu-item" href="javascript:void(0);"><%= gettext("Set color")%></a>
       <a phx-click="move" phx-target="<%= @myself %>" class="menu-item" href="javascript:void(0);"><%= gettext("Move list")%></a>
       <a phx-click="copy" phx-target="<%= @myself %>" class="menu-item" href="javascript:void(0);"><%= gettext("Copy list")%></a>
-      <a class="menu-item" href="javascript:void(0);"><%= gettext("Archive list")%></a>
+      <a phx-click="archive" phx-target="<%= @myself %>" class="menu-item" href="javascript:void(0);"><%= gettext("Archive list")%></a>
       <%= if not Enum.empty?(@list.cards) do %>
       <span class="menu-separator"></span>
       <a phx-click="move-cards" phx-target="<%= @myself %>" class="menu-item" href="javascript:void(0);"><%= gettext("Move all cards")%></a>

@@ -34,6 +34,15 @@ defmodule Vega.ListMenu do
     send_me(:preview_off) ## switch off preview mode
     {:noreply, assign(socket, action: nil)}
   end
+
+  ##
+  # Archive List
+  ##
+  def handle_event("archive", _params, %Socket{assigns: %{current_user: user, board: board, list: list}} = socket) do
+    board = Board.archive_list(board, list, user)
+    send_me({:close_menu_list, board})
+    {:noreply, socket}
+  end
   ##
   # Sort cards
   ##
