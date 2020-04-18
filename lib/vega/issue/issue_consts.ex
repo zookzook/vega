@@ -23,10 +23,11 @@ defmodule Vega.IssueConsts do
     move_cards_of_list: 13,
     archive_card: 14,
     archive_list: 15,
-    archive_board: 16,
+    close_board: 16,
     unarchive_card: 17,
     unarchive_list: 18,
-    unarchive_board: 19
+    open_board: 19,
+    clone_board: 20
   ]
 
   for {key, value} <- values do

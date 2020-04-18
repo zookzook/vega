@@ -48,6 +48,14 @@ defmodule Vega.Card do
       pos: pos}
   end
 
+
+  @doc """
+  Deep copy of the card
+  """
+  def clone(board, list, card) do
+    %Card{card | _id: Mongo.object_id(), board: board.id, list: list._id}
+  end
+
   @doc """
   Fetch all cards of the list with id `id`.
   """

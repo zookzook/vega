@@ -11,13 +11,44 @@ defmodule Vega.MenuComponent do
   import VegaWeb.Views.Helpers
 
   def mount(socket) do
-    {:ok, socket}
+    {:ok, assign(socket, action:  nil)}
   end
 
   def update(assigns, socket) do
     socket = assign(socket, assigns)
     board  = fetch_board(socket)
     {:ok, assign(socket, color: get_color(board), color_changed: false)}
+  end
+
+  def handle_event("cancel", _params, socket) do
+    send_me(:preview_off) ## switch off preview mode
+    {:noreply, assign(socket, action: nil)}
+  end
+
+  ##
+  # Copy a board
+  #
+  def handle_event("copy", _params, %Socket{assigns: %{board: board}} = socket) do
+    value = gettext("Copy of %{title}", title: board.title)
+    {:noreply, assign(socket, action: :copy, value: value)}
+  end
+  ##
+  # Update/validate the change of selection in case of 'copy board'
+  #
+  def handle_event("validate", %{"copy" => %{"title" => new_title}}, socket) do
+    {:noreply, assign(socket, value: new_title)}
+  end
+  def handle_event("save", %{"copy" => %{"title" => new_title}},
+        %Socket{assigns: %{current_user: user, board: board}} = socket) do
+
+    case VegaWeb.BoardView.validate_title(new_title) do
+      true ->
+        board = Board.clone(board, user, new_title)
+        send_me({:load, board.id})
+        {:noreply, assign(socket, action: nil)}
+      false ->
+        {:noreply, socket}
+    end
   end
 
   def handle_event("select", %{"color" => color}, %Socket{assigns: %{board: board}} = socket) do
@@ -35,6 +66,10 @@ defmodule Vega.MenuComponent do
 
   def render(assigns) do
     Phoenix.View.render(VegaWeb.BoardView, "menu.html", assigns)
+  end
+
+  defp send_me(msg) do
+    send(self(), msg)
   end
 
 end

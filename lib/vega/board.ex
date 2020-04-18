@@ -52,6 +52,7 @@ defmodule Vega.Board do
   @archive_list       IssueConsts.encode(:archive_list)
   @unarchive_card     IssueConsts.encode(:unarchive_card)
   @unarchive_list     IssueConsts.encode(:unarchive_list)
+  @clone_board        IssueConsts.encode(:clone_board)
 
   @collection         "boards"
   @issues_collection  "issues"
@@ -122,6 +123,48 @@ defmodule Vega.Board do
         :ok
       end
     end)
+  end
+
+  @doc"""
+  Copy the complete board.
+  """
+  def clone(board, user, title) do
+    new_board = %Board{
+      _id: Mongo.object_id(),
+      title: title,
+      created: DateTime.utc_now(),
+      modified: DateTime.utc_now(),
+      members: board.members,
+      options: board.options
+    }
+
+    deep_copy = Enum.map(board.lists, fn list -> BoardList.clone(new_board, list) end)
+    new_lists = Enum.map(deep_copy, fn {list, _cards} -> list end)
+    bulk      = deep_copy
+                |> Enum.map(fn {_list, cards} -> cards end)
+                |> Enum.reduce(UnorderedBulk.new(@cards_collection), fn bulk, acc -> add(acc, bulk) end)
+
+    new_board = %Board{new_board | lists: new_lists}
+
+    issue = @clone_board
+            |> Issue.new(user, new_board)
+            |> Issue.add_message_keys(title: title, board: new_board.title)
+            |> to_map()
+
+    with_transaction(new_board, fn trans ->
+      with {:ok, _} <- Mongo.insert_one(:mongo, @issues_collection, issue, trans),
+           {:ok, _} <- Mongo.insert_one(:mongo, @collection, to_map(new_board), trans),
+           %Mongo.BulkWriteResult{} <- BulkWrite.write(:mongo, bulk, trans) do
+        :ok
+      end
+    end)
+  end
+
+  def add(%UnorderedBulk{coll: coll_a} = a,  %UnorderedBulk{coll: coll_b} = b) when coll_a == coll_b do
+    %UnorderedBulk{coll: coll_a,
+      inserts: a.inserts ++ b.inserts,
+      updates: a.updates ++ b.updates,
+      deletes: a.deletes ++ b.deletes}
   end
 
   @doc """

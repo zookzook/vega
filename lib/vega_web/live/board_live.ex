@@ -28,7 +28,10 @@ defmodule VegaWeb.BoardLive do
       subscribe(board)
     end
 
+    ## todo: support preview mode instead of body_class thing
+
     {:ok, assign(socket,
+      page_title: "Vega | " <> board.title,
       body_class: get_color(board),  ## we set the body-class to avoid flickering
       board: board,
       current_user: fetch_user(socket),
@@ -50,6 +53,9 @@ defmodule VegaWeb.BoardLive do
   end
   def handle_info({:preview, board}, %Socket{assigns: %{board: original}} = socket) do
     {:noreply, assign(socket, board: board, original: original, preview: true)}
+  end
+  def handle_info({:load, id}, socket) do
+    {:noreply, redirect(socket, to: Routes.live_path(socket, VegaWeb.BoardLive, id))}
   end
   def handle_info({:updated_board, board}, socket) do
     {:noreply, broadcast_update(socket, board)}

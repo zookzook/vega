@@ -79,6 +79,8 @@ defmodule VegaWeb do
     quote do
       use Phoenix.LiveComponent
 
+      import VegaWeb.Gettext
+
       alias Phoenix.LiveView.Socket
       alias Vega.Board
       alias Vega.User

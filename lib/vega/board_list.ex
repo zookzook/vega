@@ -1,9 +1,14 @@
 defmodule Vega.BoardList do
   @moduledoc false
 
+  import Vega.StructHelper
+
   alias Vega.BoardList
   alias Vega.Card
   alias Vega.WarningColorRule
+  alias Mongo.UnorderedBulk
+
+  @cards_collection "cards"
 
   defstruct [
     :_id,       ## the ObjectId of the list
@@ -19,6 +24,17 @@ defmodule Vega.BoardList do
 
   def new(title, pos) do
     %BoardList{_id: Mongo.object_id(), title: title, pos: pos, created: DateTime.utc_now()}
+  end
+
+
+  @doc """
+  Create a deep copy. The result is a tuple with the new list and an unordered bulk operation for the cards to insert.
+  """
+  def clone(board, %BoardList{cards: cards} = list) do
+    result = %BoardList{list | _id: Mongo.object_id, cards: nil, n_cards: nil }
+    bulk = UnorderedBulk.new(@cards_collection)
+    bulk = Enum.reduce(cards, bulk, fn card, bulk -> UnorderedBulk.insert_one(bulk, Card.clone(board, result, card) |> to_map()) end)
+    {result, bulk}
   end
 
   def to_struct(%{"_id" => id, "title" => title, "pos" => pos} = doc) do
