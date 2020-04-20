@@ -504,28 +504,28 @@ msgstr "archivierte die Liste '%{list}'"
 #, elixir-format, fuzzy
 #: lib/vega_web/templates/board/menu.html.leex:19
 msgid "Archived elements"
-msgstr "Liste archivieren"
+msgstr "Archivierte Elemente"
 
 #, elixir-format
 #: lib/vega_web/templates/board/menu.html.leex:18
 msgid "Change description"
-msgstr ""
+msgstr "Beschreibung bearbeiten"
 
 #, elixir-format, fuzzy
 #: lib/vega_web/templates/board/menu.html.leex:21
 msgid "Close board"
-msgstr "Schließen"
+msgstr "Board schließen"
 
 #, elixir-format
 #: lib/vega_web/templates/board/menu.html.leex:20
 #: lib/vega_web/templates/board/menu.html.leex:33
 msgid "Copy board"
-msgstr ""
+msgstr "Board kopieren"
 
 #, elixir-format
 #: lib/vega_web/live/menu_component.ex:32
 msgid "Copy of %{title}"
-msgstr ""
+msgstr "Kopie von %{title}"
 
 #, elixir-format, fuzzy
 #: lib/vega_web/templates/board/menu.html.leex:32
@@ -535,7 +535,7 @@ msgstr "Geben Sie einen Titel ein..."
 #, elixir-format
 #: lib/vega_web/templates/board/menu.html.leex:17
 msgid "Show settings"
-msgstr ""
+msgstr "Einstellungen anzeigen"
 
 #, elixir-format
 #: lib/vega/issue/issues.ex:149
