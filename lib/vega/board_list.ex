@@ -34,7 +34,7 @@ defmodule Vega.BoardList do
     result = %BoardList{list | _id: Mongo.object_id, cards: nil, n_cards: nil }
     bulk = UnorderedBulk.new(@cards_collection)
     bulk = Enum.reduce(cards, bulk, fn card, bulk -> UnorderedBulk.insert_one(bulk, Card.clone(board, result, card) |> to_map()) end)
-    {result, bulk}
+    {list._id, result, bulk}
   end
 
   def to_struct(%{"_id" => id, "title" => title, "pos" => pos} = doc) do

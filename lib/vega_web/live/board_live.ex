@@ -28,8 +28,6 @@ defmodule VegaWeb.BoardLive do
       subscribe(board)
     end
 
-    ## todo: support preview mode instead of body_class thing
-
     {:ok, assign(socket,
       page_title: "Vega | " <> board.title,
       body_class: get_color(board),  ## we set the body-class to avoid flickering

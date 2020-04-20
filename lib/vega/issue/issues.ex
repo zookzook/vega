@@ -20,6 +20,7 @@ defmodule Vega.Issues do
   @set_list_color     IssueConsts.encode(:set_list_color)
   @move_cards_of_list IssueConsts.encode(:move_cards_of_list)
   @archive_list       IssueConsts.encode(:archive_list)
+  @clone_board        IssueConsts.encode(:clone_board)
 
   def to_struct(issue) do
     issue
@@ -140,6 +141,12 @@ defmodule Vega.Issues do
   #
   defp add_msg(%Issue{t: @archive_list} = issue) do
     %Issue{issue | msg: gettext("archived the list '%{list}'", map_to_keywords(issue.keys))}
+  end
+  ##
+  # Archive a list
+  #
+  defp add_msg(%Issue{t: @clone_board} = issue) do
+    %Issue{issue | msg: gettext("copied this board '%{board}' from '%{title}'", map_to_keywords(issue.keys))}
   end
   ##
   # Catch-All function

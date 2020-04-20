@@ -33,6 +33,7 @@ defmodule Vega.Board do
   alias Vega.Issue
   alias Vega.IssueConsts
   alias Vega.User
+  alias Vega.Issue
 
   @copy_list          IssueConsts.encode(:copy_list)
   @new_board          IssueConsts.encode(:new_board)
@@ -126,7 +127,7 @@ defmodule Vega.Board do
   end
 
   @doc"""
-  Copy the complete board.
+  Perform a deep copy.
   """
   def clone(board, user, title) do
     new_board = %Board{
@@ -139,22 +140,34 @@ defmodule Vega.Board do
     }
 
     deep_copy = Enum.map(board.lists, fn list -> BoardList.clone(new_board, list) end)
-    new_lists = Enum.map(deep_copy, fn {list, _cards} -> list end)
+    new_lists = Enum.map(deep_copy, fn {_id, list, _cards} -> list end)
     bulk      = deep_copy
-                |> Enum.map(fn {_list, cards} -> cards end)
+                |> Enum.map(fn {_id, _list, cards} -> cards end)
                 |> Enum.reduce(UnorderedBulk.new(@cards_collection), fn bulk, acc -> add(acc, bulk) end)
 
     new_board = %Board{new_board | lists: new_lists}
 
+    list_mapping = deep_copy
+                   |> Enum.map(fn {old_id, list, _card} -> {old_id, list._id} end)
+                   |> Enum.into(%{})
+
+    issues = board
+             |> Issue.fetch_all_raw()
+             |> Issue.clone_issues(new_board._id, list_mapping)
+
+    issues_bulk = UnorderedBulk.new(@issues_collection)
+    issues_bulk = Enum.reduce(issues, issues_bulk, fn issue, bulk -> UnorderedBulk.insert_one(bulk, issue) end)
+
     issue = @clone_board
             |> Issue.new(user, new_board)
-            |> Issue.add_message_keys(title: title, board: new_board.title)
+            |> Issue.add_message_keys(title: board.title, board: new_board.title)
             |> to_map()
 
     with_transaction(new_board, fn trans ->
       with {:ok, _} <- Mongo.insert_one(:mongo, @issues_collection, issue, trans),
            {:ok, _} <- Mongo.insert_one(:mongo, @collection, to_map(new_board), trans),
-           %Mongo.BulkWriteResult{} <- BulkWrite.write(:mongo, bulk, trans) do
+           %Mongo.BulkWriteResult{} <- BulkWrite.write(:mongo, bulk, trans),
+           %Mongo.BulkWriteResult{} <- BulkWrite.write(:mongo, issues_bulk, trans) do
         :ok
       end
     end)

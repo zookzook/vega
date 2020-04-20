@@ -56,11 +56,25 @@ defmodule Vega.Issue do
   def fetch_all(%Board{_id: id}) do
     Mongo.find(:mongo, @collection, %{"board" => id}, sort: %{ts: -1}, limit: 5) |> Enum.map(fn issue -> Issues.to_struct(issue) end)
   end
+  def fetch_all_raw(%Board{_id: id}) do
+    Mongo.find(:mongo, @collection, %{"board" => id})
+  end
 
   def check() do
     case Mongo.show_collections(:mongo) |> Enum.any?(fn coll -> coll == @collection end) do
       false -> Mongo.create(:mongo, @collection)
       true  -> :ok
     end
+  end
+
+  def clone_issues(issues, board, mapping) do
+    Enum.map(issues, fn issue -> clone(issue, board, Map.get(mapping, issue["list"])) end)
+  end
+
+  def clone(%{"list" => list} = issue, board, list) do
+    %{issue | "_id" => Mongo.object_id(), "board" => board, "list" => list}
+  end
+  def clone(issue, board, _list) do
+    %{issue | "_id" => Mongo.object_id(), "board" => board}
   end
 end
