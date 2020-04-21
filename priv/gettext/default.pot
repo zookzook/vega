@@ -528,7 +528,7 @@ msgid "Copy board"
 msgstr ""
 
 #, elixir-format
-#: lib/vega_web/live/menu_component.ex:74
+#: lib/vega_web/live/list_menu.ex:139 lib/vega_web/live/menu_component.ex:74
 msgid "Copy of %{title}"
 msgstr ""
 
