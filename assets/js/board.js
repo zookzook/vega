@@ -63,6 +63,23 @@ Hooks.BoardColor = {
     }
 };
 
+Hooks.AddCards = {
+    mounted() {
+        Hooks.AutoClose.mounted.call(this);
+        let textarea = this.el.querySelector('textarea');
+        let submit = this.el.querySelector('button');
+        let hidden = this.el.querySelector('input[name="action"]');
+        document.onkeyup = function(e) {
+            if(e.key === "Enter") {
+                hidden.value = 'continue';
+                submit.click();
+                hidden.value = '';
+                textarea.value = '';
+            } // if
+        };
+    },
+};
+
 Hooks.Board = {
 
     sortable: [],

@@ -136,7 +136,7 @@ defmodule Vega.ListMenu do
   # Copy a list
   #
   def handle_event("copy", _params, %Socket{assigns: %{list: list}} = socket) do
-    {:noreply, assign(socket, action: :copy, value: list.title)} ## todo gettext("Copy of #{title}", [title: list.title])
+    {:noreply, assign(socket, action: :copy, value: gettext("Copy of %{title}", [title: list.title]))}
   end
   ##
   # Update/validate the change of selection in case of 'copy list'
@@ -162,7 +162,7 @@ defmodule Vega.ListMenu do
   #
   def handle_event("move", _params, %Socket{assigns: %{current_user: user, board: board, list: list}} = socket) do
     new_board_id = board.id
-    boards       = BoardOverview.fetch_personal_boards(user, %{title: 1, lists: 1}) |> Enum.map(&to_struct(&1))
+    boards       = BoardOverview.fetch_personal_boards(user, %{title: 1, lists: 1, closed: 1}) |> Enum.filter(&(Board.is_open?(&1))) |> Enum.map(&to_struct(&1))
     board        = Enum.find(boards, fn board -> board.id == new_board_id end)
     socket       = socket
                    |> assign_boards(boards, board)

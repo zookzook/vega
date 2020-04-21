@@ -55,6 +55,9 @@ defmodule VegaWeb.BoardLive do
   def handle_info({:load, id}, socket) do
     {:noreply, redirect(socket, to: Routes.live_path(socket, VegaWeb.BoardLive, id))}
   end
+  def handle_info(:deleted, socket) do
+    {:noreply, redirect(socket, to: Routes.page_path(socket, :index))}
+  end
   def handle_info({:updated_board, board}, socket) do
     {:noreply, broadcast_update(socket, board)}
   end

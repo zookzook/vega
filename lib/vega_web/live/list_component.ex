@@ -15,7 +15,8 @@ defmodule Vega.ListComponent do
     {:noreply, assign(socket, add_card: true)}
   end
 
-  def handle_event("save", %{"card" => %{"title" => title}}, %Socket{assigns: %{current_user: user, board: board, list: list}} = socket) do
+  def handle_event("save", %{"card" => %{"title" => title},  "action" => action} = params, %Socket{assigns: %{current_user: user, board: board, list: list}} = socket) do
+
     titles = title
              |> String.split("\n")
              |> Enum.map(fn str -> String.trim(str) end)
@@ -27,7 +28,11 @@ defmodule Vega.ListComponent do
         board = Board.add_cards(board, user, list, new_titles)
         list  = Board.find_list(board, list)
         send(self(), {:updated_board, board})
-        {:noreply, assign(socket, add_card: false, board: board, list: list)}
+
+        case action do
+          "continue" -> {:noreply, assign(socket, board: board, list: list)}
+          _          -> {:noreply, assign(socket, add_card: false, board: board, list: list)}
+        end
     end
   end
   def handle_event("cancel-add-card", _params, socket) do

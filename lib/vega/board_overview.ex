@@ -6,6 +6,7 @@ defmodule Vega.BoardOverview do
   @collection "boards"
 
   alias Vega.User
+  alias Vega.Board
 
   @doc """
   Fetch all boards which are connected to the user:
@@ -14,16 +15,17 @@ defmodule Vega.BoardOverview do
   * starred boards
   """
   def fetch_all_for_user(nil) do
-    {[], [], []}
+    {[], [], [], []}
   end
   def fetch_all_for_user(%User{_id: id}) do
 
-    personal = :mongo
-               |> Mongo.find(@collection, %{"members.id" => id}, projection: %{title: 1, options: 1})
+    {personal, closed} = :mongo
+               |> Mongo.find(@collection, %{"members.id" => id}, projection: %{title: 1, options: 1, closed: 1})
                |> Enum.to_list()
                |> transform()
+               |> Enum.split_with(fn board -> Board.is_open?(board) end)
 
-    {personal, [], []}
+    {personal, [], [], closed}
   end
 
   def fetch_personal_boards(%User{_id: id}, projection \\ %{title: 1}) do

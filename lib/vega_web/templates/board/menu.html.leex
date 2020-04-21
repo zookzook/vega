@@ -18,7 +18,12 @@
         <a phx-click="edit-description" phx-target="<%= @myself %>" class="menu-item" href="javascript:void(0);"><%= gettext("Change description") %></a>
         <a phx-click="show-archive" phx-target="<%= @myself %>" class="menu-item" href="javascript:void(0);"><%= gettext("Archived elements") %></a>
         <a phx-click="copy" phx-target="<%= @myself %>" class="menu-item" href="javascript:void(0);"><%= gettext("Copy board") %></a>
+        <%= if Vega.Board.is_closed?(@board) do %>
+        <a phx-click="open" phx-target="<%= @myself %>" class="menu-item" href="javascript:void(0);"><%= gettext("Open board") %></a>
+        <a phx-click="delete" phx-target="<%= @myself %>" class="menu-item" href="javascript:void(0);"><%= gettext("Delete board") %></a>
+        <% else %>
         <a phx-click="close" phx-target="<%= @myself %>" class="menu-item" href="javascript:void(0);"><%= gettext("Close board") %></a>
+        <% end %>
         <div class="issues">
           <h3><%= gettext("History")%></h3>
           <%= render_many @history, VegaWeb.BoardView, "history.html", as: :issue %>

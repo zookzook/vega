@@ -38,6 +38,14 @@
 			</a>
 		  </div>
 		</div>
+        <%= if !Enum.empty?(@closed) do %>
+        <div class="group">
+          <h2><%= gettext "Closed boards" %></h2>
+          <div class="boards">
+            <%= render_many(@closed, VegaWeb.PageView, "board-item.html", as: :board, conn: @conn) %>
+          </div>
+        </div>
+        <% end %>
 	  </div>
 	  <% else %>
 	  <h1><%= gettext "Welcome to Vega!" %></h1>

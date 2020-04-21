@@ -15,10 +15,10 @@
             <% end %>
           </div>
           <%= if @add_card do %>
-          <%= f = form_for :card, "javascript:void(0);", [phx_submit: :save, phx_target: @myself, phx_hook: "AutoClose"] %>
+          <%= f = form_for :card, "javascript:void(0);", [phx_submit: :save, phx_target: @myself, phx_hook: "AddCards"] %>
             <div class="card-composer">
-            <%= textarea f, :title, placeholder: gettext("Enter a title for this card..."), class: "card-composer-textarea", id: make_text_id(@list._id) , phx_target: @myself %>
-              <input type="hidden" name="action" />
+            <%= textarea f, :title, placeholder: gettext("Enter a title for this card..."), class: "card-composer-textarea", id: make_text_id(@list._id), phx_target: @myself%>
+              <input type="hidden" name="action" value=""/>
               <%= submit gettext("Add new card"), class: "submit submit-primary submit-shadow-box submit-next" %>
               <a class="add-card-form-cancel submit submit-cancel submit-shadow-box" phx-target="<%= @myself %>" phx-click="cancel-add-card" href="javascript:void(0);" ><%= gettext("Cancel") %></a>
             </div>

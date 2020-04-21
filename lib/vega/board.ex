@@ -54,6 +54,8 @@ defmodule Vega.Board do
   @unarchive_card     IssueConsts.encode(:unarchive_card)
   @unarchive_list     IssueConsts.encode(:unarchive_list)
   @clone_board        IssueConsts.encode(:clone_board)
+  @open_board         IssueConsts.encode(:open_board)
+  @close_board        IssueConsts.encode(:close_board)
 
   @collection         "boards"
   @issues_collection  "issues"
@@ -92,7 +94,8 @@ defmodule Vega.Board do
     :title,       ## the title
     :description, ## optional: the description
     :members,     ## the list of members of the board
-    :lists        ## the lists of the board
+    :lists,       ## the lists of the board
+    :closed       ## closing date
   ]
 
   @doc """
@@ -694,6 +697,46 @@ defmodule Vega.Board do
   end
 
   @doc """
+  Close the board. The `:closed` attribute of the board is set to the current time and after that, it is closed
+  and hidden. Only closed boards can be deleted.
+  """
+  def close(%Board{_id: id} = board, user) do
+
+    issue = @close_board
+            |> Issue.new(user, board)
+            |> Issue.add_message_keys(board: board.title)
+            |> to_map()
+
+    with_transaction(board, fn trans ->
+      with {:ok, _} <- Mongo.insert_one(:mongo, @issues_collection, issue, trans),
+           {:ok, _} <- Mongo.update_one(:mongo, @collection, %{_id: id}, %{"$set" => %{"closed" => DateTime.utc_now()}}) do
+        :ok
+      end
+    end)
+
+  end
+
+  @doc """
+  Close the board. The `:closed` attribute of the board is set to the current time and after that, it is closed
+  and hidden. Only closed boards can be deleted.
+  """
+  def open(%Board{_id: id} = board, user) do
+
+    issue = @open_board
+            |> Issue.new(user, board)
+            |> Issue.add_message_keys(board: board.title)
+            |> to_map()
+
+    with_transaction(board, fn trans ->
+      with {:ok, _} <- Mongo.insert_one(:mongo, @issues_collection, issue, trans),
+           {:ok, _} <- Mongo.update_one(:mongo, @collection, %{_id: id}, %{"$unset" => %{"closed" => 1}}) do
+        :ok
+      end
+    end)
+
+  end
+
+  @doc """
   Archive the list. The `:archived` attribute of the list is set to the current time and after that, it is archived
   and hidden.
   """
@@ -865,11 +908,28 @@ defmodule Vega.Board do
       description: board["description"],
       created: board["created"],
       modified: board["modified"],
+      closed: board["closed"],
       title: board["title"],
       members: board["members"],
       lists: lists,
       options: [color: options["color"]] |> filter_nils()
     }
+  end
+
+  def is_closed?(%Board{closed: date}) do
+    date != nil
+  end
+  def is_closed?(_other) do
+    false
+  end
+  def is_open?(%Board{closed: date}) do
+    date == nil
+  end
+  def is_open?(%{"closed" => date}) do
+    date == nil
+  end
+  def is_open?(_other) do
+    true
   end
 
   ##

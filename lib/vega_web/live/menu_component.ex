@@ -26,6 +26,48 @@ defmodule Vega.MenuComponent do
   end
 
   ##
+  # Close a board
+  #
+  def handle_event("close", _params, %Socket{assigns: %{current_user: user, board: board}} = socket) do
+    case Board.is_open?(board) do
+      true ->
+        board = Board.close(board, user)
+        send(self(), {:updated_board, board})
+        {:noreply, assign(socket, board: board)}
+      false ->
+        {:noreply, socket}
+    end
+  end
+
+  ##
+  # Open a closed board
+  #
+  def handle_event("open", _params, %Socket{assigns: %{current_user: user, board: board}} = socket) do
+    case Board.is_closed?(board) do
+      true ->
+        board = Board.open(board, user)
+        send(self(), {:updated_board, board})
+        {:noreply, assign(socket, board: board)}
+      false ->
+        {:noreply, socket}
+    end
+  end
+
+  ##
+  # Delete a closed board
+  #
+  def handle_event("delete", _params, %Socket{assigns: %{board: board}} = socket) do
+    case Board.is_closed?(board) do
+      true ->
+        Board.delete(board)
+        send(self(), :deleted)
+      false ->
+        []
+    end
+    {:noreply, socket}
+  end
+
+  ##
   # Copy a board
   #
   def handle_event("copy", _params, %Socket{assigns: %{board: board}} = socket) do

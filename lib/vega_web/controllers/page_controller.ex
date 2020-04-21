@@ -8,17 +8,18 @@ defmodule VegaWeb.PageController do
   """
   def index(conn, _params) do
 
-    {personal, visited, starred} = conn
-                                   |> fetch_user()
-                                   |> BoardOverview.fetch_all_for_user()
+    {personal, visited, starred, closed} = conn
+                                           |> fetch_user()
+                                           |> BoardOverview.fetch_all_for_user()
 
     conn
-    |> merge_assigns(personal: personal, visited: visited, starred: starred)
+    |> merge_assigns(personal: personal, visited: visited, starred: starred, closed: closed)
     |> assign_asserts("welcome")
     |> render("index.html")
   end
 
   def clear_db(conn, _param) do
+
     Mongo.delete_many(:mongo, "cards", %{})
     Mongo.delete_many(:mongo, "issues", %{})
     Mongo.delete_many(:mongo, "boards", %{})
