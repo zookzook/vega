@@ -1,4 +1,4 @@
-<div class="menu">
+<div class="menu" phx-hook="ScrollToMenu">
   <div class="content">
     <div class="title"><h3><%= @board.title%></h3><a class="control" phx-click="close-menu" href="#" phx-target="#board"><%= gettext("Close") %></a></div>
     <div class="y-scrollbar menu-items">

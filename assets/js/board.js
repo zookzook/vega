@@ -8,6 +8,13 @@ import * as bs from "./bert-serializer"
 
 let Hooks = {};
 
+Hooks.ScrollToMenu = {
+    mounted() {
+        let menu = document.getElementById('board');
+        menu.scrollLeft = menu.scrollWidth - menu.clientWidth;
+    }
+};
+
 Hooks.Focus = {
     mounted() {
         this.el.focus();
@@ -69,7 +76,7 @@ Hooks.AddCards = {
         let textarea = this.el.querySelector('textarea');
         let submit = this.el.querySelector('button');
         let hidden = this.el.querySelector('input[name="action"]');
-        document.onkeyup = function(e) {
+        document.onkeydown = function(e) {
             if(e.key === "Enter") {
                 hidden.value = 'continue';
                 submit.click();
