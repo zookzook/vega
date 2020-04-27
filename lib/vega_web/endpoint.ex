@@ -15,7 +15,7 @@ defmodule VegaWeb.Endpoint do
     longpoll: false
 
   socket "/live", Phoenix.LiveView.Socket,
-         websocket: [connect_info: [session: @session_options], serializer:  [{BERTSerializer, "~> 2.0.0"}]]
+         websocket: [connect_info: [session: @session_options], serializer: [{BERTSerializer, "~> 2.0.0"}]]
 
   # Serve at "/" the static files from "priv/static" directory.
   #

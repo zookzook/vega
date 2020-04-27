@@ -1,0 +1,37 @@
+/*
+ * sass for the open card
+ */
+
+.fullcard {
+
+  background: rgba(235, 235, 235, 0.94);
+  border-radius: $px3;
+  box-shadow: 0 0.5rem 1rem -0.25rem rgba(9,30,66,.25),0 0 0 $px1 rgba(9,30,66,.08);
+  width: 48rem;
+  margin: 3rem 0 5rem;
+
+  .card-body {
+
+    display: flex;
+    margin: $px6;
+
+    .content {
+      width: 60%;
+      margin-right: $px12;
+    }
+
+    .menu-items {
+      width: 40%;
+    }
+
+    .menu-item {
+      background-color: rgba(9,30,66,.04);
+      display: block;
+
+      &:hover {
+        background-color: rgba(9,30,66,.08);
+      }
+    }
+  }
+
+}

@@ -1,4 +1,4 @@
-<a href="#" class="card"  id="card-<%= id(@card._id) %>" draggable="false" data-id="<%= id(@card._id) %>">
+<a href="#" class="card"  id="card-<%= id(@card._id) %>" draggable="false" data-id="<%= id(@card._id) %>" phx-click="open-card" phx-value-id="<%= @card.id %>" phx-value-list="<%= @list.id %>">
   <div class="card-details">
     <div class="card-title">
       <span><%= @card.title%></span>

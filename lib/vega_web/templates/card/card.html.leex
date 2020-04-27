@@ -1,0 +1,37 @@
+<div class="window-overlay">
+  <div class="fullcard">
+    <div class="title"><h3><%= @card.title%></h3><a class="control" phx-click="close-card" href="javascript:void(0);"><%= gettext("Close")%></a></div>
+    <div class="card-body">
+        <div class="content">
+            <div class="description">
+              Dies ist die Beschreibung
+            </div>
+            <div class="add-comment">
+              <%= f = form_for :comment, "javascript:void(0);", [phx_submit: :save, phx_change: :validate, phx_target: @myself, phx_hook: "FocusComment"] %>
+              <%= textarea f, :comment, placeholder: gettext("Enter a comment for this card..."), value: @comment, class: "card-composer-textarea", id: @card.id, phx_target: @myself %>
+              <%= submit gettext("Add comment"), disabled: (not VegaWeb.BoardView.validate_title(@comment)), class: "submit submit-primary submit-shadow-box submit-next" %>
+              </form>
+            </div>
+            <div class="comments">
+            <%= for comment <- @card.comments do %>
+                <%= live_component @socket, Vega.CommentComponent, comment: comment %>
+            <% end %>
+            </div>
+        </div>
+        <div class="menu-items">
+            <h3>Add to card</h3>
+            <a phx-click="change-title" phx-target="<%= @myself %>" class="menu-item" href="javascript:void(0);"><%= gettext("Labels") %></a>
+            <a phx-click="change-title" phx-target="<%= @myself %>" class="menu-item" href="javascript:void(0);"><%= gettext("Checklist") %></a>
+            <a phx-click="change-title" phx-target="<%= @myself %>" class="menu-item" href="javascript:void(0);"><%= gettext("Frist") %></a>
+            <a phx-click="change-title" phx-target="<%= @myself %>" class="menu-item" href="javascript:void(0);"><%= gettext("Anhang") %></a>
+            <a phx-click="change-title" phx-target="<%= @myself %>" class="menu-item" href="javascript:void(0);"><%= gettext("Titelbild") %></a>
+            <h3 class="mt-12">Actions</h3>
+            <a phx-click="change-title" phx-target="<%= @myself %>" class="menu-item" href="javascript:void(0);"><%= gettext("Change title") %></a>
+            <a phx-click="archive" phx-target="<%= @myself %>" class="menu-item" href="javascript:void(0);"><%= gettext("Archive card") %></a>
+            <a phx-click="copy" phx-target="<%= @myself %>" class="menu-item" href="javascript:void(0);"><%= gettext("Copy card") %></a>
+            <a phx-click="move" phx-target="<%= @myself %>" class="menu-item" href="javascript:void(0);"><%= gettext("Move card") %></a>
+            <a phx-click="delete" phx-target="<%= @myself %>" class="menu-item" href="javascript:void(0);"><%= gettext("Delete card") %></a>
+        </div>
+    </div>
+  </div>
+</div>

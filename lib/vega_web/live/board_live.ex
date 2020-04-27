@@ -37,6 +37,7 @@ defmodule VegaWeb.BoardLive do
       edit: false,
       menu: false,
       pop_over: nil,
+      selected_card: nil,
       list_composer: Enum.empty?(board.lists))}
   end
 
@@ -92,7 +93,17 @@ defmodule VegaWeb.BoardLive do
   def handle_event("close-all", _params, socket) do
     {:noreply, close_other(socket)}
   end
-
+  def handle_event("open-card", %{"id" => id, "list" => list_id}, %Socket{assigns: %{current_user: user, board: board}} = socket)  do
+    with list when list != nil <- Board.find_list(board, list_id),
+         card when card != nil <- BoardList.find_card(list, id) do
+      {:noreply, socket |> assign(selected_card: [id: :selected_card, current_user: user, board: board, list: list, card: card])}
+    else
+      _error -> {:noreply, socket}
+    end
+  end
+  def handle_event("close-card", _params, socket) do
+    {:noreply, socket |> assign(selected_card: nil)}
+  end
   def handle_event("open-list-menu", %{"x" => x, "y" => y, "id" => id}, %Socket{assigns: %{current_user: user, board: board}} = socket) do
     with list when list != nil <- Board.find_list(board, id) do
       {:noreply, socket |> close_other() |> assign(pop_over: [id: :list_menu, current_user: user, board: board, list: list, x: x - 15, y: y + 15])}
@@ -215,9 +226,7 @@ defmodule VegaWeb.BoardLive do
   # Subscribe the board
   #
   defp subscribe(board) do
-    board
-    |> topic()
-    |> VegaWeb.Endpoint.subscribe()
+    Phoenix.PubSub.subscribe(Vega.PubSub, topic(board), [])
   end
 
   ##

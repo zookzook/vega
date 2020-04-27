@@ -15,6 +15,19 @@ Hooks.ScrollToMenu = {
     }
 };
 
+Hooks.FocusComment = {
+    mounted() {
+        this.el.querySelector('textarea').focus();
+    },
+
+    updated() {
+        let textarea = this.el.querySelector('textarea');
+        if(!(document.activeElement === textarea)) {
+            this.el.querySelector('textarea').focus();
+        }
+    }
+};
+
 Hooks.Focus = {
     mounted() {
         this.el.focus();

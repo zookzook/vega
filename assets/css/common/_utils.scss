@@ -89,7 +89,6 @@
   }
 }
 
-
 .pos-relative {
   position: relative;
 }
@@ -100,4 +99,18 @@
 
 .text-muted {
   color: #666;
+}
+
+.window-overlay {
+  background-color: rgba(0,0,0,.64);
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  left: 0;
+  top: 0;
+  overflow-y: auto;
+  z-index: 20;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

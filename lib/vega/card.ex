@@ -12,6 +12,7 @@ defmodule Vega.Card do
 
   defstruct [
     :_id,         ## the ObjectId of the card
+    :id,          ## the ObjectId as string
     :created,     ## creation date
     :pos,         ## current position for ordering
     :modified,    ## last modification date
@@ -19,14 +20,17 @@ defmodule Vega.Card do
     :description,     ## optional: a description as Markdown
     :board,           ## the id of the board
     :list,            ## the id of the list
-    :archived         ## date of the archiving
+    :archived,        ## date of the archiving
+    :comments         ## list of comments
   ]
 
   @doc """
   Create a new card with a title `title` and position `pos`.
   """
   def new(board, list, title, pos) do
-    %Card{_id: Mongo.object_id(),
+    id = Mongo.object_id()
+    %Card{_id: id,
+      id: BSON.ObjectId.encode!(id),
       title: title,
       board: board._id,
       list: list._id,
@@ -39,7 +43,9 @@ defmodule Vega.Card do
   cards is created to preserve the order of creating time.
   """
   def new(board, list, title, pos, time) do
+    id = Mongo.object_id()
     %Card{_id: Mongo.object_id(),
+      id: BSON.ObjectId.encode!(id),
       title: title,
       board: board._id,
       list: list._id,
@@ -53,7 +59,8 @@ defmodule Vega.Card do
   Deep copy of the card
   """
   def clone(board, list, card) do
-    %Card{card | _id: Mongo.object_id(), board: board.id, list: list._id}
+    id = Mongo.object_id()
+    %Card{card | _id: id, id: BSON.ObjectId.encode!(id), board: board.id, list: list._id}
   end
 
   @doc """
@@ -68,6 +75,7 @@ defmodule Vega.Card do
   """
   def to_struct(card) do
     %Card{_id: card["_id"],
+      id: BSON.ObjectId.encode!(card["_id"]),
       title: card["title"],
       board: card["board"],
       list: card["list"],
@@ -75,6 +83,7 @@ defmodule Vega.Card do
       modified: card["modified"],
       pos: card["pos"],
       archived: card["archived"],
+      comments: card["comments"] || []
     }
   end
 

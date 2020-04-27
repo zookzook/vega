@@ -21,7 +21,7 @@ config :vega, VegaWeb.Endpoint,
   url: [host: "lvh.me"],
   secret_key_base: "mDuucO+oaLXjtnaTHVS3HXA/um73iGvJDWanDp86Poht3raBddI4GaKQV3kRqvi5",
   render_errors: [view: VegaWeb.ErrorView, accepts: ~w(html json)],
-  pubsub: [name: Vega.PubSub, adapter: Phoenix.PubSub.PG2],
+  pubsub_server: Vega.PubSub,
   live_view: [signing_salt: "jyw8j1pk"]
 
 # Configures Elixir's Logger

@@ -39,7 +39,7 @@ defmodule Vega.Board do
   @new_board          IssueConsts.encode(:new_board)
   @new_card           IssueConsts.encode(:new_card)
   @set_description    IssueConsts.encode(:set_description)
-  # todo: @add_comment     IssueConsts.encode(:add_comment)
+  @add_comment        IssueConsts.encode(:add_comment)
   @set_title          IssueConsts.encode(:set_title)
   @set_board_color    IssueConsts.encode(:set_board_color)
   @add_list           IssueConsts.encode(:add_list)
@@ -512,6 +512,35 @@ defmodule Vega.Board do
       end
     end)
 
+  end
+
+  @doc """
+  Add the new comment to the card
+  """
+  def add_comment_to_card(board, list, card, comment, user) do
+    issue = @add_comment
+            |> Issue.new(user, board)
+            |> Issue.add_message_keys(comment: comment)
+            |> to_map()
+
+    comment = %{_id: Mongo.object_id(), text: comment, user: user._id, created: DateTime.utc_now()}
+
+    with_transaction(board, fn trans ->
+      with {:ok, _} <- Mongo.insert_one(:mongo, @issues_collection, issue, trans),
+           {:ok, _} <- Mongo.update_one(:mongo, @cards_collection, %{_id: card._id}, %{"$push": %{comments: comment}}, trans) do
+        :ok
+      end
+    end)
+  end
+
+  @doc """
+  Find the card of the list in the board. Returns a tuple `{list, card}`
+  """
+  def find_card(board, list_id, card_id) do
+    with list when list != nil <- find_list(board, list_id),
+         card when card != nil <- BoardList.find_card(list, card_id) do
+      {list, card}
+    end
   end
 
   @doc"""

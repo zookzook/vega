@@ -52,4 +52,7 @@
   <%= if @pop_over != nil do %>
     <%= live_component @socket, Vega.ListMenu, @pop_over %>
   <% end %>
+  <%= if @selected_card != nil do %>
+    <%= live_component @socket, Vega.SelectedCard, @selected_card %>
+  <% end %>
 </div>
