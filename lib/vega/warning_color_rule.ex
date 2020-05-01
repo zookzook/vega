@@ -1,6 +1,8 @@
 defmodule Vega.WarningColorRule do
   @moduledoc false
 
+  import Vega.StructHelper
+
   alias Vega.WarningColorRule
 
   defstruct [
@@ -43,10 +45,14 @@ defmodule Vega.WarningColorRule do
     other
   end
 
-  def to_struct(nil) do
+  def dump(%WarningColorRule{} = rule) do
+    to_map(rule)
+  end
+
+  def load(nil) do
     nil
   end
-  def to_struct(%{"color" => color, "n" => n, "warning" => warning}) do
+  def load(%{"color" => color, "n" => n, "warning" => warning}) do
     %WarningColorRule{color: color, n: n, warning: warning}
   end
 end

@@ -1,3 +1,8 @@
 <div class="comment">
-  <%= @comment["text"] %>
+  <div class="comment-author">
+    <span class="name"><%= author(@comment)%></span><span class="relative-date"><%= relative_date(@comment.created)%></span>
+  </div>
+  <div class="comment-text">
+    <%= @comment.text |> markdown() |> raw() %>
+  </div>
 </div>

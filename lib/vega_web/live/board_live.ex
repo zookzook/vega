@@ -126,7 +126,7 @@ defmodule VegaWeb.BoardLive do
   def handle_event("cancel-add-list", _params, socket) do
     {:noreply, assign(socket, list_composer: false)}
   end
-  def handle_event("save", %{"new_list" => %{"title" => title}},  %Socket{assigns: %{current_user: user, board: board}} = socket) do
+  def handle_event("save", %{"new_list" => %{"title" => title}}, %Socket{assigns: %{current_user: user, board: board}} = socket) do
     case title do
       ""     -> {:noreply, socket}
       _other ->

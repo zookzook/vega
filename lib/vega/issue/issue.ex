@@ -10,6 +10,8 @@ defmodule Vega.Issue do
 
   """
 
+  import Vega.StructHelper
+
   alias Vega.Issue
   alias Vega.Issues
   alias Vega.User
@@ -39,6 +41,10 @@ defmodule Vega.Issue do
     %Issue{_id: Mongo.object_id(), author_id: author_id, ts: DateTime.utc_now(), t: type, board: board, list: list}
   end
 
+  def dump(%Issue{} = issue) do
+    to_map(issue)
+  end
+
   @doc """
   Add keys to the issue which are used to format a localized string in the history view of the app.
   """
@@ -54,7 +60,7 @@ defmodule Vega.Issue do
     []
   end
   def fetch_all(%Board{_id: id}) do
-    Mongo.find(:mongo, @collection, %{"board" => id}, sort: %{ts: -1}, limit: 5) |> Enum.map(fn issue -> Issues.to_struct(issue) end)
+    Mongo.find(:mongo, @collection, %{"board" => id}, sort: %{ts: -1}, limit: 5) |> Enum.map(fn issue -> Issues.load(issue) end)
   end
   def fetch_all_raw(%Board{_id: id}) do
     Mongo.find(:mongo, @collection, %{"board" => id})

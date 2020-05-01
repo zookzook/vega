@@ -15,7 +15,7 @@ defmodule Vega.ListComponent do
     {:noreply, assign(socket, add_card: true)}
   end
 
-  def handle_event("save", %{"card" => %{"title" => title},  "action" => action} = params, %Socket{assigns: %{current_user: user, board: board, list: list}} = socket) do
+  def handle_event("save", %{"card" => %{"title" => title},  "action" => action}, %Socket{assigns: %{current_user: user, board: board, list: list}} = socket) do
 
     titles = title
              |> String.split("\n")

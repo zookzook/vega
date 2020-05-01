@@ -6,9 +6,14 @@ defmodule Vega.Card do
 
   """
 
+  import Vega.StructHelper
+
   alias Vega.Card
+  alias Vega.Comment
 
   @collection "cards"
+
+  @derived_attributes [:id]
 
   defstruct [
     :_id,         ## the ObjectId of the card
@@ -67,13 +72,20 @@ defmodule Vega.Card do
   Fetch all cards of the list with id `id`.
   """
   def fetch_all_in_list(id) do
-    Mongo.find(:mongo, @collection, %{list: id, archived: %{"$exists": false}}) |> Enum.map(fn card -> to_struct(card) end)
+    Mongo.find(:mongo, @collection, %{list: id, archived: %{"$exists": false}}) |> Enum.map(fn card -> load(card) end)
+  end
+
+  def dump(%Card{} = card) do
+    card
+    |> Map.drop(@derived_attributes)
+    |> to_map()
   end
 
   @doc """
   Convert a map structure to Card-struct.
   """
-  def to_struct(card) do
+  def load(card) do
+
     %Card{_id: card["_id"],
       id: BSON.ObjectId.encode!(card["_id"]),
       title: card["title"],
@@ -83,7 +95,7 @@ defmodule Vega.Card do
       modified: card["modified"],
       pos: card["pos"],
       archived: card["archived"],
-      comments: card["comments"] || []
+      comments: (card["comments"] || []) |> Enum.map(fn m -> Comment.load(m) end) |> Enum.reverse()
     }
   end
 

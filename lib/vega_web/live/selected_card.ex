@@ -9,8 +9,6 @@ defmodule Vega.SelectedCard do
   alias Vega.Board
   alias Vega.BoardList
 
-  import VegaWeb.Gettext
-
   def mount(socket) do
     {:ok, assign(socket, action: nil, comment: nil)}
   end

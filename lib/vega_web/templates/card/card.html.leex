@@ -2,13 +2,13 @@
   <div class="fullcard">
     <div class="title"><h3><%= @card.title%></h3><a class="control" phx-click="close-card" href="javascript:void(0);"><%= gettext("Close")%></a></div>
     <div class="card-body">
-        <div class="content">
+        <div class="content y-scrollbar">
             <div class="description">
               Dies ist die Beschreibung
             </div>
-            <div class="add-comment">
+            <div class="add-comment mt-12">
               <%= f = form_for :comment, "javascript:void(0);", [phx_submit: :save, phx_change: :validate, phx_target: @myself, phx_hook: "FocusComment"] %>
-              <%= textarea f, :comment, placeholder: gettext("Enter a comment for this card..."), value: @comment, class: "card-composer-textarea", id: @card.id, phx_target: @myself %>
+              <%= textarea f, :comment, placeholder: gettext("Enter a comment for this card..."), value: @comment, class: "card-composer-textarea", id: @card.id, phx_target: @myself, phx_debounce: "1000" %>
               <%= submit gettext("Add comment"), disabled: (not VegaWeb.BoardView.validate_title(@comment)), class: "submit submit-primary submit-shadow-box submit-next" %>
               </form>
             </div>

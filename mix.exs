@@ -47,6 +47,7 @@ defmodule Vega.MixProject do
       {:ex_cldr_collation, "~> 0.2.0"},
       {:oauth2, "~> 2.0"},
       {:libcluster, "~> 3.2"},
+      {:earmark, "~> 1.4"},
       {:floki, ">= 0.0.0", only: :test}
     ]
   end

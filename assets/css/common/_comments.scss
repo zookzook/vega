@@ -1,0 +1,32 @@
+.comment {
+  margin-top: $px12;
+  margin-bottom: $px6;
+}
+
+.comment-text {
+  border-radius: $px3;
+  padding: $px6;
+  background-color: white;
+}
+
+@each $name, $color in $colors-map {
+  .#{$name} .comment-text {
+    border: 1px solid $color;
+  }
+}
+
+.comment-author {
+
+  margin-bottom: $px6;
+
+  .name {
+    font-weight: bold;
+    color: #172b4d;
+    margin-right: $px6;
+  }
+
+  .relative-date {
+    color: rgba(#172b4d, 0.8);
+    font-size: 70%;
+  }
+}

@@ -24,7 +24,7 @@ defmodule Vega.Issues do
   @close_board        IssueConsts.encode(:close_board)
   @open_board         IssueConsts.encode(:open_board)
 
-  def to_struct(issue) do
+  def load(issue) do
     issue
     |> transform()
     |> add_msg()

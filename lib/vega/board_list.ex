@@ -10,6 +10,8 @@ defmodule Vega.BoardList do
 
   @cards_collection "cards"
 
+  @derived_attributes [:id]
+
   defstruct [
     :_id,       ## the ObjectId of the list
     :id,        ## the ObjectId as a string
@@ -26,7 +28,6 @@ defmodule Vega.BoardList do
     %BoardList{_id: Mongo.object_id(), title: title, pos: pos, created: DateTime.utc_now()}
   end
 
-
   @doc """
   Create a deep copy. The result is a tuple with the new list and an unordered bulk operation for the cards to insert.
   """
@@ -37,9 +38,15 @@ defmodule Vega.BoardList do
     {list._id, result, bulk}
   end
 
-  def to_struct(%{"_id" => id, "title" => title, "pos" => pos} = doc) do
+  def dump(%BoardList{} = list) do
+    list
+    |> Map.drop(@derived_attributes)
+    |> to_map()
+  end
+
+  def load(%{"_id" => id, "title" => title, "pos" => pos} = doc) do
     cards        = Card.fetch_all_in_list(id) |> Enum.sort({:asc, Card})
-    warningColor = WarningColorRule.to_struct(doc["color"])
+    warningColor = WarningColorRule.load(doc["color"])
     %BoardList{
       _id: id,
       id: BSON.ObjectId.encode!(id),

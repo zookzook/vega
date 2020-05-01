@@ -34,6 +34,7 @@ defmodule Vega.Board do
   alias Vega.IssueConsts
   alias Vega.User
   alias Vega.Issue
+  alias Vega.WarningColorRule
 
   @copy_list          IssueConsts.encode(:copy_list)
   @new_board          IssueConsts.encode(:new_board)
@@ -85,6 +86,8 @@ defmodule Vega.Board do
   @pos_gap   100.0
   @pos_start 100.0
 
+  @derived_attributes [:id]
+
   defstruct [
     :_id,         ## the ObjectId of the board
     :options,     ## options for styling etc.
@@ -119,11 +122,11 @@ defmodule Vega.Board do
     issue = @new_board
             |> Issue.new(user, board)
             |> Issue.add_message_keys(title: title, board: board.title)
-            |> to_map()
+            |> Issue.dump()
 
     with_transaction(board, fn trans ->
       with {:ok, _} <- Mongo.insert_one(:mongo, @issues_collection, issue, trans),
-           {:ok, _} <- Mongo.insert_one(:mongo, @collection, to_map(board), trans)  do
+           {:ok, _} <- Mongo.insert_one(:mongo, @collection, dump(board), trans)  do
         :ok
       end
     end)
@@ -164,11 +167,11 @@ defmodule Vega.Board do
     issue = @clone_board
             |> Issue.new(user, new_board)
             |> Issue.add_message_keys(title: board.title, board: new_board.title)
-            |> to_map()
+            |> Issue.dump()
 
     with_transaction(new_board, fn trans ->
       with {:ok, _} <- Mongo.insert_one(:mongo, @issues_collection, issue, trans),
-           {:ok, _} <- Mongo.insert_one(:mongo, @collection, to_map(new_board), trans),
+           {:ok, _} <- Mongo.insert_one(:mongo, @collection, dump(new_board), trans),
            %Mongo.BulkWriteResult{} <- BulkWrite.write(:mongo, bulk, trans),
            %Mongo.BulkWriteResult{} <- BulkWrite.write(:mongo, issues_bulk, trans) do
         :ok
@@ -218,7 +221,7 @@ defmodule Vega.Board do
     issue = @set_title
             |> Issue.new(user, board)
             |> Issue.add_message_keys(title: title, board: board.title)
-            |> to_map()
+            |> Issue.dump()
 
     with_transaction(board, fn trans ->
       with {:ok, _} <- Mongo.insert_one(:mongo, @issues_collection, issue, trans),
@@ -241,7 +244,7 @@ defmodule Vega.Board do
     issue = @set_board_color
             |> Issue.new(user, board)
             |> Issue.add_message_keys(color: color, board: board.title)
-            |> to_map()
+            |> Issue.dump()
 
     with_transaction(board, fn trans ->
       with {:ok, _} <- Mongo.insert_one(:mongo, @issues_collection, issue, trans),
@@ -264,7 +267,7 @@ defmodule Vega.Board do
     issue = @set_description
             |> Issue.new(user, board)
             |> Issue.add_message_keys(description: description, board: board.title)
-            |> to_map()
+            |> Issue.dump()
 
     with_transaction(board, fn trans ->
       with {:ok, _} <- Mongo.insert_one(:mongo, @issues_collection, issue, trans),
@@ -288,7 +291,7 @@ defmodule Vega.Board do
     issue = @set_title
             |> Issue.new(user, board, list)
             |> Issue.add_message_keys(title: title, list: list.title)
-            |> to_map()
+            |> Issue.dump()
 
     with_transaction(board, fn trans ->
       with {:ok, _} <- Mongo.insert_one(:mongo, @issues_collection, issue, trans),
@@ -311,11 +314,11 @@ defmodule Vega.Board do
     issue = @set_list_color
             |> Issue.new(user, board, list)
             |> Issue.add_message_keys(list: list.title, color: color != nil)
-            |> to_map()
+            |> Issue.dump()
 
     modifier = case color do
       nil    -> %{"$unset" => %{"lists.$.color" => 1}}
-      _other -> %{"$set" => %{"lists.$.color" => color |> to_map()}}
+      _other -> %{"$set" => %{"lists.$.color" => color |> WarningColorRule.dump()}}
     end
 
     with_transaction(board, fn trans ->
@@ -339,10 +342,10 @@ defmodule Vega.Board do
     issue = @add_list
             |> Issue.new(user, board)
             |> Issue.add_message_keys(title: title, board: board_title)
-            |> to_map()
+            |> Issue.dump()
 
     pos     = calc_pos(lists)
-    column  = title |> BoardList.new(pos) |> to_map()
+    column  = title |> BoardList.new(pos) |> BoardList.dump()
 
     with_transaction(board, fn trans ->
       with {:ok, _} <- Mongo.insert_one(:mongo, @issues_collection, issue, trans),
@@ -364,19 +367,19 @@ defmodule Vega.Board do
     issue = @copy_list
             |> Issue.new(user, board)
             |> Issue.add_message_keys(list: title, board: board.title, title: title)
-            |> to_map()
+            |> Issue.dump()
 
     pos      = calc_pos(lists)
     new_list = new_title |> BoardList.new(pos) |> Map.put(:color, color)
     list_id  = new_list._id
 
     bulk = UnorderedBulk.new(@cards_collection)
-    bulk = Enum.reduce(cards, bulk, fn card, bulk -> UnorderedBulk.insert_one(bulk, %Card{card | _id: Mongo.object_id(), list: list_id} |> to_map()) end)
+    bulk = Enum.reduce(cards, bulk, fn card, bulk -> UnorderedBulk.insert_one(bulk, %Card{card | _id: Mongo.object_id(), list: list_id} |> Card.dump()) end)
 
     with_transaction(board, fn trans ->
       with {:ok, _} <- Mongo.insert_one(:mongo, @issues_collection, issue, trans),
            %Mongo.BulkWriteResult{} <- BulkWrite.write(:mongo, bulk, trans),
-           {:ok, _} <- Mongo.update_one(:mongo, @collection, %{_id: id}, %{"$push" => %{"lists" => new_list |> to_map()}}, trans) do
+           {:ok, _} <- Mongo.update_one(:mongo, @collection, %{_id: id}, %{"$push" => %{"lists" => new_list |> BoardList.dump()}}, trans) do
         :ok
       end
     end)
@@ -395,7 +398,7 @@ defmodule Vega.Board do
     issue = @delete_list
             |> Issue.new(user, board)
             |> Issue.add_message_keys(a: title, board: board.title)
-            |> to_map()
+            |> Issue.dump()
 
     with_transaction(board, fn trans ->
      with {:ok, _} <- Mongo.insert_one(:mongo, @issues_collection, issue, trans),
@@ -426,7 +429,7 @@ defmodule Vega.Board do
     issue = @move_list
             |> Issue.new(user, to)
             |> Issue.add_message_keys(msg)
-            |> to_map()
+            |> Issue.dump()
 
     with_transaction(to, fn trans ->
       with {:ok, _} <- Mongo.insert_one(:mongo, @issues_collection, issue, trans),
@@ -459,14 +462,14 @@ defmodule Vega.Board do
     issue_from = @move_list
             |> Issue.new(user, from)
             |> Issue.add_message_keys(a: list.title, to: to.title)
-            |> to_map()
+            |> Issue.dump()
 
     issue_to = @move_list
             |> Issue.new(user, to)
             |> Issue.add_message_keys(a: list.title, from: from.title)
-            |> to_map()
+            |> Issue.dump()
 
-    list = to_map(%BoardList{list | pos: pos})
+    list = BoardList.dump(%BoardList{list | pos: pos})
 
     with_transaction(from, fn trans ->
       with {:ok, _} <- Mongo.insert_one(:mongo, @issues_collection, issue_from, trans),
@@ -498,7 +501,7 @@ defmodule Vega.Board do
     issue = @sort_cards
             |> Issue.new(user, board)
             |> Issue.add_message_keys(list: list.title)
-            |> to_map()
+            |> Issue.dump()
 
     bulk = UnorderedBulk.new(@cards_collection)
     bulk = cards
@@ -517,11 +520,12 @@ defmodule Vega.Board do
   @doc """
   Add the new comment to the card
   """
-  def add_comment_to_card(board, list, card, comment, user) do
+  def add_comment_to_card(board, _list, card, comment, user) do
+
     issue = @add_comment
             |> Issue.new(user, board)
             |> Issue.add_message_keys(comment: comment)
-            |> to_map()
+            |> Issue.dump()
 
     comment = %{_id: Mongo.object_id(), text: comment, user: user._id, created: DateTime.utc_now()}
 
@@ -558,10 +562,10 @@ defmodule Vega.Board do
     issue = @new_card
             |> Issue.new(user, board)
             |> Issue.add_message_keys(title: title, list: list.title)
-            |> to_map()
+            |> Issue.dump()
 
     pos = calc_pos(list)
-    card = board |> Card.new(list, title, pos) |> to_map()
+    card = board |> Card.new(list, title, pos) |> Card.dump()
 
     with_transaction(board, fn trans ->
       with {:ok, _} <- Mongo.insert_one(:mongo, @issues_collection, issue, trans),
@@ -620,9 +624,9 @@ defmodule Vega.Board do
     issue = @new_card
             |> Issue.new(user, board)
             |> Issue.add_message_keys(title: title, list: list.title)
-            |> to_map()
+            |> Issue.dump()
 
-    card = board |> Card.new(list, title, pos, time) |> to_map()
+    card = board |> Card.new(list, title, pos, time) |> Card.dump()
 
     {UnorderedBulk.insert_one(issue_bulk, issue), UnorderedBulk.insert_one(card_bulk, card)}
   end
@@ -646,13 +650,13 @@ defmodule Vega.Board do
           @move_card
           |> Issue.new(user, board)
           |> Issue.add_message_keys(a: card.title, b: before_card.title)
-          |> to_map()
+          |> Issue.dump()
 
         false ->
             @move_card ## card was moved between two lists
             |> Issue.new(user, board)
             |> Issue.add_message_keys(a: card.title, b: before_card.title, list: to_list.title)
-            |> to_map()
+            |> Issue.dump()
       end
 
       with_transaction(board, fn trans ->
@@ -685,12 +689,12 @@ defmodule Vega.Board do
       true -> @move_card
               |> Issue.new(user, board)
               |> Issue.add_message_keys(a: card.title)
-              |> to_map()
+              |> Issue.dump()
 
       false -> @move_card
               |> Issue.new(user, board)
               |> Issue.add_message_keys(a: card.title, list: to_list.title)
-              |> to_map()
+              |> Issue.dump()
     end
 
     with_transaction(board, fn trans ->
@@ -711,7 +715,7 @@ defmodule Vega.Board do
     issue = @move_cards_of_list
             |> Issue.new(user, board, from)
             |> Issue.add_message_keys(from: from.title, to: to.title, count: length(cards))
-            |> to_map()
+            |> Issue.dump()
 
     bulk = UnorderedBulk.new(@cards_collection)
    {bulk, _pos} = Enum.reduce(cards, {bulk, pos}, fn card, {bulk, pos} -> {UnorderedBulk.update_one(bulk, %{_id: card._id}, %{"$set" => %{"pos" => pos, "list" => to_id}}), pos + @pos_gap} end)
@@ -734,7 +738,7 @@ defmodule Vega.Board do
     issue = @close_board
             |> Issue.new(user, board)
             |> Issue.add_message_keys(board: board.title)
-            |> to_map()
+            |> Issue.dump()
 
     with_transaction(board, fn trans ->
       with {:ok, _} <- Mongo.insert_one(:mongo, @issues_collection, issue, trans),
@@ -754,7 +758,7 @@ defmodule Vega.Board do
     issue = @open_board
             |> Issue.new(user, board)
             |> Issue.add_message_keys(board: board.title)
-            |> to_map()
+            |> Issue.dump()
 
     with_transaction(board, fn trans ->
       with {:ok, _} <- Mongo.insert_one(:mongo, @issues_collection, issue, trans),
@@ -774,7 +778,7 @@ defmodule Vega.Board do
     issue = @archive_list
             |> Issue.new(user, board)
             |> Issue.add_message_keys(list: list.title, count: length(cards))
-            |> to_map()
+            |> Issue.dump()
 
     with_transaction(board, fn trans ->
       with {:ok, _} <- Mongo.insert_one(:mongo, @issues_collection, issue, trans),
@@ -794,7 +798,7 @@ defmodule Vega.Board do
     issue = @unarchive_list
             |> Issue.new(user, board)
             |> Issue.add_message_keys(list: list.title, count: length(cards))
-            |> to_map()
+            |> Issue.dump()
 
     with_transaction(board, fn trans ->
       with {:ok, _} <- Mongo.insert_one(:mongo, @issues_collection, issue, trans),
@@ -814,7 +818,7 @@ defmodule Vega.Board do
     issue = @archive_card
             |> Issue.new(user, board)
             |> Issue.add_message_keys(card: card.title)
-            |> to_map()
+            |> Issue.dump()
 
     with_transaction(board, fn trans ->
       with {:ok, _} <- Mongo.insert_one(:mongo, @issues_collection, issue, trans),
@@ -833,7 +837,7 @@ defmodule Vega.Board do
     issue = @unarchive_card
             |> Issue.new(user, board)
             |> Issue.add_message_keys(card: card.title)
-            |> to_map()
+            |> Issue.dump()
 
     with_transaction(board, fn trans ->
       with {:ok, _} <- Mongo.insert_one(:mongo, @issues_collection, issue, trans),
@@ -884,19 +888,19 @@ defmodule Vega.Board do
   def fetch_one() do
     :mongo
     |> Mongo.find_one(@collection, %{})
-    |> to_struct()
+    |> load()
   end
 
   def fetch(%Board{_id: id}, %User{_id: user_id}) do
     :mongo
     |> Mongo.find_one(@collection, %{_id: id, "members.id": user_id})
-    |> to_struct()
+    |> load()
   end
   def fetch(id, %User{_id: user_id}) when is_binary(id) do
     with {:ok, id} <-  BSON.ObjectId.decode(id) do
       :mongo
       |> Mongo.find_one(@collection, %{_id: id, "members.id": user_id})
-      |> to_struct()
+      |> load()
     else
       _error -> nil
     end
@@ -904,30 +908,36 @@ defmodule Vega.Board do
   def fetch(%Board{_id: id}) do
     :mongo
     |> Mongo.find_one(@collection, %{_id: id})
-    |> to_struct()
+    |> load()
   end
   def fetch(id) when is_binary(id) do
     with {:ok, id} <-  BSON.ObjectId.decode(id) do
       :mongo
       |> Mongo.find_one(@collection, %{_id: id})
-      |> to_struct()
+      |> load()
     else
       _error -> nil
     end
+  end
+
+  def dump(%Board{} = board) do
+    board
+    |> Map.drop(@derived_attributes)
+    |> to_map()
   end
 
   @doc """
   Convert a map structure to a `Board` struct. The function fills the each list with
   the connected cards. The lists and cards are sorted according the position attribute.
   """
-  def to_struct(nil) do
+  def load(nil) do
     nil
   end
-  def to_struct(board) do
+  def load(board) do
 
     lists = (board["lists"] || [])
             |> Enum.reject(fn list -> BoardList.is_archived(list) end)
-            |> Enum.map(fn list-> BoardList.to_struct(list) end)
+            |> Enum.map(fn list-> BoardList.load(list) end)
             |> Enum.sort({:asc, BoardList})
 
     options = board["options"]
@@ -944,6 +954,8 @@ defmodule Vega.Board do
       options: [color: options["color"]] |> filter_nils()
     }
   end
+
+
 
   def is_closed?(%Board{closed: date}) do
     date != nil

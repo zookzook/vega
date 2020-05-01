@@ -41,12 +41,12 @@ defmodule Vega.User do
   def fetch_github(github_user) do
     :mongo
     |> Mongo.find_one(@collection, %{"login.provider" => "github", "login.login" => github_user["login"]})
-    |> to_struct()
+    |> load()
   end
   def fetch_by_login(login) do
     :mongo
     |> Mongo.find_one(@collection, %{"login.provider" => "github", "login.login" => login})
-    |> to_struct()
+    |> load()
   end
   def fetch(nil) do
     nil
@@ -55,7 +55,7 @@ defmodule Vega.User do
     fetch(BSON.ObjectId.decode!(id))
   end
   def fetch(id) do
-    Mongo.find_one(:mongo, @collection, %{_id: id}) |> to_struct()
+    Mongo.find_one(:mongo, @collection, %{_id: id}) |> load()
   end
 
   def fake(login, name, email) do
@@ -69,10 +69,15 @@ defmodule Vega.User do
   def fake(login) do
     fetch_by_login(login)
   end
-  def to_struct(nil) do
+
+  def dump(%User{} = user) do
+    to_map(user)
+  end
+
+  def load(nil) do
     nil
   end
-  def to_struct(%{"_id" => id, "login" => login} = user) do
+  def load(%{"_id" => id, "login" => login} = user) do
     %User{
       _id:        id,
       email:      user["email"],
