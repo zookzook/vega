@@ -17,7 +17,7 @@ defmodule VegaWeb.ArchiveCardsTest do
       board = Board.add_list(board, user, "Features")
       [a]         = board.lists
       new_titles = ["this", "is", "a", "test"]
-      board      = Board.add_cards(board, user, a, new_titles)
+      board      = Board.add_cards(board, a, new_titles, user)
       [a]        = board.lists
       [card | _] = a.cards
       board      = Board.archive_card(board, card, user)
@@ -38,7 +38,7 @@ defmodule VegaWeb.ArchiveCardsTest do
       board = Board.add_list(board, user, "Features")
       [a]         = board.lists
       new_titles = ["this", "is", "a", "test"]
-      board      = Board.add_cards(board, user, a, new_titles)
+      board      = Board.add_cards(board, a, new_titles, user)
       [a]        = board.lists
 
       cards = a.cards

@@ -25,7 +25,7 @@ defmodule Vega.ListComponent do
     case titles do
       [] -> {:noreply, assign(socket, add_card: false)}
       new_titles ->
-        board = Board.add_cards(board, user, list, new_titles)
+        board = Board.add_cards(board, list, new_titles, user)
         list  = Board.find_list(board, list)
         send(self(), {:updated_board, board})
 

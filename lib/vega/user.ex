@@ -125,7 +125,6 @@ defmodule Vega.User do
     GenServer.start_link(__MODULE__, nil, name: @me)
   end
 
-  @imp true
   def init(_) do
     PubSub.subscribe(Vega.PubSub, @topic)
     {:ok, []}

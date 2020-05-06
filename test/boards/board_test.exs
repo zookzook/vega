@@ -221,7 +221,7 @@ defmodule VegaWeb.BoardTest do
       board = Board.add_list(board, user, "to do")
       for list <- board.lists do
         cards = Enum.map(1..10, fn i -> "My card title " <> to_string(i) end)
-        Board.add_cards(board, user, list, cards)
+        Board.add_cards(board, list, cards, user)
       end
 
       board = Board.fetch(board)
@@ -287,7 +287,7 @@ defmodule VegaWeb.BoardTest do
     [list] = board.lists
 
     card_title = "My card title"
-    board = Board.add_card(board, user, list, card_title)
+    board = Board.add_card(board, list, card_title, user)
 
     [list] = board.lists
 
@@ -313,7 +313,7 @@ defmodule VegaWeb.BoardTest do
 
     [a,_] = board.lists
     cards = Enum.map(1..@max_cards, fn i -> "My card title " <> to_string(i) end)
-    Board.add_cards(board, user, a, cards)
+    Board.add_cards(board, a, cards, user)
 
     board = Board.fetch(board)
     [a,b] = board.lists
@@ -340,7 +340,7 @@ defmodule VegaWeb.BoardTest do
 
     for list <- board.lists do
       cards = Enum.map(1..@max_cards, fn i -> "My card title " <> to_string(i) end)
-      Board.add_cards(board, user, list, cards)
+      Board.add_cards(board, list, cards, user)
     end
 
     board = Board.fetch(board)
@@ -363,7 +363,7 @@ defmodule VegaWeb.BoardTest do
 
       for list <- from.lists do
         cards = Enum.map(1..5, fn i -> "My card title " <> to_string(i) end)
-        Board.add_cards(from, user, list, cards)
+        Board.add_cards(from, list, cards, user)
       end
 
       title = "To board"
@@ -398,7 +398,7 @@ defmodule VegaWeb.BoardTest do
 
       for list <- from.lists do
         cards = Enum.map(1..5, fn i -> "My card title " <> to_string(i) end)
-        Board.add_cards(from, user, list, cards)
+        Board.add_cards(from, list, cards, user)
       end
 
       title = "To board"
@@ -408,7 +408,7 @@ defmodule VegaWeb.BoardTest do
 
       for list <- to.lists do
         cards = Enum.map(1..5, fn i -> "My card title " <> to_string(i) end)
-        Board.add_cards(to, user, list, cards)
+        Board.add_cards(to, list, cards, user)
       end
 
       from = Board.fetch(from)

@@ -21,13 +21,13 @@ defmodule VegaWeb.CardsTest do
 
       [a] = board.lists
 
-      board = Board.add_card(board, user, a, "A new card 1")
+      board = Board.add_card(board, a, "A new card 1", user)
 
       [a] = board.lists
-      board = Board.add_card(board, user, a, "A new card 2")
+      board = Board.add_card(board, a, "A new card 2", user)
 
       [a] = board.lists
-      board = Board.add_card(board, user, a, "A new card 3")
+      board = Board.add_card(board, a, "A new card 3", user)
 
       [a] = board.lists
 
@@ -53,7 +53,7 @@ defmodule VegaWeb.CardsTest do
       board = Board.add_list(board, user, "to do")
       [a] = board.lists
 
-      board = Board.add_cards(board, user, a, new_titles)
+      board = Board.add_cards(board, a, new_titles, user)
       [a] = board.lists
 
       [card_1, card_2, card_3, card_4] = a.cards
@@ -80,7 +80,7 @@ defmodule VegaWeb.CardsTest do
       board      = Board.add_list(board, user, "to do")
       [a]        = board.lists
       new_titles = ["this", "is", "a", "test"]
-      board      = Board.add_cards(board, user, a, new_titles)
+      board      = Board.add_cards(board, a, new_titles, user)
       [a]        = board.lists
 
       [card_1, _card_2, _card_3, card_4] = a.cards
@@ -140,7 +140,7 @@ defmodule VegaWeb.CardsTest do
       board      = Board.add_list(board, user, "to do")
       [a]        = board.lists
       new_titles = ["this", "is", "a", "test"]
-      board      = Board.add_cards(board, user, a, new_titles)
+      board      = Board.add_cards(board, a, new_titles, user)
       [a]        = board.lists
 
       [card_1 | _xs] = a.cards
@@ -196,7 +196,7 @@ defmodule VegaWeb.CardsTest do
       board      = Board.add_list(board, user, "to do")
       [a]        = board.lists
       new_titles = ["this", "is", "a", "test"]
-      board      = Board.add_cards(board, user, a, new_titles)
+      board      = Board.add_cards(board, a, new_titles, user)
       [a]        = board.lists
 
       cards = Enum.sort(a.cards, fn left, right -> left.title <= right.title end)

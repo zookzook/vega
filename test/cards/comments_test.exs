@@ -19,7 +19,7 @@ defmodule VegaWeb.CommentsTest do
       board = Board.add_list(board, user, "to do")
       [a] = board.lists
 
-      board = Board.add_card(board, user, a, "A new card")
+      board = Board.add_card(board, a, "A new card", user)
       [a] = board.lists
       [card] = a.cards
 

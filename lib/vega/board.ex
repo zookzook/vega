@@ -554,10 +554,10 @@ defmodule Vega.Board do
 
   ## Example
 
-    iex> Vega.Board.add_card(board, user, list, "The new card")
+    iex> Vega.Board.add_card(board, list, "The new card", user)
 
   """
-  def add_card(board, user, list, title) do
+  def add_card(board, list, title, user) do
 
     issue = @new_card
             |> Issue.new(user, board)
@@ -586,16 +586,16 @@ defmodule Vega.Board do
   ## Example
 
     iex> new_titles = ["this", "is", "a", "test"]
-    iex> board  = Board.add_cards(board, user, list, new_titles)
+    iex> board  = Board.add_cards(board, list, new_titles, user)
 
   """
-  def add_cards(board, _user, _list, []) do
+  def add_cards(board, _list, [], _user) do
     board
   end
-  def add_cards(board, user, list, [title]) do
-    add_card(board, user, list, title)
+  def add_cards(board, list, [title], user) do
+    add_card(board, list, title, user)
   end
-  def add_cards(board, user, list, titles) do
+  def add_cards(board, list, titles, user) do
 
     time       = DateTime.utc_now()
     pos        = calc_pos(list)
