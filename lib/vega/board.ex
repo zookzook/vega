@@ -520,7 +520,7 @@ defmodule Vega.Board do
   @doc """
   Add the new comment to the card
   """
-  def add_comment_to_card(board, _list, card, comment, user) do
+  def add_comment_to_card(board, card, comment, user) do
 
     issue = @add_comment
             |> Issue.new(user, board)

@@ -5,7 +5,7 @@ defmodule Vega.MixProject do
     [
       app: :vega,
       version: "0.1.0",
-      elixir: "~> 1.5",
+      elixir: "~> 1.9",
       elixirc_paths: elixirc_paths(Mix.env()),
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
@@ -48,6 +48,7 @@ defmodule Vega.MixProject do
       {:oauth2, "~> 2.0"},
       {:libcluster, "~> 3.2"},
       {:earmark, "~> 1.4"},
+      {:cachex, "~> 3.2"},
       {:floki, ">= 0.0.0", only: :test}
     ]
   end

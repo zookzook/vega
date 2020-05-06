@@ -53,7 +53,7 @@ defmodule Vega.Issue do
   end
 
   def author(%Issue{author_id: author_id}) do
-    User.fetch(author_id) ## todo caching system
+    User.get(author_id)
   end
 
   def fetch_all(nil) do

@@ -5,7 +5,10 @@ defmodule Vega.User do
 
   """
 
+  use GenServer
+
   alias Vega.User
+  alias Phoenix.PubSub
   import Vega.StructHelper
 
   defstruct [
@@ -17,6 +20,7 @@ defmodule Vega.User do
   ]
 
   @collection "users"
+  @topic "cache:users"
 
   def new_github(github_user) do
     %User{_id: Mongo.object_id(),
@@ -85,6 +89,56 @@ defmodule Vega.User do
       avatar_url: user["avatar_url"],
       login:      login
     }
+  end
+
+  def get(id) when is_binary(id) do
+    case Cachex.fetch(:users, id) do
+      {:ok, user} -> user
+      _           -> nil
+    end
+  end
+  def get(id) do
+    id |> BSON.ObjectId.encode!() |> get()
+  end
+
+  def remove(ids) when is_list(ids) do
+    Enum.each(ids, fn id -> Cachex.del(:users, id) end)
+    PubSub.broadcast( Vega.PubSub, @topic, {:remove, ids})
+  end
+
+  def remove(id) do
+    Cachex.del(:users, id)
+    PubSub.broadcast(Vega.PubSub, @topic, {:remove, id})
+  end
+
+  def fallback(id) do
+    with found when found != nil <- fetch(id) do
+      {:commit, found}
+    else
+      _ -> {:ignore, :not_found}
+    end
+  end
+
+  @me __MODULE__
+
+  def start_link(_args) do
+    GenServer.start_link(__MODULE__, nil, name: @me)
+  end
+
+  @imp true
+  def init(_) do
+    PubSub.subscribe(Vega.PubSub, @topic)
+    {:ok, []}
+  end
+
+  def handle_info({:remove, ids}, state) when is_list(ids) do
+    Enum.each(ids, fn id -> Cachex.del(:users, id) end)
+    {:noreply, state}
+  end
+
+  def handle_info({:remove, id}, state) do
+    Cachex.del(:users, id)
+    {:noreply, state}
   end
 
 end

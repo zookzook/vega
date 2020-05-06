@@ -28,12 +28,6 @@ defmodule VegaWeb.ChannelCase do
   end
 
   setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Vega.Repo)
-
-    unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(Vega.Repo, {:shared, self()})
-    end
-
     :ok
   end
 end

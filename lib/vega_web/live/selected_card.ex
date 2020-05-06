@@ -20,7 +20,7 @@ defmodule Vega.SelectedCard do
     {:noreply, socket}
   end
   def handle_event("save", %{"comment" => %{"comment" => comment}}, %Socket{assigns: %{current_user: user, board: board, list: list, card: card}} = socket) do
-    board = Board.add_comment_to_card(board, list, card, comment, user)
+    board = Board.add_comment_to_card(board, card, comment, user)
     list = Board.find_list(board, list)
     card = BoardList.find_card(list, card._id)
     send(self(), {:updated_board, board})

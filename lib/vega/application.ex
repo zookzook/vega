@@ -7,13 +7,18 @@ defmodule Vega.Application do
 
   def start(_type, _args) do
 
+    import Cachex.Spec
+
     # List all child processes to be supervised
     children = [
       # Start the endpoint when the application starts
       {Mongo, [name: :mongo, url: Application.get_env(:vega, :mongodb)[:url], timeout: 60_000, pool_size: 10, idle_interval: 10_000]},
       {Phoenix.PubSub, name: Vega.PubSub},
       VegaWeb.Endpoint,
+      %{id: :user_cache,
+        start: {Cachex, :start_link, [:users, [fallback: fallback(default: &Vega.User.fallback/1)]]}},
       {Cluster.Supervisor, [Application.get_env(:libcluster, :topologies), [name: Vega.ClusterSupervisor]]},
+      {Vega.User, nil},
       # Starts a worker by calling: Vega.Worker.start_link(arg)
       # {Vega.Worker, arg},
     ]

@@ -19,7 +19,7 @@ defmodule Vega.Comment do
   end
 
   def author(%Comment{user: user}) do
-    User.fetch(user) ## todo caching system
+    User.get(user) ## todo caching system
   end
 
   def dump(%Comment{} = comment) do
