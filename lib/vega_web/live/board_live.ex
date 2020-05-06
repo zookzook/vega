@@ -193,7 +193,7 @@ defmodule VegaWeb.BoardLive do
          from_list when from_list != nil <- Board.find_list(board, from_id),
          card when card != nil           <- BoardList.find_card(from_list, id) do
 
-      board = Board.move_card_to_end(board, current_user, card, from_list, to_list)
+      board = Board.move_card_to_end(board, card, from_list, to_list, current_user)
       {:noreply, broadcast_update(socket, board)}
 
     else

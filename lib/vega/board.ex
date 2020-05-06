@@ -680,7 +680,7 @@ defmodule Vega.Board do
   It returns the new board.
 
   """
-  def move_card_to_end(board, user, card, %BoardList{_id: from_id}, %BoardList{_id: id} = to_list) do
+  def move_card_to_end(board, card, %BoardList{_id: from_id}, %BoardList{_id: id} = to_list, user) do
 
     pos = calc_pos(to_list)
 
