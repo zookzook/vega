@@ -178,7 +178,7 @@ defmodule VegaWeb.BoardLive do
          card when card != nil               <- BoardList.find_card(from_list, id),
          before_card when before_card != nil <- BoardList.find_card(to_list, before_id) do
 
-      board = Board.move_card_before(board, current_user, card, from_list, to_list, before_card)
+      board = Board.move_card_before(board, card, from_list, to_list, before_card, current_user)
       {:noreply, broadcast_update(socket, board)}
     else
       _error -> {:noreply, socket}

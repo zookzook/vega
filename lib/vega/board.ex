@@ -637,11 +637,11 @@ defmodule Vega.Board do
   * `card_id` the id of the card to be moved to before the card with the id `before_id`
   * `before_id` the id of the card where the other card should moved in front of it
 
-    (board, current_user, card, from_list, to_list, before_card)
+    move_card_before(board, card, from_list, to_list, before_card, current_user)
 
   As the result the new board is returned.
   """
-  def move_card_before(board, user, card, %BoardList{_id: from_id}, %BoardList{_id: id, cards: cards} = to_list, before_card) do
+  def move_card_before(board, card, %BoardList{_id: from_id}, %BoardList{_id: id, cards: cards} = to_list, before_card, user) do
 
     with pos <- calc_pos(cards, before_card._id) do
 
