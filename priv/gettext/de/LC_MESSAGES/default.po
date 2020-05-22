@@ -37,37 +37,37 @@ msgid "changed title '%{title}' of board '%{board}'"
 msgstr "änderte den Titel '%{title}' vom Board '%{board}'"
 
 #, elixir-format
-#: lib/vega_web/views/board_view.ex:112
+#: lib/vega_web/views/board_view.ex:112 lib/vega_web/views/card_view.ex:39
 msgid "yesterday"
 msgstr "gestern"
 
 #, elixir-format
-#: lib/vega_web/views/board_view.ex:125
+#: lib/vega_web/views/board_view.ex:125 lib/vega_web/views/card_view.ex:52
 msgid "%{t} hours ago"
 msgstr "vor %{t} Stunden"
 
 #, elixir-format
-#: lib/vega_web/views/board_view.ex:134
+#: lib/vega_web/views/board_view.ex:134 lib/vega_web/views/card_view.ex:61
 msgid "%{t} minutes ago"
 msgstr "vor %{t} Minuten"
 
 #, elixir-format
-#: lib/vega_web/views/board_view.ex:124
+#: lib/vega_web/views/board_view.ex:124 lib/vega_web/views/card_view.ex:51
 msgid "an hour ago"
 msgstr "vor einer Stunde"
 
 #, elixir-format
-#: lib/vega_web/views/board_view.ex:132
+#: lib/vega_web/views/board_view.ex:132 lib/vega_web/views/card_view.ex:59
 msgid "few seconds ago"
 msgstr "vor einigen Sekunden"
 
 #, elixir-format
-#: lib/vega_web/views/board_view.ex:133
+#: lib/vega_web/views/board_view.ex:133 lib/vega_web/views/card_view.ex:60
 msgid "one minute ago"
 msgstr "vor einer Minute"
 
 #, elixir-format
-#: lib/vega_web/views/board_view.ex:113
+#: lib/vega_web/views/board_view.ex:113 lib/vega_web/views/card_view.ex:40
 msgid "the day before yesterday"
 msgstr "vorgestern"
 
@@ -232,7 +232,7 @@ msgid "changed the color of board '%{board}' to '%{color}'"
 msgstr "setzte die Farbe vom Board '%{board}' auf '%{color}'"
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:182
+#: lib/vega/issue/issues.ex:188
 msgid "blue"
 msgstr "Blau"
 
@@ -242,27 +242,28 @@ msgid "changed title '%{title}' of list '%{list}'"
 msgstr "setzte den Titel der Liste '%{list}' auf '%{title}'"
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:181
+#: lib/vega/issue/issues.ex:187
 msgid "green"
 msgstr "Grün"
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:183
+#: lib/vega/issue/issues.ex:189
 msgid "orange"
 msgstr "Orange"
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:185
+#: lib/vega/issue/issues.ex:191
 msgid "purple"
 msgstr "Lila"
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:180
+#: lib/vega/issue/issues.ex:186
 msgid "red"
 msgstr "Rot"
 
 #, elixir-format
 #: menu.html.leex:3 lib/vega_web/templates/board/menu.html.leex:3
+#: lib/vega_web/templates/card/card.html.leex:3
 msgid "Close"
 msgstr "Schließen"
 
@@ -277,7 +278,7 @@ msgid "History"
 msgstr "Aktivität"
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:184
+#: lib/vega/issue/issues.ex:190
 msgid "pink"
 msgstr "Pink"
 
@@ -342,7 +343,7 @@ msgid "Welcome to Vega!"
 msgstr "Willkommen zu Vega!"
 
 #, elixir-format
-#: lib/vega/issue/issues.ex:179
+#: lib/vega/issue/issues.ex:185
 msgid "default"
 msgstr "Standard"
 
@@ -566,3 +567,68 @@ msgstr "schloss dieses Board '%{board}'"
 #: lib/vega/issue/issues.ex:163
 msgid "opened this board '%{board}'"
 msgstr "öffnete dieses Board '%{board}'"
+
+#, elixir-format
+#: lib/vega_web/templates/card/card.html.leex:12
+msgid "Add comment"
+msgstr "Kommentar hinzufügen"
+
+#, elixir-format
+#: lib/vega_web/templates/card/card.html.leex:26
+msgid "Anhang"
+msgstr ""
+
+#, elixir-format
+#: lib/vega_web/templates/card/card.html.leex:30
+msgid "Archive card"
+msgstr "Archiviere Karte"
+
+#, elixir-format
+#: lib/vega_web/templates/card/card.html.leex:29
+msgid "Change title"
+msgstr "Titel ändern"
+
+#, elixir-format
+#: lib/vega_web/templates/card/card.html.leex:24
+msgid "Checklist"
+msgstr ""
+
+#, elixir-format, fuzzy
+#: lib/vega_web/templates/card/card.html.leex:31
+msgid "Copy card"
+msgstr "Board kopieren"
+
+#, elixir-format, fuzzy
+#: lib/vega_web/templates/card/card.html.leex:33
+msgid "Delete card"
+msgstr "Board löschen"
+
+#, elixir-format, fuzzy
+#: lib/vega_web/templates/card/card.html.leex:11
+msgid "Enter a comment for this card..."
+msgstr "Geben Sie einen Titel für diese Karte ein..."
+
+#, elixir-format
+#: lib/vega_web/templates/card/card.html.leex:25
+msgid "Frist"
+msgstr ""
+
+#, elixir-format
+#: lib/vega_web/templates/card/card.html.leex:23
+msgid "Labels"
+msgstr "Labels"
+
+#, elixir-format, fuzzy
+#: lib/vega_web/templates/card/card.html.leex:32
+msgid "Move card"
+msgstr "Karten verschieben"
+
+#, elixir-format
+#: lib/vega_web/templates/card/card.html.leex:27
+msgid "Titelbild"
+msgstr ""
+
+#, elixir-format
+#: lib/vega/issue/issues.ex:169
+msgid "added comment '%{comment}'"
+msgstr "hat einen Kommentar '%{comment}' hinzugefügt"

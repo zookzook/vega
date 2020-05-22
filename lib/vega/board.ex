@@ -22,7 +22,8 @@ defmodule Vega.Board do
 
   """
 
-  import Vega.StructHelper
+
+  alias Yildun.Collection
 
   alias Mongo.BulkWrite
   alias Mongo.Session
@@ -30,11 +31,15 @@ defmodule Vega.Board do
   alias Vega.Board
   alias Vega.BoardList
   alias Vega.Card
+  alias Vega.Comment
+  alias Vega.Issue
   alias Vega.Issue
   alias Vega.IssueConsts
+  alias Vega.Member
   alias Vega.User
-  alias Vega.Issue
   alias Vega.WarningColorRule
+
+  use Collection
 
   @copy_list          IssueConsts.encode(:copy_list)
   @new_board          IssueConsts.encode(:new_board)
@@ -86,20 +91,20 @@ defmodule Vega.Board do
   @pos_gap   100.0
   @pos_start 100.0
 
-  @derived_attributes [:id]
+  collection "boards" do
+    attribute :options, map()                                         ## options for styling etc.
+    attribute :id, String.t(), derived: true                          ## the ObjectId as string
+    attribute :created, DateTime.t(), default: &DateTime.utc_now/0    ## creation date
+    attribute :modified, DateTime.t(), default: &DateTime.utc_now/0   ## last modification date
+    attribute :title, String.t()                                      ## the title
+    attribute :description, String.t()                                ## optional: the description
+    attribute :closed, DateTime.t()                                   ## closing date
 
-  defstruct [
-    :_id,         ## the ObjectId of the board
-    :options,     ## options for styling etc.
-    :id,          ## the ObjectId as string
-    :created,     ## the creation date
-    :modified,    ## the last modification date
-    :title,       ## the title
-    :description, ## optional: the description
-    :members,     ## the list of members of the board
-    :lists,       ## the lists of the board
-    :closed       ## closing date
-  ]
+    embeds_many :members, Member                                      ## the list of members of the board
+    embeds_many :lists, BoardList, default: []                        ## the lists of the board
+
+    after_load  &Board.after_load/1
+  end
 
   @doc """
   Create a new empty board with the `title`.
@@ -108,16 +113,11 @@ defmodule Vega.Board do
       iex> Vega.Board.new(user, "My first Board")
 
   """
-  def new(%User{_id: id} = user, title, opts \\ %{}) do
-    members = %{"role" => "admin", "id" => id}
-    board   = %Board{
-      _id: Mongo.object_id(),
-      title: title,
-      created: DateTime.utc_now(),
-      modified: DateTime.utc_now(),
-      members: members,
-      options: opts
-    }
+  def new(user, title, opts \\ %{}) do
+    members = Member.new(user)
+
+    %Board{_id: id} = board = new()
+    board = %Board{board | members: members, id: BSON.ObjectId.encode!(id), title: title, options: opts}
 
     issue = @new_board
             |> Issue.new(user, board)
@@ -527,7 +527,7 @@ defmodule Vega.Board do
             |> Issue.add_message_keys(comment: comment)
             |> Issue.dump()
 
-    comment = %{_id: Mongo.object_id(), text: comment, user: user._id, created: DateTime.utc_now()}
+    comment = Comment.new(comment, user) |> Comment.dump()
 
     with_transaction(board, fn trans ->
       with {:ok, _} <- Mongo.insert_one(:mongo, @issues_collection, issue, trans),
@@ -920,42 +920,22 @@ defmodule Vega.Board do
     end
   end
 
-  def dump(%Board{} = board) do
-    board
-    |> Map.drop(@derived_attributes)
-    |> to_map()
-  end
-
   @doc """
   Convert a map structure to a `Board` struct. The function fills the each list with
   the connected cards. The lists and cards are sorted according the position attribute.
   """
-  def load(nil) do
-    nil
-  end
-  def load(board) do
+  def after_load(%Board{_id: id, lists: lists, options: options} = board) do
 
-    lists = (board["lists"] || [])
+    lists = (lists || [])
             |> Enum.reject(fn list -> BoardList.is_archived(list) end)
-            |> Enum.map(fn list-> BoardList.load(list) end)
             |> Enum.sort({:asc, BoardList})
 
-    options = board["options"]
-    %Board{
-      _id: board["_id"],
-      id: BSON.ObjectId.encode!(board["_id"]),
-      description: board["description"],
-      created: board["created"],
-      modified: board["modified"],
-      closed: board["closed"],
-      title: board["title"],
-      members: board["members"],
+    %Board{ board |
+      id: BSON.ObjectId.encode!(id),
       lists: lists,
-      options: [color: options["color"]] |> filter_nils()
+      options: [color: options["color"]] |> Collection.filter_nils()
     }
   end
-
-
 
   def is_closed?(%Board{closed: date}) do
     date != nil

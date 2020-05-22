@@ -7,23 +7,26 @@ defmodule Vega.User do
 
   use GenServer
 
+  alias Yildun.Collection
+  alias Vega.Comment
+  alias Vega.Issue
   alias Vega.User
   alias Phoenix.PubSub
-  import Vega.StructHelper
 
-  defstruct [
-    :_id,         ## the id of the user
-    :name,        ## Name
-    :login,       ## login struct: a map with keys provider and login
-    :email,       ## email - optional
-    :avatar_url   ## avatar_url - optional
-  ]
+  use Collection
 
-  @collection "users"
   @topic "cache:users"
+  @collection nil       ## keeps the editor happy
+
+  collection "users" do
+    attribute :name, String.t()         ## Name
+    attribute :login, map()             ## login struct: a map with keys provider and login
+    attribute :email, String.t()        ## email - optional
+    attribute :avatar_url, String.t()   ## avatar_url - optional
+  end
 
   def new_github(github_user) do
-    %User{_id: Mongo.object_id(),
+    %User{new() |
       email: github_user["email"],
       name: github_user["name"],
       avatar_url: github_user["avatar_url"],
@@ -35,7 +38,7 @@ defmodule Vega.User do
     case fetch_github(github_user) do
       nil->
         user = new_github(github_user)
-        with {:ok, _} <- Mongo.insert_one(:mongo, @collection, to_map(user)) do
+        with {:ok, _} <- Mongo.insert_one(:mongo, @collection, dump(user)) do
           user
         end
       user -> user
@@ -74,27 +77,17 @@ defmodule Vega.User do
     fetch_by_login(login)
   end
 
-  def dump(%User{} = user) do
-    to_map(user)
+  def get(%Issue{author_id: author_id}) do
+    get(author_id)
   end
-
-  def load(nil) do
-    nil
+  def get(%Comment{user: user}) do
+    get(user)
   end
-  def load(%{"_id" => id, "login" => login} = user) do
-    %User{
-      _id:        id,
-      email:      user["email"],
-      name:       user["name"],
-      avatar_url: user["avatar_url"],
-      login:      login
-    }
-  end
-
   def get(id) when is_binary(id) do
     case Cachex.fetch(:users, id) do
-      {:ok, user} -> user
-      _           -> nil
+      {:ok, user}     -> user
+      {:commit, user} -> user
+      _other          -> nil
     end
   end
   def get(id) do

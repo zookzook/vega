@@ -1,7 +1,7 @@
 defmodule Vega.BoardList do
   @moduledoc false
 
-  import Vega.StructHelper
+  use Yildun.Collection
 
   alias Vega.BoardList
   alias Vega.Card
@@ -10,22 +10,28 @@ defmodule Vega.BoardList do
 
   @cards_collection "cards"
 
-  @derived_attributes [:id]
+  document do
+    attribute :_id, BJSON.ObjectId.t(), default: &Mongo.object_id()/0      ## the ObjectId of the list
+    attribute :id, String.t(), derived: true                               ## derived, the ObjectId as a string
+    attribute :created, DateTime.t(), default: &DateTime.utc_now/0         ## creation date
+    attribute :modified, DateTime.t(), default: &DateTime.utc_now/0        ## last modification date
+    attribute :archived, DateTime.t()                                      ## archiving date
+    attribute :pos, float()                                                ## current pos
+    attribute :title, String.t()                                           ## the title
+    attribute :cards, list(Card.t()), derived: true                        ## the cards (fetched)
+    attribute :n_cards, non_neg_integer(), derived: true                   ## the number of cards (derived)
+    embeds_one :color, WarningColorRule                                    ## the color rule of the list
 
-  defstruct [
-    :_id,       ## the ObjectId of the list
-    :id,        ## the ObjectId as a string
-    :pos,       ## current pos
-    :title,     ## the title
-    :cards,     ## the cards (fetched)
-    :n_cards,   ## the number of cards (buffered)
-    :color,     ## the color rule of the list
-    :created,   ## creation date
-    :archived   ## archiving date
-  ]
+    after_load  &BoardList.after_load/1
+  end
 
   def new(title, pos) do
-    %BoardList{_id: Mongo.object_id(), title: title, pos: pos, created: DateTime.utc_now()}
+    %BoardList{_id: id} = list = new()
+    %BoardList{list |
+      title: title,
+      pos: pos,
+      id: BSON.ObjectId.encode!(id)
+      }
   end
 
   @doc """
@@ -34,29 +40,18 @@ defmodule Vega.BoardList do
   def clone(board, %BoardList{cards: cards} = list) do
     result = %BoardList{list | _id: Mongo.object_id, cards: nil, n_cards: nil }
     bulk = UnorderedBulk.new(@cards_collection)
-    bulk = Enum.reduce(cards, bulk, fn card, bulk -> UnorderedBulk.insert_one(bulk, Card.clone(board, result, card) |> to_map()) end)
+    bulk = Enum.reduce(cards, bulk, fn card, bulk -> UnorderedBulk.insert_one(bulk, Card.clone(board, result, card) |> Yildun.Collection.dump()) end)
     {list._id, result, bulk}
   end
 
-  def dump(%BoardList{} = list) do
-    list
-    |> Map.drop(@derived_attributes)
-    |> to_map()
-  end
+  def after_load(%BoardList{_id: id} = list) do
+    cards = Card.fetch_all_in_list(id) |> Enum.sort({:asc, Card})
 
-  def load(%{"_id" => id, "title" => title, "pos" => pos} = doc) do
-    cards        = Card.fetch_all_in_list(id) |> Enum.sort({:asc, Card})
-    warningColor = WarningColorRule.load(doc["color"])
-    %BoardList{
-      _id: id,
-      id: BSON.ObjectId.encode!(id),
-      pos: pos,
-      title: title,
+    %BoardList{ list |
       cards: cards,
-      n_cards: length(cards),
-      color: warningColor,
-      created: doc["created"],
-      archived: doc["archived"]}
+      id: BSON.ObjectId.encode!(id),
+      n_cards: length(cards)
+    }
   end
 
   def find_card(board, card_id) when is_binary(card_id) do

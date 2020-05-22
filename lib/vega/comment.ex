@@ -1,42 +1,27 @@
 defmodule Vega.Comment do
 
+  use Yildun.Collection
+
   alias Vega.User
   alias Vega.Comment
-  import Vega.StructHelper
 
-  @derived_attributes [:id]
+  document do
+    attribute :_id, BSON.ObjectID.t(), default: &Mongo.object_id/0  ## the ObjectId of the card
+    attribute :id, String.t(), derived: true                        ## the ObjectId as string, delegate: BSON.ObjectId.encode!/1
+    attribute :text, String.t()                                     ## the comment
+    attribute :user, BSON.ObjectID.t()                              ## the user id of the author
+    attribute :created, DateTime.t(), default: &DateTime.utc_now/0  ## creation date
 
-  defstruct [
-    :_id,    ## the ObjectId of the card
-    :id,     ## the ObjectId as string, delegate: BSON.ObjectId.encode!/1
-    :text,   ## the comment
-    :user,   ## the user id of the author
-    :created ## creation date
-  ]
+    after_load  &Comment.after_load/1
+  end
 
   def new(comment, %User{_id: id}) do
-    %Comment{_id: Mongo.object_id(), text: comment, user: id, created: DateTime.utc_now()}
+    new()
+    |> Map.put(:text, comment)
+    |> Map.put(:user, id)
   end
 
-  def author(%Comment{user: user}) do
-    User.get(user) ## todo caching system
-  end
-
-  def dump(%Comment{} = comment) do
-    comment
-    |> Map.drop(@derived_attributes)
-    |> to_map()
-  end
-
-  def load(nil) do
-    nil
-  end
-  def load(map) do
-    id = map["_id"]
-    %Comment{_id: id,
-      id: BSON.ObjectId.encode!(id),
-      text: map["text"],
-      user: map["user"],
-      created: map["created"]}
+  def after_load(%Comment{_id: id} = comment) do
+    Map.put(comment, :id, BSON.ObjectId.encode!(id))
   end
 end

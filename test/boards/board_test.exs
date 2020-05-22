@@ -18,7 +18,7 @@ defmodule VegaWeb.BoardTest do
       board = Board.new(user, title)
       assert board != nil
       assert board.title == title
-      assert %{"id" => ^id, "role" => "admin"} = board.members
+      assert %Vega.Member{id: ^id, role: "admin"} = board.members
       assert {:ok, 1, 0} == Board.delete(board)
     end
 

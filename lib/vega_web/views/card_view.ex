@@ -5,6 +5,7 @@ defmodule VegaWeb.CardView do
   alias Vega.Dates
 
   alias Vega.Comment
+  alias Vega.User
 
   ## todo: put this into a utils module
   def markdown(string) do
@@ -14,7 +15,7 @@ defmodule VegaWeb.CardView do
   end
 
   def author(%Comment{} = comment) do
-    with user when user != nil <- Comment.author(comment) do
+    with user when user != nil <- User.get(comment) do
       user.name
     else
       _error -> ["??"]

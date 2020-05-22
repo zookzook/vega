@@ -8,7 +8,7 @@ defmodule Vega.Issues do
   @new_board          IssueConsts.encode(:new_board)
   @new_card           IssueConsts.encode(:new_card)
   @set_description    IssueConsts.encode(:set_description)
-  # todo: @add_comment     IssueConsts.encode(:add_comment)
+  @add_comment        IssueConsts.encode(:add_comment)
   @set_title          IssueConsts.encode(:set_title)
   @set_board_color    IssueConsts.encode(:set_board_color)
   @add_list           IssueConsts.encode(:add_list)
@@ -24,14 +24,8 @@ defmodule Vega.Issues do
   @close_board        IssueConsts.encode(:close_board)
   @open_board         IssueConsts.encode(:open_board)
 
-  def load(issue) do
-    issue
-    |> transform()
-    |> add_msg()
-  end
-
-  defp transform(issue) do
-    %Issue{_id: issue["_id"], ts: issue["ts"], author_id: issue["author_id"], board: issue["board"], t: issue["t"], list: issue["list"], keys: issue["keys"] || []}
+  def add_message(issue) do
+    add_msg(issue)
   end
 
   ##
@@ -161,6 +155,12 @@ defmodule Vega.Issues do
   #
   defp add_msg(%Issue{t: @open_board} = issue) do
     %Issue{issue | msg: gettext("opened this board '%{board}'", map_to_keywords(issue.keys))}
+  end
+  ##
+  # Added comment
+  #
+  defp add_msg(%Issue{t: @add_comment} = issue) do
+    %Issue{issue | msg: gettext("added comment '%{comment}'", map_to_keywords(issue.keys))}
   end
   ##
   # Catch-All function

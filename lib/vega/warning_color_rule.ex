@@ -1,15 +1,15 @@
 defmodule Vega.WarningColorRule do
   @moduledoc false
 
-  import Vega.StructHelper
+  use Yildun.Collection
 
   alias Vega.WarningColorRule
 
-  defstruct [
-    :color,    ## the default color
-    :n,        ## threshold
-    :warning   ## the warning color
-  ]
+  document do
+    attribute :color, String.t()     ## the default color
+    attribute :n, non_neg_integer()  ## threshold
+    attribute :warning, String.t()   ## the warning color
+  end
 
   def new(color, n, warning) do
     %WarningColorRule{color: color, n: n, warning: warning} |> filter_default()
@@ -45,14 +45,4 @@ defmodule Vega.WarningColorRule do
     other
   end
 
-  def dump(%WarningColorRule{} = rule) do
-    to_map(rule)
-  end
-
-  def load(nil) do
-    nil
-  end
-  def load(%{"color" => color, "n" => n, "warning" => warning}) do
-    %WarningColorRule{color: color, n: n, warning: warning}
-  end
 end

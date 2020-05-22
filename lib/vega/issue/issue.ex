@@ -10,39 +10,37 @@ defmodule Vega.Issue do
 
   """
 
-  import Vega.StructHelper
-
   alias Vega.Issue
   alias Vega.Issues
   alias Vega.User
   alias Vega.Board
   alias Vega.BoardList
+  alias Yildun.Collection
 
-  defstruct [
-    :_id,       ## the id
-    :ts,        ## timestamp
-    :author_id, ## id of the user
-    :t,         ## the type of modification see Vega.IssueConsts
-    :board,     ## the id of the board
-    :list,      ## the id of the list
-    :keys,      ## keys for gettext
-    :msg        ## the localized message of the modification
-  ]
+  use Collection
 
   @collection "issues"
 
-  def new(type, %User{_id: author_id}) do
-    %Issue{_id: Mongo.object_id(), author_id: author_id, ts: DateTime.utc_now(), t: type}
-  end
-  def new(type, %User{_id: author_id}, %Board{_id: board}) do
-    %Issue{_id: Mongo.object_id(), author_id: author_id, ts: DateTime.utc_now(), t: type, board: board}
-  end
-  def new(type, %User{_id: author_id}, %Board{_id: board}, %BoardList{_id: list}) do
-    %Issue{_id: Mongo.object_id(), author_id: author_id, ts: DateTime.utc_now(), t: type, board: board, list: list}
+  collection "issues" do
+    attribute :ts, DateTime.t() , default: &DateTime.utc_now/0  ## timestamp
+    attribute :author_id, BSON.ObjectId.t()                     ## id of the user
+    attribute :t, non_neg_integer()                             ## the type of modification see Vega.IssueConsts
+    attribute :board, BSON.ObjectId.t()                         ## the id of the board
+    attribute :list, BSON.ObjectId.t()                          ## the id of the list
+    attribute :keys, map()                                      ## keys for gettext
+    attribute :msg, String.t()                                  ## the localized message of the modification
+
+    after_load &Issue.after_load/1
   end
 
-  def dump(%Issue{} = issue) do
-    to_map(issue)
+  def new(type, %User{_id: author_id}) do
+    %Issue{new() | author_id: author_id, t: type}
+  end
+  def new(type, %User{_id: author_id}, %Board{_id: board}) do
+    %Issue{new() | author_id: author_id, t: type, board: board}
+  end
+  def new(type, %User{_id: author_id}, %Board{_id: board}, %BoardList{_id: list}) do
+    %Issue{new() | author_id: author_id, t: type, board: board, list: list}
   end
 
   @doc """
@@ -60,10 +58,17 @@ defmodule Vega.Issue do
     []
   end
   def fetch_all(%Board{_id: id}) do
-    Mongo.find(:mongo, @collection, %{"board" => id}, sort: %{ts: -1}, limit: 5) |> Enum.map(fn issue -> Issues.load(issue) end)
+    Mongo.find(:mongo, @collection, %{"board" => id}, sort: %{ts: -1}, limit: 5) |> Enum.map(fn issue -> issue |> load() end)
   end
   def fetch_all_raw(%Board{_id: id}) do
     Mongo.find(:mongo, @collection, %{"board" => id})
+  end
+
+  def after_load(%Issue{keys: keys} = issue) when keys == nil do
+    Issues.add_message(%Issue{issue | keys: []})
+  end
+  def after_load(issue) do
+    Issues.add_message(issue)
   end
 
   def check() do
